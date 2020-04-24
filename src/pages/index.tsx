@@ -24,7 +24,7 @@ export default () => (
   <div style={content}>
     <div className="text-center mb-5">
       <Link href="#">
-        <a className="logo mr-0">
+        <a className="logo mr-0" href={'/'}>
           <SmileFilled size={48} />
         </a>
       </Link>
