@@ -4,6 +4,7 @@ import { Alert, Button, Divider, Form, Input } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
@@ -33,7 +34,7 @@ export default function Login() {
         setErrorDescription(result.error.message)
       } else {
         const { accessToken } = result.data.login
-        console.log({ accessToken })
+        Cookies.set('accessToken', accessToken)
       }
     })
   }
