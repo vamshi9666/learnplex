@@ -5,6 +5,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
+import NProgress from 'nprogress'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
@@ -24,19 +25,23 @@ export default function Login() {
   const [errorDescription, setErrorDescription] = useState('')
 
   const onFinish = async ({ email, password }: any) => {
+    NProgress.start()
     login({
       email,
       password,
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.error) {
         console.log({ 'login error': result.error })
         setLoginError(true)
         setErrorDescription(result.error.message)
       } else {
         const { accessToken } = result.data.login
+        console.log({ accessToken, result })
         Cookies.set('accessToken', accessToken)
+        await router.push('/')
       }
     })
+    NProgress.done()
   }
 
   const layout = {

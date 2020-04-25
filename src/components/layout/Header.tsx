@@ -1,12 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Menu } from 'antd'
 import { useRouter } from 'next/router'
+import { useQuery } from 'urql'
+import Cookies from 'js-cookie'
 
 export default function Header() {
   const router = useRouter()
+  const ME_QUERY = `
+    query {
+        me {
+          user {
+             username
+          }
+        }
+    }
+  `
+  const accessToken = Cookies.get('accessToken')
+  const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
+    query: ME_QUERY,
+  })
+  useEffect(() => {
+    reExecuteMeQuery()
+  }, [accessToken])
+  if (fetching) return <p>Loading....</p>
+  // if (error) return <p>Oh no... {error.message}</p>
+  const isLoggedIn = !fetching && !error && data && data.me && !!accessToken
+
   return (
     <>
-      <div className={'logo float-left'}>
+      <div
+        className={'logo float-left cursor-pointer'}
+        onClick={() => router.push('/')}
+      >
         <img src={'/logo.png'} alt={'Coderplex Logo'} width={'32'} />
         <span className={'ml-4 font-large'}>
           <b>Coderplex</b>
@@ -18,8 +43,17 @@ export default function Header() {
         selectable={false}
         onClick={async ({ key }) => await router.push(key)}
       >
-        <Menu.Item key={'/login'}>Login</Menu.Item>
-        <Menu.Item key={'/register'}>Register</Menu.Item>
+        {isLoggedIn
+          ? [
+              <Menu.Item key={`/${data?.me.username}`}>
+                {data?.me.user.username}
+              </Menu.Item>,
+              <Menu.Item key={'/logout'}>Logout</Menu.Item>,
+            ]
+          : [
+              <Menu.Item key={'/login'}>Login</Menu.Item>,
+              <Menu.Item key={'/register'}>Register</Menu.Item>,
+            ]}
       </Menu>
     </>
   )

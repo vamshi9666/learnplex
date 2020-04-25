@@ -9,6 +9,7 @@ export default function App({ Component }: { Component: any }) {
     <>
       <Head>
         <meta charSet="utf-8" />
+        <link rel="stylesheet" type="text/css" href="/nprogress.css" />
       </Head>
       <Layout className={'h-100p'}>
         <Layout.Header className={'bg-initial'}>
