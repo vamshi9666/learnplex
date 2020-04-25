@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Menu } from 'antd'
 import { useRouter } from 'next/router'
 

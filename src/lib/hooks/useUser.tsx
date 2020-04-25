@@ -10,6 +10,7 @@ export function useUser() {
         me {
           user {
              username
+             roles
           }
           accessToken
         }
