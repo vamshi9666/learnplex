@@ -13,6 +13,7 @@ import '../styles/global.css'
 import App from '../components/App'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { parseCookies } from '../lib/parseCookies'
+import { ACCESS_TOKEN_COOKIE } from '../constants'
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`)
@@ -31,13 +32,14 @@ export default withUrqlClient((context) => ({
   fetchOptions: () => {
     let accessToken
     if (process.browser) {
-      accessToken = Cookies.get('accessToken')
+      accessToken = Cookies.get(ACCESS_TOKEN_COOKIE)
     } else {
       const cookies = parseCookies(context?.req)
-      accessToken = cookies.accessToken
+      accessToken = cookies[ACCESS_TOKEN_COOKIE]
     }
     return {
       headers: { authorization: accessToken ? `Bearer ${accessToken}` : '' },
+      credentials: 'include',
     }
   },
 }))(MyApp)

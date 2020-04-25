@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'urql'
 import Cookies from 'js-cookie'
 
+import { ACCESS_TOKEN_COOKIE } from '../../constants'
+
 export default function Header() {
   const router = useRouter()
   const ME_QUERY = `
@@ -15,7 +17,7 @@ export default function Header() {
         }
     }
   `
-  const accessToken = Cookies.get('accessToken')
+  const accessToken = Cookies.get(ACCESS_TOKEN_COOKIE)
   const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
     query: ME_QUERY,
   })

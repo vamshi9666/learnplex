@@ -9,6 +9,7 @@ import NProgress from 'nprogress'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
+import { ACCESS_TOKEN_COOKIE } from '../constants'
 
 export default function Login() {
   const router = useRouter()
@@ -37,7 +38,7 @@ export default function Login() {
       } else {
         const { accessToken } = result.data.login
         console.log({ accessToken, result })
-        Cookies.set('accessToken', accessToken)
+        Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         await router.push('/')
       }
     })
