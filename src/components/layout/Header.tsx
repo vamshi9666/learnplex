@@ -1,32 +1,15 @@
 import React, { useEffect } from 'react'
 import { Menu } from 'antd'
 import { useRouter } from 'next/router'
-import { useQuery } from 'urql'
-import Cookies from 'js-cookie'
 
-import { ACCESS_TOKEN_COOKIE } from '../../constants'
+import { useUser } from '../../lib/hooks/useUser'
 
 export default function Header() {
   const router = useRouter()
-  const ME_QUERY = `
-    query {
-        me {
-          user {
-             username
-          }
-        }
-    }
-  `
-  const accessToken = Cookies.get(ACCESS_TOKEN_COOKIE)
-  const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
-    query: ME_QUERY,
-  })
-  useEffect(() => {
-    reExecuteMeQuery()
-  }, [accessToken, reExecuteMeQuery])
+  const { user, fetching, error } = useUser()
   if (fetching) return <p>Loading....</p>
   // if (error) return <p>Oh no... {error.message}</p>
-  const isLoggedIn = !fetching && !error && data && data.me && !!accessToken
+  const isLoggedIn = !!user && !fetching && !error
 
   return (
     <>
@@ -47,9 +30,7 @@ export default function Header() {
       >
         {isLoggedIn
           ? [
-              <Menu.Item key={`/${data?.me.username}`}>
-                {data?.me.user.username}
-              </Menu.Item>,
+              <Menu.Item key={`/${user.username}`}>{user.username}</Menu.Item>,
               <Menu.Item key={'/logout'}>Logout</Menu.Item>,
             ]
           : [
