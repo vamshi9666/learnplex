@@ -1,4 +1,4 @@
-import { CombinedError, useMutation } from 'urql'
+import { useMutation } from 'urql'
 import React, { useState } from 'react'
 import { Alert, Button, Divider, Form, Input } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
@@ -20,7 +20,7 @@ export default function Login() {
       }
     }
   `
-  const [loginResult, login] = useMutation(LOGIN_MUTATION)
+  const [, login] = useMutation(LOGIN_MUTATION)
   const [loginError, setLoginError] = useState(false)
   const [errorDescription, setErrorDescription] = useState('')
 

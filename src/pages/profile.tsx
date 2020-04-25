@@ -12,7 +12,7 @@ export default function Profile() {
     }
   `
 
-  const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
+  const [{ data, fetching, error }] = useQuery({
     query: ME_QUERY,
   })
 

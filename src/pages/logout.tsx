@@ -11,7 +11,7 @@ export default function Logout() {
       logout
     }
   `
-  const [logoutResult, logout] = useMutation(LOGOUT_MUTATION)
+  const [, logout] = useMutation(LOGOUT_MUTATION)
   useEffect(() => {
     NProgress.start()
     logout().then(() => {
@@ -19,7 +19,7 @@ export default function Logout() {
       router.push('/login').then()
     })
     NProgress.done()
-  }, [])
+  }, [logout, router])
 
   return <p>Loading....</p>
 }

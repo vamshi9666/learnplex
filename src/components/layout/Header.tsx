@@ -21,7 +21,7 @@ export default function Header() {
   })
   useEffect(() => {
     reExecuteMeQuery()
-  }, [accessToken])
+  }, [accessToken, reExecuteMeQuery])
   if (fetching) return <p>Loading....</p>
   // if (error) return <p>Oh no... {error.message}</p>
   const isLoggedIn = !fetching && !error && data && data.me && !!accessToken
