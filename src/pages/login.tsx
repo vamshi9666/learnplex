@@ -38,7 +38,8 @@ export default function Login() {
       } else {
         const { accessToken } = result.data.login
         console.log({ accessToken, result })
-        Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
+        // Cookie will be set by server
+        // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         await router.push('/')
       }
     })

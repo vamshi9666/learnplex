@@ -25,10 +25,6 @@ export function useUser() {
     reExecuteMeQuery()
   }, [accessToken, reExecuteMeQuery])
 
-  if (data && data.me) {
-    Cookies.set(ACCESS_TOKEN_COOKIE, data.me.accessToken)
-  }
-
   return fetching
     ? { user: undefined, fetching: true, error: undefined }
     : error
