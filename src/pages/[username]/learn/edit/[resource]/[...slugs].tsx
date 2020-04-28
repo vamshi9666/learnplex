@@ -2,15 +2,14 @@ import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Col, Row } from 'antd'
+import { Section } from '../../../../../graphql/types'
+import { setCurrentSectionIdFromSlugs } from '../../../../../utils/setSectionIdFromSlugs'
+import { SEO } from '../../../../../components/SEO'
+import { upperCamelCase } from '../../../../../utils/upperCamelCase'
+import Sidebar from '../../../../../components/learn/Sidebar'
+import CustomEditor from '../../../../../components/layout/Editor'
 
-import { Section } from '../../../../graphql/types'
-import { SEO } from '../../../../components/SEO'
-import { upperCamelCase } from '../../../../utils/upperCamelCase'
-import Sidebar from '../../../../components/learn/Sidebar'
-import { setCurrentSectionIdFromSlugs } from '../../../../utils/setSectionIdFromSlugs'
-import CustomEditor from '../../../../components/layout/Editor'
-
-export default function ViewResource() {
+export default function EditResource() {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
@@ -108,6 +107,7 @@ export default function ViewResource() {
             defaultOpenKeys={slugs}
             sectionsMap={sectionsMap}
             baseSectionId={baseSectionId}
+            inEditMode={true}
           />
         </Col>
 
@@ -117,7 +117,7 @@ export default function ViewResource() {
             currentSectionId={currentSectionId}
             username={username}
             resourceSlug={resourceSlug}
-            inEditMode={false}
+            inEditMode={true}
           />
         </Col>
       </Row>

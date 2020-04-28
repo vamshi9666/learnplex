@@ -17,7 +17,7 @@ export default function CustomEditor({
   currentSectionId,
   username,
   resourceSlug,
-  inEditMode = false,
+  inEditMode = true,
 }: {
   pageContent: string | undefined
   currentSectionId: string
@@ -157,15 +157,17 @@ export default function CustomEditor({
 
       <Divider />
 
-      <Editor
-        readOnly={!inEditMode}
-        editorKey={`editor-${currentSectionId}`}
-        ref={editor}
-        editorState={editorState}
-        onChange={onChange}
-        handleKeyCommand={handleKeyCommand}
-        keyBindingFn={myKeyBindingFn}
-      />
+      <div className={'position-fixed'}>
+        <Editor
+          readOnly={!inEditMode}
+          editorKey={`editor-${currentSectionId}`}
+          ref={editor}
+          editorState={editorState}
+          onChange={onChange}
+          handleKeyCommand={handleKeyCommand}
+          keyBindingFn={myKeyBindingFn}
+        />
+      </div>
     </div>
   )
 }
