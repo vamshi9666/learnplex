@@ -4,6 +4,7 @@ import 'antd/dist/antd.css'
 import 'isomorphic-unfetch'
 import Router from 'next/router'
 import NProgress from 'nprogress'
+import 'draft-js/dist/Draft.css'
 
 import '../styles/vars.css'
 import '../styles/global.css'

@@ -4,12 +4,10 @@ import { Alert, Button, Divider, Form, Input } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 import NProgress from 'nprogress'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
-import { ACCESS_TOKEN_COOKIE } from '../constants'
 
 export default function Login() {
   const router = useRouter()

@@ -1,10 +1,7 @@
 import { useMutation } from 'urql'
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 import NProgress from 'nprogress'
-
-import { ACCESS_TOKEN_COOKIE } from '../constants'
 
 export default function Logout() {
   const router = useRouter()
