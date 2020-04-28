@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   convertFromRaw,
   convertToRaw,
@@ -11,6 +11,8 @@ import {
 import { Button, Divider } from 'antd'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
+import { useRouter } from 'next/router'
+import { useUser } from '../../lib/hooks/useUser'
 
 export default function CustomEditor({
   pageContent,
@@ -25,6 +27,7 @@ export default function CustomEditor({
   resourceSlug: string
   inEditMode?: boolean
 }) {
+  const router = useRouter()
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
     blocks: [
@@ -125,6 +128,8 @@ export default function CustomEditor({
     NProgress.done()
   }
 
+  const { user } = useUser()
+
   const fork = () => {
     NProgress.start()
     forkResource({
@@ -132,11 +137,16 @@ export default function CustomEditor({
         username,
         resourceSlug,
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.error) {
         console.log({ forkResourceError: result.error })
       } else {
         console.log({ result })
+        const slugs = router.query.slugs as string[]
+        const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+        await router.push(
+          `/${user?.username}/learn/edit/${resourceSlug}/${slugsPath}`
+        )
       }
     })
     NProgress.done()
@@ -150,7 +160,7 @@ export default function CustomEditor({
           </Button>
         ) : (
           <Button className={'float-right'} type={'primary'} onClick={fork}>
-            Fork
+            Edit
           </Button>
         )}
       </div>

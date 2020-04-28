@@ -12,7 +12,7 @@ import { useRouter } from 'next/router'
 import { Section } from '../../graphql/types'
 
 interface Props {
-  inEditMode?: boolean
+  inEditMode: boolean
   sectionsMap: Map<string, Section>
   baseSectionId: string
   defaultSelectedKeys?: string[]
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function Sidebar({
-  inEditMode = false,
+  inEditMode,
   sectionsMap,
   baseSectionId,
   defaultSelectedKeys = [],
@@ -92,7 +92,9 @@ export default function Sidebar({
   const handleClick = async (e: any) => {
     const path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
     if (inEditMode) {
-      await router.push(`/${username}/learn/edit/${resourceSlug}/${path}`)
+      return await router.push(
+        `/${username}/learn/edit/${resourceSlug}/${path}`
+      )
     }
     await router.push(`/${username}/learn/${resourceSlug}/${path}`)
   }
@@ -106,8 +108,8 @@ export default function Sidebar({
       openKeys={openKeys}
     >
       {inEditMode && (
-        <Menu.Item className={'text-center'} key={'outline'}>
-          Edit Outline
+        <Menu.Item className={'text-center'} key={'resource-index'}>
+          Edit Index
         </Menu.Item>
       )}
       {sortedSections.map((section) =>

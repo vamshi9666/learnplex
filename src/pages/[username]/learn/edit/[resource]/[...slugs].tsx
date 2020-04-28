@@ -1,101 +1,26 @@
-import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Col, Row } from 'antd'
-import { Section } from '../../../../../graphql/types'
-import { setCurrentSectionIdFromSlugs } from '../../../../../utils/setSectionIdFromSlugs'
+
 import { SEO } from '../../../../../components/SEO'
 import { upperCamelCase } from '../../../../../utils/upperCamelCase'
 import Sidebar from '../../../../../components/learn/Sidebar'
 import CustomEditor from '../../../../../components/layout/Editor'
+import useSlugs from '../../../../../lib/hooks/useSlugs'
 
 export default function EditResource() {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
   const slugs = router.query.slugs as string[]
-  const SECTIONS_LIST_QUERY = `
-    query($resourceSlug: String!, $username: String!) {
-      sectionsList(resourceSlug: $resourceSlug, username: $username) {
-        id
-        title
-        slug
-        isBaseSection
-        isPage
-        sections {
-          id
-          slug
-          order
-        }
-        page {
-          content
-        }
-      }
-    }
-  `
-
-  const [
-    {
-      data: sectionsListData,
-      fetching: sectionsListFetching,
-      error: sectionsListError,
-    },
-  ] = useQuery({
-    query: SECTIONS_LIST_QUERY,
-    variables: {
-      resourceSlug,
-      username,
-    },
-  })
-  const initialSectionsMap: Map<string, Section> = new Map()
-  const [sectionsMap, setSectionsMap] = useState(initialSectionsMap)
-  const [baseSectionId, setBaseSectionId] = useState('')
-  const [currentSectionId, setCurrentSectionId] = useState('')
-
-  useEffect(() => {
-    if (
-      !sectionsListFetching &&
-      !sectionsListError &&
-      sectionsListData.sectionsList.length !== 0
-    ) {
-      const [baseSection] = sectionsListData.sectionsList.filter(
-        (section: Section) => section.isBaseSection
-      )
-      setBaseSectionId(baseSection.id)
-      setSectionsMap((prevSectionsMap) => {
-        const newSectionsMap = new Map()
-        sectionsListData.sectionsList.forEach((section: Section) =>
-          newSectionsMap.set(section.id, section)
-        )
-        return newSectionsMap
-      })
-    }
-  }, [sectionsListData, sectionsListError, sectionsListFetching])
-
-  useEffect(() => {
-    if (!sectionsListFetching && !sectionsListError && !!baseSectionId) {
-      setCurrentSectionIdFromSlugs({
-        baseSectionId,
-        slugs,
-        sectionsMap,
-        setCurrentSectionId,
-      })
-    }
-  }, [
-    slugs,
+  const {
     baseSectionId,
-    sectionsListError,
-    sectionsListFetching,
     sectionsMap,
-  ])
-
-  if (sectionsListFetching || !baseSectionId) return <p>Loading....</p>
-  if (sectionsListError) return <p>Oh no... {sectionsListError.message}</p>
-
-  console.log({ sectionsListData, sectionsListFetching, sectionsListError })
-  console.log({ sectionsMap, baseSectionId, currentSectionId })
-
-  const pageContent = sectionsMap.get(currentSectionId)?.page?.content
+    currentSectionId,
+    body,
+    pageContent,
+  } = useSlugs({ resourceSlug, username, slugs })
+  if (body) return body
 
   return (
     <>
