@@ -20,20 +20,23 @@ export default function ViewResource() {
     body,
     pageContent,
   } = useSlugs({ resourceSlug, username, slugs })
-  if (body) return body
 
   return (
     <>
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
       <Row>
         <Col span={6}>
-          <Sidebar
-            defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-            defaultOpenKeys={slugs}
-            sectionsMap={sectionsMap}
-            baseSectionId={baseSectionId}
-            inEditMode={false}
-          />
+          {body ? (
+            body
+          ) : (
+            <Sidebar
+              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
+              defaultOpenKeys={slugs}
+              sectionsMap={sectionsMap}
+              baseSectionId={baseSectionId}
+              inEditMode={false}
+            />
+          )}
         </Col>
 
         <Col className={'p-5'} span={12}>

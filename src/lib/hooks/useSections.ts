@@ -1,5 +1,6 @@
 import { useQuery } from 'urql'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Skeleton } from 'antd'
 
 import { Section } from '../../graphql/types'
 
@@ -67,11 +68,24 @@ export function useSections({
     }
   }, [sectionsListData, sectionsListError, sectionsListFetching])
 
+  let body
+  if (sectionsListFetching || !baseSectionId) {
+    body = React.createElement(Skeleton, {
+      active: true,
+      paragraph: { rows: 10 },
+    })
+  } else if (sectionsListError) {
+    body = React.createElement('p', {}, `Oh no... ${sectionsListError.message}`)
+  } else {
+    body = undefined
+  }
+
   return {
     sectionsListFetching,
     baseSectionId,
     sectionsListError,
     sectionsMap,
     sectionsListData,
+    body,
   }
 }

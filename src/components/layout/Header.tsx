@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu } from 'antd'
+import { Menu, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 
 import { useUser } from '../../lib/hooks/useUser'
@@ -7,7 +7,7 @@ import { useUser } from '../../lib/hooks/useUser'
 export default function Header() {
   const router = useRouter()
   const { user, fetching, error } = useUser()
-  if (fetching) return <p>Loading....</p>
+  if (fetching) return <Skeleton active={true} />
   const isLoggedIn = !!user && !fetching && !error
 
   return (

@@ -19,6 +19,7 @@ export default function useSlugs({
     sectionsListError,
     sectionsMap,
     sectionsListData,
+    body,
   } = useSections({ resourceSlug, username })
 
   useEffect(() => {
@@ -42,15 +43,6 @@ export default function useSlugs({
     sectionsListFetching,
     sectionsMap,
   ])
-
-  let body
-  if (sectionsListFetching || !baseSectionId) {
-    body = React.createElement('p', {}, 'Loading....')
-  } else if (sectionsListError) {
-    body = React.createElement('p', {}, `Oh no... ${sectionsListError.message}`)
-  } else {
-    body = undefined
-  }
 
   const pageContent = sectionsMap.get(currentSectionId)?.page?.content
 
