@@ -54,7 +54,11 @@ export default function ViewResource() {
   const [currentSectionId, setCurrentSectionId] = useState('')
 
   useEffect(() => {
-    if (!sectionsListFetching && !sectionsListError) {
+    if (
+      !sectionsListFetching &&
+      !sectionsListError &&
+      sectionsListData.sectionsList.length !== 0
+    ) {
       const [baseSection] = sectionsListData.sectionsList.filter(
         (section: Section) => section.isBaseSection
       )
