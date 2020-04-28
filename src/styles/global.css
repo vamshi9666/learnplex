@@ -400,7 +400,7 @@ body {
     display: none !important;
 }
 
-.ant-menu-item-selected, .ant-menu-submenu-selected {
+.ant-menu-item-selected, .ant-menu-submenu-selected > .ant-menu-submenu-title {
     background-color: initial !important;
     font-weight: bold !important;
     color: black !important;
