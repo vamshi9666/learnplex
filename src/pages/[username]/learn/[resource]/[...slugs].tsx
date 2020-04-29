@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Col, Row } from 'antd'
+import { Breadcrumb, Col, Row } from 'antd'
 
 import { SEO } from '../../../../components/SEO'
-import { upperCamelCase } from '../../../../utils/upperCamelCase'
+import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
 import Sidebar from '../../../../components/learn/Sidebar'
 import CustomEditor from '../../../../components/layout/Editor'
 import useSlugs from '../../../../lib/hooks/useSlugs'
@@ -26,17 +26,23 @@ export default function ViewResource() {
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
       <Row>
         <Col span={6}>
-          {body ? (
-            body
-          ) : (
-            <Sidebar
-              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-              defaultOpenKeys={slugs}
-              sectionsMap={sectionsMap}
-              baseSectionId={baseSectionId}
-              inEditMode={false}
-            />
-          )}
+          {body
+            ? body
+            : [
+                <Breadcrumb className={'text-center'}>
+                  {slugs.map((slug) => (
+                    <Breadcrumb.Item>{titleCase(slug)}</Breadcrumb.Item>
+                  ))}
+                </Breadcrumb>,
+                <br />,
+                <Sidebar
+                  defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
+                  defaultOpenKeys={slugs}
+                  sectionsMap={sectionsMap}
+                  baseSectionId={baseSectionId}
+                  inEditMode={false}
+                />,
+              ]}
         </Col>
 
         <Col className={'p-5'} span={12}>

@@ -34,6 +34,7 @@ export default function Sidebar({
 
   const sectionMenuItem = ({ sectionId }: { sectionId: string }) => {
     const section = sectionsMap.get(sectionId) as Section
+    if (!section) return <p key={sectionId}>loading...</p>
     const sortedSections = section.sections.sort((a, b) => {
       return a.order > b.order ? 1 : a.order < b.order ? -1 : 0
     })
@@ -98,6 +99,7 @@ export default function Sidebar({
     }
     await router.push(`/${username}/learn/${resourceSlug}/${path}`)
   }
+  const sidebar = document.getElementById('sidebar')
 
   return (
     <Menu
@@ -106,6 +108,9 @@ export default function Sidebar({
       onClick={handleClick}
       defaultSelectedKeys={defaultSelectedKeys}
       openKeys={openKeys}
+      className={'position-fixed'}
+      id={'sidebar'}
+      style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
     >
       {inEditMode && (
         <Menu.Item className={'text-center'} key={'resource-index'}>

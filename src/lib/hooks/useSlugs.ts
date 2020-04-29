@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
 import { setCurrentSectionIdFromSlugs } from '../../utils/setSectionIdFromSlugs'

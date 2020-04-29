@@ -18,10 +18,6 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-#__next {
-    height: 100%;
-}
-
 .text-left {
     text-align: left !important;
 }
@@ -375,6 +371,10 @@ body {
     height: 100% !important;
 }
 
+.mh-100vh {
+    min-height: 100vh !important;
+}
+
 .b-0 {
     border: 0 !important;
 }
@@ -385,6 +385,10 @@ body {
 
 .position-fixed {
     position: fixed !important;
+}
+
+.position-absolute {
+    position: absolute !important;
 }
 
 .overflow-scroll {

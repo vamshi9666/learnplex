@@ -1,5 +1,5 @@
 import { useQuery } from 'urql'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Skeleton } from 'antd'
 
 import { Section } from '../../graphql/types'
@@ -21,8 +21,10 @@ export function useSections({
         isPage
         sections {
           id
-          slug
           order
+        }
+        parentSection {
+          id
         }
         page {
           content
@@ -37,6 +39,7 @@ export function useSections({
       fetching: sectionsListFetching,
       error: sectionsListError,
     },
+    reExecuteSectionsListQuery,
   ] = useQuery({
     query: SECTIONS_LIST_QUERY,
     variables: {
@@ -80,6 +83,64 @@ export function useSections({
     body = undefined
   }
 
+  const renders = useRef(0)
+  console.log('renders hook', renders.current++)
+
+  const setSection = ({ updatedSection }: { updatedSection: Section }) => {
+    // reExecuteSectionsListQuery()
+    setSectionsMap((prevSectionsMap) => {
+      const newSectionsMap = new Map<string, Section>()
+      const sectionIds = Array.from(prevSectionsMap.keys())
+      sectionIds.forEach((sectionId) => {
+        if (sectionId === updatedSection.id) {
+          newSectionsMap.set(sectionId, Object.assign({}, updatedSection))
+        } else {
+          newSectionsMap.set(
+            sectionId,
+            Object.assign({}, prevSectionsMap.get(sectionId)!)
+          )
+        }
+      })
+      return newSectionsMap
+    })
+  }
+
+  const deleteSection = ({
+    sectionId,
+    parentSectionId,
+  }: {
+    sectionId: string
+    parentSectionId: string
+  }) => {
+    setSectionsMap((prevSectionsMap) => {
+      const newSectionsMap = new Map<string, Section>()
+      const sectionIds = Array.from(prevSectionsMap.keys())
+      for (const currentSectionId of sectionIds) {
+        // Delete sectionId from sectionsMap
+        if (sectionId === currentSectionId) {
+          continue
+        }
+        const newSection = Object.assign(
+          {},
+          prevSectionsMap.get(currentSectionId)
+        )
+
+        // Delete SectionID from the subsections of parent
+        if (currentSectionId === parentSectionId) {
+          const sections = Object.assign(
+            [],
+            prevSectionsMap.get(currentSectionId)!.sections
+          )
+          newSection.sections = sections.filter(
+            (section: Section) => section.id !== sectionId
+          )
+        }
+        newSectionsMap.set(currentSectionId, newSection)
+      }
+      return newSectionsMap
+    })
+  }
+
   return {
     sectionsListFetching,
     baseSectionId,
@@ -87,5 +148,8 @@ export function useSections({
     sectionsMap,
     sectionsListData,
     body,
+    setSection,
+    deleteSection,
+    reExecuteSectionsListQuery,
   }
 }
