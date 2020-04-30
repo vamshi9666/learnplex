@@ -1,16 +1,19 @@
-import { Button, Timeline } from 'antd'
+import { Timeline } from 'antd'
 import React, { useState } from 'react'
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons'
 
 import { Section } from '../../graphql/types'
 import SectionItem from './SectionItem'
+import NewSectionModal from './NewSectionModal'
 
 export default function SectionItems({
   sections,
   sectionsMap,
+  parentSection,
 }: {
   sections: Section[]
   sectionsMap: Map<string, Section>
+  parentSection: Section
 }) {
   const [show, setShow] = useState(false)
   if (!sections) return <p>loading...</p>
@@ -23,6 +26,7 @@ export default function SectionItems({
         : 0
     }
   )
+
   return (
     <Timeline>
       {sortedSections.map((section: Section) => (
@@ -47,7 +51,12 @@ export default function SectionItems({
           )
         }
       >
-        {show && <Button type={'primary'}>Add</Button>}
+        <NewSectionModal
+          parentSectionId={parentSection.id}
+          show={show}
+          setShow={setShow}
+          sectionsMap={sectionsMap}
+        />
       </Timeline.Item>
     </Timeline>
   )

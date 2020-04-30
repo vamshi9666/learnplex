@@ -81,6 +81,7 @@ export default function SectionItemForm({
         slug
         isBaseSection
         isPage
+        hasSubSections
         sections {
           id
           order

@@ -375,6 +375,14 @@ body {
     min-height: 100vh !important;
 }
 
+.w-70vw {
+    width: 70vw !important;
+}
+
+.mh-70vh {
+    min-height: 70vh !important;
+}
+
 .b-0 {
     border: 0 !important;
 }

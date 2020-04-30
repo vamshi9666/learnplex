@@ -21,6 +21,7 @@ export default function SectionItem({
         <SectionItems
           sections={currentSection.sections}
           sectionsMap={sectionsMap}
+          parentSection={currentSection}
         />
       )}
     </Timeline.Item>

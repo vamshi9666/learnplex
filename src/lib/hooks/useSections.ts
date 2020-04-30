@@ -19,6 +19,7 @@ export function useSections({
         slug
         isBaseSection
         isPage
+        hasSubSections
         sections {
           id
           order
@@ -92,15 +93,12 @@ export function useSections({
       const newSectionsMap = new Map<string, Section>()
       const sectionIds = Array.from(prevSectionsMap.keys())
       sectionIds.forEach((sectionId) => {
-        if (sectionId === updatedSection.id) {
-          newSectionsMap.set(sectionId, Object.assign({}, updatedSection))
-        } else {
-          newSectionsMap.set(
-            sectionId,
-            Object.assign({}, prevSectionsMap.get(sectionId)!)
-          )
-        }
+        newSectionsMap.set(
+          sectionId,
+          Object.assign({}, prevSectionsMap.get(sectionId)!)
+        )
       })
+      newSectionsMap.set(updatedSection.id, Object.assign({}, updatedSection))
       return newSectionsMap
     })
   }

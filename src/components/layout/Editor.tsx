@@ -32,7 +32,7 @@ export default function CustomEditor({
     entityMap: {},
     blocks: [
       {
-        text: '',
+        text: ' ',
         key: 'empty',
         type: 'unstyled',
         entityRanges: [],
@@ -152,22 +152,18 @@ export default function CustomEditor({
     NProgress.done()
   }
   return (
-    <div className={'position-fixed overflow-scroll'}>
-      <div onClick={focusEditor}>
+    <div className={'overflow-scroll p-4 w-70vw'}>
+      <div onClick={focusEditor} className={'mh-70vh'}>
         {inEditMode ? (
-          <Button className={'float-right'} type={'primary'} onClick={save}>
+          <Button className={'float-left'} type={'primary'} onClick={save}>
             Save
           </Button>
         ) : (
-          <Button className={'float-right'} type={'primary'} onClick={fork}>
+          <Button className={'float-left'} type={'primary'} onClick={fork}>
             Edit
           </Button>
         )}
-      </div>
-
-      <Divider />
-
-      <div className={'position-fixed'}>
+        <Divider />
         <Editor
           readOnly={!inEditMode}
           editorKey={`editor-${currentSectionId}`}

@@ -38,7 +38,7 @@ export default function Sidebar({
     const sortedSections = section.sections.sort((a, b) => {
       return a.order > b.order ? 1 : a.order < b.order ? -1 : 0
     })
-    if (section.isPage) {
+    if (!section.hasSubSections) {
       return (
         <Menu.Item key={section.slug} id={section.id}>
           <div>

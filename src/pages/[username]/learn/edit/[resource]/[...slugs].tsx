@@ -29,13 +29,16 @@ export default function EditResource() {
           {body
             ? body
             : [
-                <Breadcrumb className={'text-center'}>
-                  {slugs.map((slug) => (
-                    <Breadcrumb.Item>{titleCase(slug)}</Breadcrumb.Item>
+                <Breadcrumb key={'breadcrumb'} className={'text-center'}>
+                  {slugs.map((slug, index) => (
+                    <Breadcrumb.Item key={slug}>
+                      {titleCase(slug)}
+                    </Breadcrumb.Item>
                   ))}
                 </Breadcrumb>,
-                <br />,
+                <br key={'line-break'} />,
                 <Sidebar
+                  key={'sidebar'}
                   defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
                   defaultOpenKeys={slugs}
                   sectionsMap={sectionsMap}

@@ -13,6 +13,10 @@ export default function ResourceIndex({
   console.log({ sectionsMap, baseSectionId })
   const baseSection = sectionsMap.get(baseSectionId)!
   return (
-    <SectionItems sections={baseSection.sections} sectionsMap={sectionsMap} />
+    <SectionItems
+      sections={baseSection.sections}
+      sectionsMap={sectionsMap}
+      parentSection={baseSection}
+    />
   )
 }

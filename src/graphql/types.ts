@@ -98,6 +98,7 @@ export type Section = {
   baseSection?: Maybe<Section>
   page?: Maybe<Page>
   isPage: Scalars['Boolean']
+  hasSubSections: Scalars['Boolean']
   isSection: Scalars['Boolean']
   isBaseSection: Scalars['Boolean']
   isRoot: Scalars['Boolean']
