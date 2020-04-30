@@ -27,49 +27,17 @@ export default function SectionItemForm({
     setSection: setSectionInSectionsMap,
     deleteSection: deleteSectionInSectionsMap,
   } = useSections({ resourceSlug, username })
-  const [editing, setEditing] = useState(new Map<string, boolean>())
-  const allSectionIds = Array.from(sectionsMap.keys())
+  const [editing, setEditing] = useState(false)
 
   const renders = useRef(0)
   console.log(`renders: ${renders.current++}`)
 
-  const changeEditing = ({
-    sectionId,
-    changeValue,
-  }: {
-    sectionId: string
-    changeValue: boolean
-  }) => {
-    setEditing((prevEditingState) => {
-      const nextEditingState = new Map<string, boolean>()
-      allSectionIds.forEach((currentSectionId) => {
-        if (sectionId === currentSectionId) {
-          nextEditingState.set(currentSectionId, changeValue)
-        } else {
-          nextEditingState.set(
-            currentSectionId,
-            prevEditingState.get(currentSectionId) ?? false
-          )
-        }
-      })
-      return nextEditingState
-    })
-  }
-
-  const startEditing = ({ sectionId }: { sectionId: string }) => {
-    changeEditing({ sectionId, changeValue: true })
-  }
-
-  const stopEditing = ({ sectionId }: { sectionId: string }) => {
-    changeEditing({ sectionId, changeValue: false })
-  }
-
   const handleTitleChange = ({ e, section }: { e: any; section: Section }) => {
     console.log(e.target.value)
     if (slug(e.target.value) !== section.slug) {
-      startEditing({ sectionId: section.id })
+      setEditing(true)
     } else {
-      stopEditing({ sectionId: section.id })
+      setEditing(false)
     }
   }
 
@@ -125,7 +93,7 @@ export default function SectionItemForm({
           old: sectionsMap.get(section.id),
         })
         setSectionInSectionsMap({ updatedSection: result.data.updateSection })
-        stopEditing({ sectionId })
+        setEditing(false)
       }
     })
     NProgress.done()
@@ -192,13 +160,13 @@ export default function SectionItemForm({
             <>
               <Tooltip
                 placement={'topLeft'}
-                title={editing.get(section.id) ? 'Save' : 'Already Saved'}
+                title={editing ? 'Save' : 'Already Saved'}
               >
                 <Button
                   type={'link'}
                   htmlType={'submit'}
                   icon={
-                    editing.get(section.id) ? (
+                    editing ? (
                       <CheckCircleOutlined />
                     ) : (
                       <CheckCircleTwoTone twoToneColor={'#52c41a'} />

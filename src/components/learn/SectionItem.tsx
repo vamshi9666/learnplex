@@ -1,5 +1,6 @@
 import { Timeline } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
+import { RightOutlined, DownOutlined } from '@ant-design/icons'
 
 import { Section } from '../../graphql/types'
 import SectionItems from './SectionItems'
@@ -13,11 +14,25 @@ export default function SectionItem({
   sectionsMap: Map<string, Section>
 }) {
   const currentSection = sectionsMap.get(sectionId)!
+  const [isOpen, setOpen] = useState(false)
   if (!currentSection) return <p>loading...</p>
+
+  const toggleOpen = () => {
+    setOpen(!isOpen)
+  }
   return (
-    <Timeline.Item className={'pb-1'}>
+    <Timeline.Item
+      className={'pb-1 font-large'}
+      dot={
+        currentSection.hasSubSections && (
+          <span className={'cursor-pointer'} onClick={() => toggleOpen()}>
+            {isOpen ? <DownOutlined /> : <RightOutlined />}
+          </span>
+        )
+      }
+    >
       <SectionItemForm section={currentSection} sectionsMap={sectionsMap} />
-      {!currentSection.isPage && (
+      {isOpen && !currentSection.isPage && (
         <SectionItems
           sections={currentSection.sections}
           sectionsMap={sectionsMap}
