@@ -429,3 +429,7 @@ body {
 .ant-timeline-item-tail {
     border-left: 2px solid rgba(0, 0, 0, 0.2) !important;
 }
+
+.ant-timeline-item-head {
+    background-color: var(--backgroundColor) !important;
+}
