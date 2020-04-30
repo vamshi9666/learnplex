@@ -1,6 +1,7 @@
-import { useQuery } from 'urql'
+import { useMutation, useQuery } from 'urql'
 import React, { useEffect, useRef, useState } from 'react'
 import { Skeleton } from 'antd'
+import { DropResult } from 'react-beautiful-dnd'
 
 import { Section } from '../../graphql/types'
 
@@ -139,6 +140,104 @@ export function useSections({
     })
   }
 
+  const REORDER_SECTIONS_MUTATION = `
+    mutation($data: ReorderSectionsInput!) {
+      reorderSections(data: $data) {
+        id
+        title
+        slug
+        isBaseSection
+        isPage
+        hasSubSections
+        sections {
+          id
+          order
+        }
+        parentSection {
+          id
+        }
+        page {
+          content
+        }
+      }
+    }
+  `
+
+  const [, reorderSectionsMutation] = useMutation(REORDER_SECTIONS_MUTATION)
+
+  const reorderSections = async ({
+    result,
+    parentSectionId,
+    sections,
+  }: {
+    result: DropResult
+    parentSectionId: string
+    sections: Section[]
+  }) => {
+    if (!result.destination) {
+      return
+    }
+    const sourceOrder = sections[result.source.index].order
+    const destinationOrder = sections[result.destination.index].order
+
+    setSectionsMap((prevSectionsMap) => {
+      const sectionIds = Array.from(prevSectionsMap.keys())
+      const newSectionsMap = new Map<string, Section>()
+      sectionIds.forEach((sectionId) => {
+        newSectionsMap.set(
+          sectionId,
+          Object.assign({}, prevSectionsMap.get(sectionId)!)
+        )
+      })
+      const clonedSections = Object.assign([] as Section[], sections)
+      if (sourceOrder < destinationOrder) {
+        clonedSections.map((section) => {
+          if (
+            section.order >= sourceOrder + 1 &&
+            section.order <= destinationOrder
+          ) {
+            section.order -= 1
+          } else if (section.order === sourceOrder) {
+            section.order = destinationOrder
+          }
+          return section
+        })
+      } else {
+        clonedSections.map((section) => {
+          if (
+            section.order >= destinationOrder &&
+            section.order <= sourceOrder - 1
+          ) {
+            section.order += 1
+          } else if (section.order === sourceOrder) {
+            section.order = destinationOrder
+          }
+          return section
+        })
+      }
+      const parentSection = newSectionsMap.get(parentSectionId)!
+      parentSection.sections = clonedSections
+      newSectionsMap.set(parentSectionId, parentSection)
+      return newSectionsMap
+    })
+
+    reorderSectionsMutation({
+      data: {
+        sourceOrder,
+        destinationOrder,
+        parentSectionId,
+      },
+    }).then((result) => {
+      if (result.error) {
+        console.log({ reorderSectionsError: result.error })
+      } else {
+        console.log({ result })
+        const updatedSection = result.data.reorderSections
+        setSection({ updatedSection })
+      }
+    })
+  }
+
   return {
     sectionsListFetching,
     baseSectionId,
@@ -149,5 +248,6 @@ export function useSections({
     setSection,
     deleteSection,
     reExecuteSectionsListQuery,
+    reorderSections,
   }
 }

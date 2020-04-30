@@ -4,10 +4,12 @@ import {
   CheckCircleOutlined,
   CheckCircleTwoTone,
   DeleteTwoTone,
+  DragOutlined,
 } from '@ant-design/icons'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
 import { Section } from '../../graphql/types'
 import { slug } from '../../utils/slug'
@@ -16,9 +18,11 @@ import { useSections } from '../../lib/hooks/useSections'
 export default function SectionItemForm({
   section,
   sectionsMap,
+  dragHandleProps,
 }: {
   section: Section
   sectionsMap: Map<string, Section>
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined
 }) {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
@@ -194,10 +198,16 @@ export default function SectionItemForm({
                   />
                 </Popconfirm>
               </Tooltip>
+              <div className={'ml-3'} {...dragHandleProps}>
+                <DragOutlined />
+              </div>
             </>
           }
         />
       </Form.Item>
+      {/*<Form.Item>*/}
+      {/*  <DragOutlined />*/}
+      {/*</Form.Item>*/}
     </Form>
   )
 }
