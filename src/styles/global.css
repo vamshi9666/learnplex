@@ -425,3 +425,7 @@ body {
 .ant-menu-item:hover, .ant-menu-submenu-title:hover {
     color: black !important;
 }
+
+.ant-timeline-item-tail {
+    border-left: 2px solid rgba(0, 0, 0, 0.2) !important;
+}
