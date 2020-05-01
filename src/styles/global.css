@@ -412,10 +412,19 @@ body {
     display: none !important;
 }
 
+
 .ant-menu-item-selected, .ant-menu-submenu-selected > .ant-menu-submenu-title {
-    background-color: initial !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
     font-weight: bold !important;
     color: black !important;
+}
+
+.ant-menu-item-selected {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
+    background-color: initial !important;
 }
 
 .ant-menu-item::after {
@@ -437,4 +446,15 @@ body {
 .breadcrumb {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+}
+
+.ant-menu-sub {
+    background: initial !important;
+}
+
+.a-menu {
+    overflow-y:scroll !important;
+    overflow-x:hidden !important;
+    bottom: 80px !important;
+    top: 100px !important;
 }
