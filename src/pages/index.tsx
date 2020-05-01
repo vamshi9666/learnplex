@@ -59,13 +59,32 @@ export default function Home() {
       resourceSlug: 'python-3',
       owner_username: 'pbteja1998',
     },
+    {
+      id: '5',
+      imgSrc:
+        'https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png',
+      title: 'Learn React',
+      description: 'A JavaScript library for building user interfaces',
+      resourceSlug: 'react',
+      owner_username: 'pbteja1998',
+    },
+    {
+      id: '6',
+      imgSrc:
+        'https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/267_Python_logo-512.png',
+      title: 'Learn Python 3',
+      description:
+        'A programming language that lets you work more quickly and integrate your systems more effectively.',
+      resourceSlug: 'python-3',
+      owner_username: 'pbteja1998',
+    },
   ]
 
   return (
     <>
       <Row gutter={[16, 16]}>
         {resources.map((resource) => (
-          <Col key={resource.id} span={6}>
+          <Col key={resource.id} md={6}>
             <Card
               key={resource.id}
               hoverable
@@ -73,7 +92,7 @@ export default function Home() {
                 <img
                   alt={resource.title}
                   src={resource.imgSrc}
-                  style={{ height: '320px' }}
+                  style={{ width: '150px', margin: '20px auto 0 auto' }}
                 />
               }
               onClick={() =>
@@ -85,7 +104,10 @@ export default function Home() {
               <Card.Meta
                 title={resource.title}
                 description={resource.description}
-                style={{ height: '120px' }}
+                className={'overflow-scroll'}
+                style={{
+                  height: '100px',
+                }}
               />
             </Card>
           </Col>
