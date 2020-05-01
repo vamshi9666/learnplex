@@ -433,3 +433,8 @@ body {
 .ant-timeline-item-head {
     background-color: var(--backgroundColor) !important;
 }
+
+.breadcrumb {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}

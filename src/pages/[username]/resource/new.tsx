@@ -17,7 +17,7 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 }
 
-export default function NewResource() {
+export default function CreateResource() {
   const [form] = Form.useForm()
   const router = useRouter()
   const { user, fetching, error } = useUser()
@@ -45,6 +45,7 @@ export default function NewResource() {
       createResource(data: $data) {
         id
         slug
+        description
       }
     }
   `
@@ -63,12 +64,13 @@ export default function NewResource() {
     query: TOPICS_QUERY,
   })
 
-  const onFinish = async ({ title, topic: topicId }: any) => {
+  const onFinish = async ({ title, topic: topicId, description }: any) => {
     NProgress.start()
     createResource({
       data: {
         title,
         topicId,
+        description,
       },
     }).then((result) => {
       if (result.error) {
@@ -126,6 +128,10 @@ export default function NewResource() {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item label={'Description'} name={'description'}>
+          <Input />
         </Form.Item>
 
         <Form.Item {...tailLayout}>

@@ -17,6 +17,7 @@ interface Props {
   baseSectionId: string
   defaultSelectedKeys?: string[]
   defaultOpenKeys?: string[]
+  breadCrumb: any
 }
 
 export default function Sidebar({
@@ -25,6 +26,7 @@ export default function Sidebar({
   baseSectionId,
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
+  breadCrumb,
 }: Props) {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
@@ -91,6 +93,10 @@ export default function Sidebar({
   )
 
   const handleClick = async (e: any) => {
+    if (e.key === 'breadcrumb') {
+      router.reload()
+      return
+    }
     const path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
     if (inEditMode) {
       return await router.push(
@@ -102,24 +108,27 @@ export default function Sidebar({
   const sidebar = document.getElementById('sidebar')
 
   return (
-    <Menu
-      mode={'inline'}
-      onOpenChange={(e) => setOpenKeys(e)}
-      onClick={handleClick}
-      defaultSelectedKeys={defaultSelectedKeys}
-      openKeys={openKeys}
-      className={'position-fixed'}
-      id={'sidebar'}
-      style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
-    >
-      {inEditMode && (
-        <Menu.Item className={'text-center'} key={'resource-index'}>
-          Edit Index
-        </Menu.Item>
-      )}
-      {sortedSections.map((section) =>
-        sectionMenuItem({ sectionId: section.id })
-      )}
-    </Menu>
+    <>
+      <Menu
+        mode={'inline'}
+        onOpenChange={(e) => setOpenKeys(e)}
+        onClick={handleClick}
+        defaultSelectedKeys={defaultSelectedKeys}
+        openKeys={openKeys}
+        className={'position-fixed'}
+        id={'sidebar'}
+        style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
+      >
+        <Menu.Item key={'breadcrumb'}>{breadCrumb}</Menu.Item>
+        {inEditMode && (
+          <Menu.Item className={'text-center'} key={'resource-index'}>
+            Edit Index
+          </Menu.Item>
+        )}
+        {sortedSections.map((section) =>
+          sectionMenuItem({ sectionId: section.id })
+        )}
+      </Menu>
+    </>
   )
 }

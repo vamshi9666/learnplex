@@ -24,7 +24,7 @@ export type Query = {
 }
 
 export type QueryResourceArgs = {
-  slug: Scalars['String']
+  resourceSlug: Scalars['String']
   username: Scalars['String']
 }
 
@@ -82,6 +82,7 @@ export type Resource = {
   user: User
   topic: Topic
   verified: Scalars['Boolean']
+  description?: Maybe<Scalars['String']>
 }
 
 export type Section = {
@@ -157,6 +158,8 @@ export type Mutation = {
   savePage: Section
   forkResource?: Maybe<Resource>
   completeSection?: Maybe<Progress>
+  updateResourceDescription: Resource
+  updateResourceTitle: Resource
 }
 
 export type MutationChangePasswordArgs = {
@@ -224,6 +227,16 @@ export type MutationCompleteSectionArgs = {
   data: CompleteSectionInput
 }
 
+export type MutationUpdateResourceDescriptionArgs = {
+  description: Scalars['String']
+  resourceSlug: Scalars['String']
+}
+
+export type MutationUpdateResourceTitleArgs = {
+  title: Scalars['String']
+  resourceSlug: Scalars['String']
+}
+
 export type ChangePasswordInput = {
   password: Scalars['String']
   token: Scalars['String']
@@ -243,6 +256,7 @@ export type CreateTopicInput = {
 export type CreateResourceInput = {
   title: Scalars['String']
   topicId: Scalars['String']
+  description: Scalars['String']
 }
 
 export type AddSectionInput = {

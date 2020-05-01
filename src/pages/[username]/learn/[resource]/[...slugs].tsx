@@ -26,23 +26,24 @@ export default function ViewResource() {
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
       <Row>
         <Col span={6}>
-          {body
-            ? body
-            : [
-                <Breadcrumb className={'text-center'}>
+          {body ? (
+            body
+          ) : (
+            <Sidebar
+              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
+              defaultOpenKeys={slugs}
+              sectionsMap={sectionsMap}
+              baseSectionId={baseSectionId}
+              inEditMode={false}
+              breadCrumb={
+                <Breadcrumb className={'text-center breadcrumb'}>
                   {slugs.map((slug) => (
                     <Breadcrumb.Item>{titleCase(slug)}</Breadcrumb.Item>
                   ))}
-                </Breadcrumb>,
-                <br />,
-                <Sidebar
-                  defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-                  defaultOpenKeys={slugs}
-                  sectionsMap={sectionsMap}
-                  baseSectionId={baseSectionId}
-                  inEditMode={false}
-                />,
-              ]}
+                </Breadcrumb>
+              }
+            />
+          )}
         </Col>
 
         <Col className={'p-5'} span={12}>

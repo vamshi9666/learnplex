@@ -17,7 +17,7 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 }
 
-export default function NewTopic() {
+export default function CreateTopic() {
   const router = useRouter()
   const { user, fetching, error } = useUser()
 

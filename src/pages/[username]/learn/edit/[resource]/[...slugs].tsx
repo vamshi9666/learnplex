@@ -26,26 +26,30 @@ export default function EditResource() {
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
       <Row>
         <Col span={6}>
-          {body
-            ? body
-            : [
-                <Breadcrumb key={'breadcrumb'} className={'text-center'}>
+          {body ? (
+            body
+          ) : (
+            <Sidebar
+              key={'sidebar'}
+              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
+              defaultOpenKeys={slugs}
+              sectionsMap={sectionsMap}
+              baseSectionId={baseSectionId}
+              inEditMode={true}
+              breadCrumb={
+                <Breadcrumb
+                  key={'breadcrumb'}
+                  className={'text-center breadcrumb'}
+                >
                   {slugs.map((slug, index) => (
                     <Breadcrumb.Item key={slug}>
                       {titleCase(slug)}
                     </Breadcrumb.Item>
                   ))}
-                </Breadcrumb>,
-                <br key={'line-break'} />,
-                <Sidebar
-                  key={'sidebar'}
-                  defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-                  defaultOpenKeys={slugs}
-                  sectionsMap={sectionsMap}
-                  baseSectionId={baseSectionId}
-                  inEditMode={true}
-                />,
-              ]}
+                </Breadcrumb>
+              }
+            />
+          )}
         </Col>
 
         <Col className={'p-5'} span={12}>
