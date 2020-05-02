@@ -5,7 +5,7 @@ import { Breadcrumb, Col, Row } from 'antd'
 import { SEO } from '../../../../../components/SEO'
 import { titleCase, upperCamelCase } from '../../../../../utils/upperCamelCase'
 import Sidebar from '../../../../../components/learn/Sidebar'
-import CustomEditor from '../../../../../components/layout/Editor'
+import CustomEditor from '../../../../../components/learn/Editor'
 import useSlugs from '../../../../../lib/hooks/useSlugs'
 
 export default function EditResource() {
@@ -51,7 +51,7 @@ export default function EditResource() {
             />
           </Col>
 
-          <Col className={'p-5'} span={12}>
+          <Col className={'p-5'} span={18}>
             <CustomEditor
               pageContent={pageContent}
               currentSectionId={currentSectionId}

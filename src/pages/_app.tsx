@@ -8,6 +8,7 @@ import 'draft-js/dist/Draft.css'
 
 import '../styles/vars.css'
 import '../styles/global.css'
+import '../components/learn/styles/Draft.css'
 import App from '../components/App'
 import withUrql from '../lib/withUrqlClient'
 

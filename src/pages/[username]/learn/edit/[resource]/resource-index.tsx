@@ -130,7 +130,7 @@ export default function EditResourceIndex() {
             />
           </Col>
 
-          <Col className={'p-5'} span={12}>
+          <Col className={'p-5'} span={18}>
             <Typography>
               <Typography.Title
                 level={2}
