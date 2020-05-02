@@ -41,6 +41,10 @@ export default function Home() {
 
   const handleChange = (value: string) => {
     setValue(value)
+    if (!value) {
+      setResources([])
+      return
+    }
     searchMutation({
       value,
     }).then((result) => {
