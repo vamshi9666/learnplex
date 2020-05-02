@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton } from 'antd'
+import { Button, Skeleton } from 'antd'
 import { useQuery } from 'urql'
 
 import { useUser } from '../../lib/hooks/useUser'
@@ -7,8 +7,10 @@ import NotAuthenticated from '../../components/error/NotAuthenticated'
 import InternalServerError from '../../components/error/InternalServerError'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
+import { useRouter } from 'next/router'
 
 export default function MyResources() {
+  const router = useRouter()
   const RESOURCES_QUERY = `
     query {
       resources {
@@ -38,5 +40,15 @@ export default function MyResources() {
 
   const resources = data.resources as Resource[]
 
-  return <ResourceCards resources={resources} />
+  return (
+    <ResourceCards
+      resources={resources}
+      description={"You don't have any resources yet."}
+      actionsIfEmpty={
+        <Button type={'primary'} onClick={() => router.push('/resources/new')}>
+          Create New Resource
+        </Button>
+      }
+    />
+  )
 }

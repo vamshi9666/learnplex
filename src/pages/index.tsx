@@ -27,7 +27,7 @@ export default function Home() {
     }
   `
 
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(undefined as string | undefined)
   const [resources, setResources] = useState([] as Resource[])
   const [, searchMutation] = useMutation(SEARCH_RESOURCES_MUTATION)
 
@@ -96,7 +96,7 @@ export default function Home() {
 
       <Divider />
 
-      <ResourceCards resources={resources} />
+      <ResourceCards resources={resources} showEmpty={value !== undefined} />
     </>
   )
 }

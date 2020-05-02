@@ -80,7 +80,7 @@ export function useSections({
       active: true,
       paragraph: { rows: 10 },
     })
-  } else if (sectionsListError && !baseSectionId) {
+  } else if (sectionsListError || !baseSectionId) {
     body = React.createElement(PageNotFound, {})
   } else {
     body = undefined

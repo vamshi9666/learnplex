@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'antd'
+import { Card, Col, Empty, Row } from 'antd'
 import React from 'react'
 import { useRouter } from 'next/router'
 
@@ -6,8 +6,14 @@ import { Resource } from '../../graphql/types'
 
 export default function ResourceCards({
   resources,
+  showEmpty = true,
+  description = 'No resources matched with your query',
+  actionsIfEmpty,
 }: {
   resources: Resource[]
+  showEmpty?: boolean
+  description?: string
+  actionsIfEmpty?: any
 }) {
   const router = useRouter()
   return (
@@ -34,6 +40,13 @@ export default function ResourceCards({
             </Card>
           </Col>
         ))}
+        {showEmpty && resources.length === 0 && (
+          <Col offset={8} md={8} className={'text-center'}>
+            <Empty description={description} />
+            <br />
+            {actionsIfEmpty}
+          </Col>
+        )}
       </Row>
     </>
   )
