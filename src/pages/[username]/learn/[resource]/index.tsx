@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Breadcrumb, Col, Row } from 'antd'
 
 import { SEO } from '../../../../components/SEO'
-import { upperCamelCase } from '../../../../utils/upperCamelCase'
+import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
 import Sidebar from '../../../../components/learn/Sidebar'
 import { useSections } from '../../../../lib/hooks/useSections'
 
@@ -30,7 +30,9 @@ export default function ViewResourceIndex() {
               inEditMode={false}
               breadCrumb={
                 <Breadcrumb className={'text-center'}>
-                  <Breadcrumb.Item>Index</Breadcrumb.Item>
+                  <Breadcrumb.Item>
+                    {titleCase(resourceSlug)} Index
+                  </Breadcrumb.Item>
                 </Breadcrumb>
               }
             />

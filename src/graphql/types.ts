@@ -160,6 +160,7 @@ export type Mutation = {
   completeSection?: Maybe<Progress>
   updateResourceDescription: Resource
   updateResourceTitle: Resource
+  searchResources: Array<Resource>
 }
 
 export type MutationChangePasswordArgs = {
@@ -235,6 +236,10 @@ export type MutationUpdateResourceDescriptionArgs = {
 export type MutationUpdateResourceTitleArgs = {
   title: Scalars['String']
   resourceSlug: Scalars['String']
+}
+
+export type MutationSearchResourcesArgs = {
+  value: Scalars['String']
 }
 
 export type ChangePasswordInput = {

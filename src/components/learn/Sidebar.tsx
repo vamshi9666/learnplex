@@ -10,6 +10,7 @@ import {
 import { useRouter } from 'next/router'
 
 import { Section } from '../../graphql/types'
+import { useUser } from '../../lib/hooks/useUser'
 
 interface Props {
   inEditMode: boolean
@@ -93,12 +94,19 @@ export default function Sidebar({
   )
 
   const handleClick = async (e: any) => {
+    let toEditPage = inEditMode
+    if (e.key === 'edit-resource-index') {
+      toEditPage = true
+    }
     if (e.key === 'breadcrumb') {
       router.reload()
       return
     }
-    const path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
-    if (inEditMode) {
+    let path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
+    if (e.key === 'edit-resource-index') {
+      path = 'resource-index'
+    }
+    if (toEditPage) {
       return await router.push(
         `/${username}/learn/edit/${resourceSlug}/${path}`
       )
@@ -106,6 +114,8 @@ export default function Sidebar({
     await router.push(`/${username}/learn/${resourceSlug}/${path}`)
   }
   const sidebar = document.getElementById('sidebar')
+
+  const { user } = useUser()
 
   return (
     <>
@@ -120,8 +130,8 @@ export default function Sidebar({
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >
         <Menu.Item key={'breadcrumb'}>{breadCrumb}</Menu.Item>
-        {inEditMode && (
-          <Menu.Item className={'text-center'} key={'resource-index'}>
+        {(inEditMode || user?.username === username) && (
+          <Menu.Item className={'text-center'} key={'edit-resource-index'}>
             Edit Index
           </Menu.Item>
         )}

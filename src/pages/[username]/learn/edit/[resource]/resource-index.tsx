@@ -121,7 +121,9 @@ export default function EditResourceIndex() {
               defaultSelectedKeys={['resource-index']}
               breadCrumb={
                 <Breadcrumb className={'text-center breadcrumb'}>
-                  <Breadcrumb.Item>Index</Breadcrumb.Item>
+                  <Breadcrumb.Item>
+                    {titleCase(resourceSlug)} Index
+                  </Breadcrumb.Item>
                 </Breadcrumb>
               }
             />
