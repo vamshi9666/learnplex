@@ -42,7 +42,7 @@ export default function EditResource() {
                   className={'text-center breadcrumb'}
                 >
                   {slugs.map((slug, index) => (
-                    <Breadcrumb.Item key={slug}>
+                    <Breadcrumb.Item key={`${slug}-${index}`}>
                       {titleCase(slug)}
                     </Breadcrumb.Item>
                   ))}

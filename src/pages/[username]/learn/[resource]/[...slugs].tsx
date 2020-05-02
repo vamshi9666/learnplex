@@ -37,8 +37,10 @@ export default function ViewResource() {
               inEditMode={false}
               breadCrumb={
                 <Breadcrumb className={'text-center breadcrumb'}>
-                  {slugs.map((slug) => (
-                    <Breadcrumb.Item>{titleCase(slug)}</Breadcrumb.Item>
+                  {slugs.map((slug, index) => (
+                    <Breadcrumb.Item key={`${slug}-${index}`}>
+                      {titleCase(slug)}
+                    </Breadcrumb.Item>
                   ))}
                 </Breadcrumb>
               }
