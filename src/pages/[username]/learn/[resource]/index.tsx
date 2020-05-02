@@ -19,11 +19,11 @@ export default function ViewResourceIndex() {
   return (
     <>
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
-      <Row>
-        <Col span={6}>
-          {body ? (
-            body
-          ) : (
+      {body ? (
+        body
+      ) : (
+        <Row>
+          <Col span={6}>
             <Sidebar
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}
@@ -36,9 +36,9 @@ export default function ViewResourceIndex() {
                 </Breadcrumb>
               }
             />
-          )}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
     </>
   )
 }

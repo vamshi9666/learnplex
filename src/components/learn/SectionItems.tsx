@@ -1,4 +1,4 @@
-import { Timeline } from 'antd'
+import { Skeleton, Timeline } from 'antd'
 import React, { useState } from 'react'
 import {
   DragDropContext,
@@ -29,7 +29,7 @@ export default function SectionItems({
   const username = router.query.username as string
   const { reorderSections } = useSections({ resourceSlug, username })
 
-  if (!sections) return <p>loading...</p>
+  if (!sections) return <Skeleton active={true} />
 
   const sortedSections = sections.sort(
     (section: Section, anotherSection: Section) => {

@@ -24,7 +24,7 @@ export default function App({ Component }: { Component: any }) {
         <meta charSet="utf-8" />
         <link rel="stylesheet" type="text/css" href="/nprogress.css" />
       </Head>
-      <Layout className={'mh-100vh'}>
+      <Layout className={'mh-100vh bg-initial'}>
         <Layout.Header className={'bg-initial'}>
           {/* TODO: Without Provider, useEffect is not running in useUser hook, figure out why */}
           <Provider value={client}>

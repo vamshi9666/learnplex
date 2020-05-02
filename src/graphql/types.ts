@@ -6,6 +6,8 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any
 }
 
 export type Query = {
@@ -77,12 +79,17 @@ export type Resource = {
   slug: Scalars['String']
   isFork: Scalars['Boolean']
   forkedFrom: User
+  forkedVersion?: Maybe<Scalars['Int']>
   forks: Array<Resource>
   baseSection: Section
   user: User
   topic: Topic
   verified: Scalars['Boolean']
   description?: Maybe<Scalars['String']>
+  userId: Scalars['Int']
+  createdDate: Scalars['DateTime']
+  updatedDate: Scalars['DateTime']
+  version: Scalars['Int']
 }
 
 export type Section = {
@@ -98,6 +105,10 @@ export type Section = {
   parentSection?: Maybe<Section>
   baseSection?: Maybe<Section>
   page?: Maybe<Page>
+  createdDate: Scalars['DateTime']
+  updatedDate: Scalars['DateTime']
+  version: Scalars['Int']
+  forkedVersion?: Maybe<Scalars['Int']>
   isPage: Scalars['Boolean']
   hasSubSections: Scalars['Boolean']
   isSection: Scalars['Boolean']

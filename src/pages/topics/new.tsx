@@ -2,12 +2,13 @@ import React from 'react'
 import { Button, Form, Input } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { useRouter } from 'next/router'
 
-import { useUser } from '../../../lib/hooks/useUser'
-import { SEO } from '../../../components/SEO'
-import { Topic, UserRole } from '../../../graphql/types'
-import { slug } from '../../../utils/slug'
+import { useUser } from '../../lib/hooks/useUser'
+import { SEO } from '../../components/SEO'
+import { Topic, UserRole } from '../../graphql/types'
+import { slug } from '../../utils/slug'
+import NotAuthorized from '../../components/error/NotAuthorized'
+import NotAuthenticated from '../../components/error/NotAuthenticated'
 
 const layout = {
   labelCol: { span: 8 },
@@ -18,8 +19,7 @@ const tailLayout = {
 }
 
 export default function CreateTopic() {
-  const router = useRouter()
-  const { user, fetching, error } = useUser()
+  const { user, fetching } = useUser()
 
   const [form] = Form.useForm()
   const CREATE_TOPIC_MUTATION = `
@@ -64,12 +64,9 @@ export default function CreateTopic() {
   }
 
   if (fetching) return <p>User Loading....</p>
-  if (!user) return <p>Oh no... {error?.message}</p>
-  if (
-    router.query.username !== user.username ||
-    !user.roles.includes(UserRole.Admin)
-  )
-    return <p>Access Forbidden...</p>
+  if (!user) return <NotAuthenticated />
+  if (!user.roles.includes(UserRole.Admin)) return <NotAuthorized />
+
   if (topicsFetching) return <p>Loading....</p>
   if (topicsError) return <p>Oh no... {topicsError.message}</p>
 

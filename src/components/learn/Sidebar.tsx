@@ -1,4 +1,4 @@
-import { Menu } from 'antd'
+import { Menu, Button, Skeleton } from 'antd'
 import React, { useState } from 'react'
 import {
   FileOutlined,
@@ -37,7 +37,7 @@ export default function Sidebar({
 
   const sectionMenuItem = ({ sectionId }: { sectionId: string }) => {
     const section = sectionsMap.get(sectionId) as Section
-    if (!section) return <p key={sectionId}>loading...</p>
+    if (!section) return <Skeleton key={sectionId} active={true} />
     const sortedSections = section.sections.sort((a, b) => {
       return a.order > b.order ? 1 : a.order < b.order ? -1 : 0
     })
@@ -132,7 +132,7 @@ export default function Sidebar({
         <Menu.Item key={'breadcrumb'}>{breadCrumb}</Menu.Item>
         {(inEditMode || user?.username === username) && (
           <Menu.Item className={'text-center'} key={'edit-resource-index'}>
-            Edit Index
+            <Button block={true}>Edit Index</Button>
           </Menu.Item>
         )}
         {sortedSections.map((section) =>

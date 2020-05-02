@@ -1,4 +1,4 @@
-import { Button, Form, Input, Tooltip, Popconfirm } from 'antd'
+import { Button, Form, Input, Tooltip, Popconfirm, Skeleton } from 'antd'
 import React, { useRef, useState } from 'react'
 import {
   CheckCircleOutlined,
@@ -126,7 +126,7 @@ export default function SectionItemForm({
     NProgress.done()
   }
 
-  if (!section) return <p>loading...</p>
+  if (!section) return <Skeleton active={true} />
 
   return (
     <Form

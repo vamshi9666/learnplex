@@ -24,11 +24,11 @@ export default function ViewResource() {
   return (
     <>
       <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
-      <Row>
-        <Col span={6}>
-          {body ? (
-            body
-          ) : (
+      {body ? (
+        body
+      ) : (
+        <Row>
+          <Col span={6}>
             <Sidebar
               defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
               defaultOpenKeys={slugs}
@@ -45,19 +45,19 @@ export default function ViewResource() {
                 </Breadcrumb>
               }
             />
-          )}
-        </Col>
+          </Col>
 
-        <Col className={'p-5'} span={12}>
-          <CustomEditor
-            pageContent={pageContent}
-            currentSectionId={currentSectionId}
-            username={username}
-            resourceSlug={resourceSlug}
-            inEditMode={false}
-          />
-        </Col>
-      </Row>
+          <Col className={'p-5'} span={12}>
+            <CustomEditor
+              pageContent={pageContent}
+              currentSectionId={currentSectionId}
+              username={username}
+              resourceSlug={resourceSlug}
+              inEditMode={false}
+            />
+          </Col>
+        </Row>
+      )}
     </>
   )
 }

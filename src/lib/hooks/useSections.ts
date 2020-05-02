@@ -4,6 +4,7 @@ import { Skeleton } from 'antd'
 import { DropResult } from 'react-beautiful-dnd'
 
 import { Section } from '../../graphql/types'
+import PageNotFound from '../../components/error/PageNotFound'
 
 export function useSections({
   resourceSlug,
@@ -74,13 +75,13 @@ export function useSections({
   }, [sectionsListData, sectionsListError, sectionsListFetching])
 
   let body
-  if (sectionsListFetching || !baseSectionId) {
+  if (sectionsListFetching && !sectionsListError) {
     body = React.createElement(Skeleton, {
       active: true,
       paragraph: { rows: 10 },
     })
-  } else if (sectionsListError) {
-    body = React.createElement('p', {}, `Oh no... ${sectionsListError.message}`)
+  } else if (sectionsListError && !baseSectionId) {
+    body = React.createElement(PageNotFound, {})
   } else {
     body = undefined
   }

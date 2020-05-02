@@ -4,23 +4,24 @@ import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 
-import { SEO } from '../../../components/SEO'
-import { Resource, Topic } from '../../../graphql/types'
-import { slug } from '../../../utils/slug'
-import { useUser } from '../../../lib/hooks/useUser'
+import { SEO } from '../../components/SEO'
+import { Resource, Topic } from '../../graphql/types'
+import { slug } from '../../utils/slug'
+import { useUser } from '../../lib/hooks/useUser'
+import NotAuthenticated from '../../components/error/NotAuthenticated'
 
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 8 },
 }
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 8, span: 8 },
 }
 
 export default function CreateResource() {
   const [form] = Form.useForm()
   const router = useRouter()
-  const { user, fetching, error } = useUser()
+  const { user, fetching } = useUser()
 
   const TOPICS_QUERY = `
       query {
@@ -85,8 +86,7 @@ export default function CreateResource() {
   }
 
   if (fetching) return <p>User Loading....</p>
-  if (!user) return <p>Oh no... {error?.message}</p>
-  if (router.query.username !== user.username) return <p>Access Forbidden...</p>
+  if (!user) return <NotAuthenticated />
   if (topicsFetching || resourcesFetching) return <p>Loading....</p>
   if (topicsError) return <p>Oh no... {topicsError.message}</p>
   if (resourcesError) return <p>Oh no... {resourcesError.message}</p>
@@ -130,13 +130,23 @@ export default function CreateResource() {
           </Select>
         </Form.Item>
 
-        <Form.Item label={'Description'} name={'description'}>
+        <Form.Item
+          label={'Description'}
+          name={'description'}
+          rules={[{ required: true }]}
+        >
           <Input />
         </Form.Item>
 
         <Form.Item {...tailLayout}>
           <Button type={'primary'} htmlType={'submit'}>
             Add Resource
+          </Button>
+          <Button
+            className={'float-right'}
+            onClick={() => router.push(`/resources`)}
+          >
+            My Resources
           </Button>
         </Form.Item>
       </Form>

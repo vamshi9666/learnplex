@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
 import { setCurrentSectionIdFromSlugs } from '../../utils/setSectionIdFromSlugs'
+import PageNotFound from '../../components/error/PageNotFound'
 
 export default function useSlugs({
   resourceSlug,
@@ -44,11 +45,23 @@ export default function useSlugs({
     sectionsMap,
   ])
 
+  let isValidPage = true
+
+  if (!sectionsListFetching) {
+    isValidPage = !!sectionsMap.get(currentSectionId)
+  }
+
+  let modifiedBody = body
+
+  if (!isValidPage) {
+    modifiedBody = React.createElement(PageNotFound)
+  }
+
   const pageContent = sectionsMap.get(currentSectionId)?.page?.content
 
   return {
     currentSectionId,
-    body,
+    body: modifiedBody,
     pageContent,
     sectionsListFetching,
     baseSectionId,

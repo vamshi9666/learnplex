@@ -1,4 +1,4 @@
-import { Timeline } from 'antd'
+import { Skeleton, Timeline } from 'antd'
 import React, { useState } from 'react'
 import { RightOutlined, DownOutlined } from '@ant-design/icons'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
@@ -18,7 +18,7 @@ export default function SectionItem({
 }) {
   const currentSection = sectionsMap.get(sectionId)!
   const [isOpen, setOpen] = useState(false)
-  if (!currentSection) return <p>loading...</p>
+  if (!currentSection) return <Skeleton active={true} />
 
   const toggleOpen = () => {
     setOpen(!isOpen)

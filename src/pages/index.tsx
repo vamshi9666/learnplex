@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import { Card, Row, Col, Input, Divider, Typography } from 'antd'
+import { Row, Col, Input, Divider, Typography, Button } from 'antd'
 import { useMutation } from 'urql'
 
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '../constants'
 import { Resource } from '../graphql/types'
+import ResourceCards from '../components/learn/ResourceCards'
 
 export default function Home() {
   const router = useRouter()
@@ -67,36 +68,35 @@ export default function Home() {
             </Typography.Title>
           </Typography>
           <Input
+            size={'large'}
             placeholder={'Python'}
             value={value}
             onChange={(e) => handleChange(e.target.value)}
           />
         </Col>
       </Row>
-      <Divider />
-      <Row gutter={[16, 16]}>
-        {resources.map((resource) => (
-          <Col key={resource.id} md={6}>
-            <Card
-              key={resource.id}
-              hoverable
-              onClick={() =>
-                router.push(`/${resource.user.username}/learn/${resource.slug}`)
-              }
-            >
-              <Card.Meta
-                title={`${resource.title}`}
-                description={resource.description}
-                className={'overflow-scroll'}
-                style={{
-                  height: '100px',
-                }}
-              />
-              by {resource.user.username}
-            </Card>
-          </Col>
-        ))}
+      <br />
+      <Row>
+        <Col offset={8} span={8}>
+          <Button
+            className={'float-left'}
+            onClick={() => router.push(`/resources/new`)}
+          >
+            Create New Resource
+          </Button>
+          <Button
+            className={'float-right'}
+            type={'primary'}
+            onClick={() => router.push(`/resources`)}
+          >
+            My Resources
+          </Button>
+        </Col>
       </Row>
+
+      <Divider />
+
+      <ResourceCards resources={resources} />
     </>
   )
 }
