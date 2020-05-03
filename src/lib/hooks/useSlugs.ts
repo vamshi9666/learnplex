@@ -47,7 +47,7 @@ export default function useSlugs({
 
   let isValidPage = true
 
-  if (!sectionsListFetching) {
+  if (!sectionsListFetching && !!currentSectionId) {
     isValidPage = !!sectionsMap.get(currentSectionId)
   }
 

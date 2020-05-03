@@ -8,8 +8,14 @@ import {
   KeyBindingUtil,
   RichUtils,
 } from 'draft-js'
-import { Button } from 'antd'
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
+import { Alert, Button } from 'antd'
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  SaveOutlined,
+  CheckOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
 
 export default function CustomDraftEditor({
   pageContent,
@@ -21,6 +27,8 @@ export default function CustomDraftEditor({
   showNextButton,
   goToPreviousSection,
   goToNextSection,
+  pageEmpty,
+  completeSection,
 }: {
   pageContent: string
   fork: () => void
@@ -31,6 +39,8 @@ export default function CustomDraftEditor({
   showNextButton: boolean
   goToPreviousSection: () => void
   goToNextSection: () => void
+  pageEmpty: boolean
+  completeSection: () => void
 }) {
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
@@ -189,27 +199,36 @@ export default function CustomDraftEditor({
   }
 
   const ActionControls = ({ editorState }: { editorState: EditorState }) => {
-    return (
-      <div
-        className="RichEditor-controls"
-        style={{ borderBottom: '1px solid #ddd' }}
-      >
-        {inEditMode ? (
-          <Button
-            className={'p-0'}
-            type={'link'}
-            onClick={async (e) =>
-              await save({ content: editorState.getCurrentContent() })
-            }
-          >
-            Save
-          </Button>
-        ) : (
-          <Button className={'p-0'} type={'link'} onClick={() => fork()}>
-            Edit
-          </Button>
-        )}
-      </div>
+    return inEditMode ? (
+      <>
+        <Button
+          className={'mb-3 float-left'}
+          type={'primary'}
+          icon={<SaveOutlined />}
+          onClick={async (e) =>
+            await save({ content: editorState.getCurrentContent() })
+          }
+        >
+          Save
+        </Button>
+        <Alert
+          className={'float-right'}
+          message={'You are editing this resource.'}
+          type={'info'}
+          showIcon={true}
+        />
+      </>
+    ) : (
+      <>
+        <Button
+          className={'float-left'}
+          type={'primary'}
+          icon={<EditOutlined />}
+          onClick={() => fork()}
+        >
+          Edit
+        </Button>
+      </>
     )
   }
 
@@ -236,8 +255,10 @@ export default function CustomDraftEditor({
       <div className="RichEditor-root">
         <div className={'RichEditor-sticky-controls'}>
           <ActionControls editorState={editorState} />
+          <div style={{ clear: 'both' }} />
           {inEditMode && (
             <>
+              <br />
               <BlockStyleControls
                 editorState={editorState}
                 onToggle={toggleBlockType}
@@ -259,33 +280,54 @@ export default function CustomDraftEditor({
             customStyleMap={styleMap}
             handleKeyCommand={handleKeyCommand}
             keyBindingFn={mapKeyToEditorCommand}
-            placeholder={'Tell a story...'}
+            placeholder={
+              inEditMode
+                ? 'Write something here...'
+                : 'There is nothing here...'
+            }
             ref={editor}
             spellCheck={true}
           />
           <br />
           <div className={'text-center bottom-actions'}>
-            {showPrevButton && (
+            <Button
+              className={'float-left'}
+              onClick={() => goToPreviousSection()}
+              disabled={!showPrevButton}
+            >
+              <ArrowLeftOutlined />
+              Previous
+            </Button>
+
+            {inEditMode ? (
               <Button
-                className={'float-left'}
-                onClick={() => goToPreviousSection()}
+                type={'primary'}
+                onClick={async (e) =>
+                  await save({ content: editorState.getCurrentContent() })
+                }
+                icon={<SaveOutlined />}
               >
-                <ArrowLeftOutlined />
-                Previous
+                Save
+              </Button>
+            ) : (
+              <Button
+                type={'primary'}
+                onClick={() => completeSection()}
+                disabled={pageEmpty}
+                icon={<CheckOutlined />}
+              >
+                Complete
               </Button>
             )}
 
-            <Button type={'primary'}>Complete</Button>
-
-            {showNextButton && (
-              <Button
-                className={'float-right'}
-                onClick={() => goToNextSection()}
-              >
-                Next
-                <ArrowRightOutlined />
-              </Button>
-            )}
+            <Button
+              className={'float-right'}
+              onClick={() => goToNextSection()}
+              disabled={!showNextButton}
+            >
+              Next
+              <ArrowRightOutlined />
+            </Button>
           </div>
         </div>
       </div>

@@ -66,8 +66,8 @@ export default function EditResourceIndex() {
     username,
   })
 
-  const { user } = useUser()
-  if (fetching) return <Skeleton active={true} />
+  const { user, fetching: userFetching } = useUser()
+  if (fetching || userFetching) return <Skeleton active={true} />
 
   if (!user) return <NotAuthenticated />
   if (router.query.username !== user.username) return <NotAuthorized />

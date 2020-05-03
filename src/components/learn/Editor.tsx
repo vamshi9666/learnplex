@@ -26,7 +26,7 @@ export default function CustomEditor({
     entityMap: {},
     blocks: [
       {
-        text: ' ',
+        text: '',
         key: 'empty',
         type: 'unstyled',
         entityRanges: [],
@@ -107,6 +107,22 @@ export default function CustomEditor({
     resourceSlug,
   })
 
+  const COMPLETE_SECTION_MUTATION = `
+    mutation($data: CompleteSectionInput!) {
+      completeSection(data: $data) {
+        id
+        user {
+          username
+        }
+        completedSections {
+          slug
+        }
+      }
+    }
+  `
+
+  const [, completeSectionMutation] = useMutation(COMPLETE_SECTION_MUTATION)
+
   if (body) return body
 
   const goTo = async ({ path }: { path: string }) => {
@@ -135,6 +151,22 @@ export default function CustomEditor({
     await goTo({ path: nextSectionPath })
   }
 
+  const completeSection = () => {
+    NProgress.start()
+    completeSectionMutation({
+      data: {
+        sectionId: currentSectionId,
+      },
+    }).then((result) => {
+      if (result.error) {
+        console.log({ completeSectionError: result.error })
+      } else {
+        console.log({ result })
+      }
+    })
+    NProgress.done()
+  }
+
   return (
     <CustomDraftEditor
       fork={fork}
@@ -146,6 +178,8 @@ export default function CustomEditor({
       showNextButton={!!nextSectionPath}
       goToNextSection={goToNextSection}
       goToPreviousSection={goToPreviousSection}
+      pageEmpty={pageContent === EMPTY_PAGE_CONTENT}
+      completeSection={completeSection}
     />
   )
 }
