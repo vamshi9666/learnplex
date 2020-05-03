@@ -2,6 +2,7 @@ import { useMutation } from 'urql'
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
+import { Skeleton } from 'antd'
 
 export default function Logout() {
   const router = useRouter()
@@ -23,5 +24,5 @@ export default function Logout() {
     NProgress.done()
   }, [logout, router])
 
-  return <p>Loading....</p>
+  return <Skeleton active={true} />
 }

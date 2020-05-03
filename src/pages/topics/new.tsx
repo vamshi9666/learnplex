@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, Skeleton } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
 
@@ -9,6 +9,7 @@ import { Topic, UserRole } from '../../graphql/types'
 import { slug } from '../../utils/slug'
 import NotAuthorized from '../../components/error/NotAuthorized'
 import NotAuthenticated from '../../components/error/NotAuthenticated'
+import InternalServerError from '../../components/error/InternalServerError'
 
 const layout = {
   labelCol: { span: 8 },
@@ -63,12 +64,12 @@ export default function CreateTopic() {
     NProgress.done()
   }
 
-  if (fetching) return <p>User Loading....</p>
+  if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
   if (!user.roles.includes(UserRole.Admin)) return <NotAuthorized />
 
-  if (topicsFetching) return <p>Loading....</p>
-  if (topicsError) return <p>Oh no... {topicsError.message}</p>
+  if (topicsFetching) return <Skeleton active={true} />
+  if (topicsError) return <InternalServerError message={topicsError.message} />
 
   return (
     <>

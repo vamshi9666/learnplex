@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Form, Input } from 'antd'
+import { Button, Divider, Form, Input, Skeleton } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -9,6 +9,7 @@ import { useMutation, useQuery } from 'urql'
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { User } from '../graphql/types'
+import InternalServerError from '../components/error/InternalServerError'
 
 const layout = {
   labelCol: { span: 8 },
@@ -66,8 +67,8 @@ export default function Register() {
     NProgress.done()
   }
 
-  if (fetching) return <p>Loading....</p>
-  if (error) return <p>Oh no... {error.message}</p>
+  if (fetching) return <Skeleton active={true} />
+  if (error) return <InternalServerError message={error.message} />
 
   return (
     <>

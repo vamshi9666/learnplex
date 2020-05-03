@@ -7,7 +7,7 @@ export default function NotAuthenticated() {
   return (
     <Result
       status={403}
-      title={'401'}
+      title={'401 - Not Authenticated'}
       subTitle={
         'Sorry, you are not authenticated. You need to be logged in to view this page.'
       }

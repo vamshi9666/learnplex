@@ -31,9 +31,9 @@ export default function MyResources() {
     query: RESOURCES_QUERY,
   })
 
-  if (fetching) return <p>User Loading....</p>
+  if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
-  if (error) return <InternalServerError />
+  if (error) return <InternalServerError message={error.message} />
 
   if (resourcesFetching) return <Skeleton active={true} />
   if (resourcesError) return <InternalServerError />

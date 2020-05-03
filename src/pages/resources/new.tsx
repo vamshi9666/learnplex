@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input, Select } from 'antd'
+import { Button, Form, Input, Select, Skeleton } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
@@ -9,6 +9,7 @@ import { Resource, Topic } from '../../graphql/types'
 import { slug } from '../../utils/slug'
 import { useUser } from '../../lib/hooks/useUser'
 import NotAuthenticated from '../../components/error/NotAuthenticated'
+import InternalServerError from '../../components/error/InternalServerError'
 
 const layout = {
   labelCol: { span: 8 },
@@ -85,11 +86,12 @@ export default function CreateResource() {
     NProgress.done()
   }
 
-  if (fetching) return <p>User Loading....</p>
+  if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
-  if (topicsFetching || resourcesFetching) return <p>Loading....</p>
-  if (topicsError) return <p>Oh no... {topicsError.message}</p>
-  if (resourcesError) return <p>Oh no... {resourcesError.message}</p>
+  if (topicsFetching || resourcesFetching) return <Skeleton active={true} />
+  if (topicsError) return <InternalServerError message={topicsError.message} />
+  if (resourcesError)
+    return <InternalServerError message={resourcesError.message} />
 
   return (
     <>

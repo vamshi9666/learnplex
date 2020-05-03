@@ -1,7 +1,8 @@
 import { useMutation } from 'urql'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import NProgress from 'nprogress'
 import { useRouter } from 'next/router'
+import { Skeleton } from 'antd'
 
 export default function ConfirmEmail() {
   const CONFIRM_EMAIL_MUTATION = `
@@ -27,5 +28,5 @@ export default function ConfirmEmail() {
     NProgress.done()
   }, [confirmEmail, router])
 
-  return <p>Loading....</p>
+  return <Skeleton active={true} />
 }

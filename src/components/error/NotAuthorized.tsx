@@ -7,7 +7,7 @@ export default function NotAuthorized() {
   return (
     <Result
       status={'403'}
-      title={'403'}
+      title={'403 - Access Forbidden'}
       subTitle={
         'Sorry, you are not authorized to access this page. Please login with another account'
       }
