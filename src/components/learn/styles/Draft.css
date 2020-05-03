@@ -20,11 +20,19 @@
     padding: 15px;
 }
 
+.RichEditor-sticky-controls {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
 .RichEditor-editor {
-    border-top: 1px solid #ddd;
+    /*border-top: 1px solid #ddd;*/
     cursor: text;
     font-size: 16px;
-    margin-top: 10px;
 }
 
 .RichEditor-editor .public-DraftEditorPlaceholder-root,

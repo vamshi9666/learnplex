@@ -181,7 +181,10 @@ export default function CustomDraftEditor({
 
   const ActionControls = ({ editorState }: { editorState: EditorState }) => {
     return (
-      <div className="RichEditor-controls">
+      <div
+        className="RichEditor-controls"
+        style={{ borderBottom: '1px solid #ddd' }}
+      >
         {inEditMode ? (
           <Button
             className={'p-0'}
@@ -222,20 +225,21 @@ export default function CustomDraftEditor({
   return (
     <>
       <div className="RichEditor-root">
-        <ActionControls editorState={editorState} />
-        <hr />
-        {inEditMode && (
-          <>
-            <BlockStyleControls
-              editorState={editorState}
-              onToggle={toggleBlockType}
-            />
-            <InlineStyleControls
-              editorState={editorState}
-              onToggle={toggleInlineStyle}
-            />
-          </>
-        )}
+        <div className={'RichEditor-sticky-controls'}>
+          <ActionControls editorState={editorState} />
+          {inEditMode && (
+            <>
+              <BlockStyleControls
+                editorState={editorState}
+                onToggle={toggleBlockType}
+              />
+              <InlineStyleControls
+                editorState={editorState}
+                onToggle={toggleInlineStyle}
+              />
+            </>
+          )}
+        </div>
         <div className={className} onClick={focus}>
           <Editor
             readOnly={!inEditMode}
