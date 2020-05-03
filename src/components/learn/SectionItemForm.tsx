@@ -205,9 +205,6 @@ export default function SectionItemForm({
           }
         />
       </Form.Item>
-      {/*<Form.Item>*/}
-      {/*  <DragOutlined />*/}
-      {/*</Form.Item>*/}
     </Form>
   )
 }

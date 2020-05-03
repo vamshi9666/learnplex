@@ -8,7 +8,7 @@ import {
   KeyBindingUtil,
   RichUtils,
 } from 'draft-js'
-import { Button, Space } from 'antd'
+import { Button } from 'antd'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 
 export default function CustomDraftEditor({
@@ -17,12 +17,20 @@ export default function CustomDraftEditor({
   save,
   inEditMode,
   editorKey,
+  showPrevButton,
+  showNextButton,
+  goToPreviousSection,
+  goToNextSection,
 }: {
   pageContent: string
   fork: () => void
   save: ({ content }: { content: any }) => void
   inEditMode: boolean
   editorKey: string
+  showPrevButton: boolean
+  showNextButton: boolean
+  goToPreviousSection: () => void
+  goToNextSection: () => void
 }) {
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
@@ -257,17 +265,27 @@ export default function CustomDraftEditor({
           />
           <br />
           <div className={'text-center bottom-actions'}>
-            <Space>
-              <Button>
+            {showPrevButton && (
+              <Button
+                className={'float-left'}
+                onClick={() => goToPreviousSection()}
+              >
                 <ArrowLeftOutlined />
                 Previous
               </Button>
-              <Button type={'primary'}>Complete</Button>
-              <Button>
+            )}
+
+            <Button type={'primary'}>Complete</Button>
+
+            {showNextButton && (
+              <Button
+                className={'float-right'}
+                onClick={() => goToNextSection()}
+              >
                 Next
                 <ArrowRightOutlined />
               </Button>
-            </Space>
+            )}
           </div>
         </div>
       </div>

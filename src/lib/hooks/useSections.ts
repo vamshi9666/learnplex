@@ -22,9 +22,11 @@ export function useSections({
         isBaseSection
         isPage
         hasSubSections
+        order
         sections {
           id
           order
+          slug
         }
         parentSection {
           id
@@ -239,6 +241,141 @@ export function useSections({
     })
   }
 
+  function getExtremeSubSectionIds({
+    sectionId,
+  }: {
+    sectionId: string
+  }): { beginning: string; ending: string } {
+    const section = sectionsMap.get(sectionId)!
+    if (!section) {
+      return { beginning: '', ending: '' }
+    }
+    if (section.sections.length === 0) {
+      return {
+        beginning: section.id,
+        ending: section.id,
+      }
+    }
+    const sortedSections = section.sections.sort((a, b) =>
+      a.order > b.order ? 1 : a.order < b.order ? -1 : 0
+    )
+    return {
+      beginning: getExtremeSubSectionIds({ sectionId: sortedSections[0].id })
+        .beginning,
+      ending: getExtremeSubSectionIds({
+        sectionId: sortedSections[sortedSections.length - 1].id,
+      }).ending,
+    }
+  }
+
+  const getSlugsPathUtil = ({
+    targetSectionId,
+    currentSectionId,
+  }: {
+    targetSectionId: string
+    currentSectionId: string
+  }) => {
+    const currentSection = sectionsMap.get(currentSectionId)!
+    if (targetSectionId === currentSectionId) {
+      return [currentSection.slug]
+    }
+    if (currentSection.sections.length === 0) {
+      return []
+    }
+    for (const section of currentSection.sections) {
+      const temp: string[] = getSlugsPathUtil({
+        currentSectionId: section.id,
+        targetSectionId,
+      })
+      if (temp.length > 0) {
+        if (currentSectionId === baseSectionId) {
+          return temp
+        } else {
+          return [currentSection.slug, ...temp]
+        }
+      }
+    }
+    return []
+  }
+
+  const getSlugsPathFromSectionId = ({ sectionId }: { sectionId: string }) => {
+    return getSlugsPathUtil({
+      targetSectionId: sectionId,
+      currentSectionId: baseSectionId,
+    })
+  }
+
+  const getNeighbourSectionIds = ({ sectionId }: { sectionId: string }) => {
+    const section = sectionsMap.get(sectionId)
+    if (!section || sectionId === baseSectionId) {
+      return { prevSectionId: '', nextSectionId: '' }
+    }
+
+    const parentSectionId = section.parentSection!.id
+    const parentSection = sectionsMap.get(parentSectionId)!
+    const sortedSections = parentSection.sections.sort((a, b) =>
+      a.order > b.order ? 1 : a.order < b.order ? -1 : 0
+    )
+    const sortedSectionIds = sortedSections.map((section) => section.id)
+    const currentSectionIdIndex = sortedSectionIds.indexOf(sectionId)
+    let prevSectionId = sortedSectionIds[currentSectionIdIndex - 1]
+    let nextSectionId = sortedSectionIds[currentSectionIdIndex + 1]
+    if (prevSectionId) {
+      prevSectionId = getExtremeSubSectionIds({ sectionId: prevSectionId })
+        .ending
+    } else {
+      const { prevSectionId: prevParentId } = getNeighbourSectionIds({
+        sectionId: parentSectionId,
+      })
+      prevSectionId = getExtremeSubSectionIds({ sectionId: prevParentId })
+        .ending
+    }
+
+    if (nextSectionId) {
+      nextSectionId = getExtremeSubSectionIds({ sectionId: nextSectionId })
+        .beginning
+    } else {
+      const { nextSectionId: nextParentId } = getNeighbourSectionIds({
+        sectionId: parentSectionId,
+      })
+      nextSectionId = getExtremeSubSectionIds({ sectionId: nextParentId })
+        .beginning
+    }
+    return {
+      prevSectionId,
+      nextSectionId,
+    }
+  }
+
+  const getNeighbourSectionSlugs = ({ sectionId }: { sectionId: string }) => {
+    const { prevSectionId, nextSectionId } = getNeighbourSectionIds({
+      sectionId,
+    })
+
+    const prevSectionSlugs = getSlugsPathFromSectionId({
+      sectionId: prevSectionId,
+    })
+    const nextSectionSlugs = getSlugsPathFromSectionId({
+      sectionId: nextSectionId,
+    })
+
+    let prevSectionPath = ''
+    let nextSectionPath = ''
+
+    if (prevSectionSlugs.length > 0) {
+      prevSectionPath = prevSectionSlugs.reduce((a, b) => `${a}/${b}`)
+    }
+
+    if (nextSectionSlugs.length > 0) {
+      nextSectionPath = nextSectionSlugs.reduce((a, b) => `${a}/${b}`)
+    }
+
+    return {
+      prevSectionPath,
+      nextSectionPath,
+    }
+  }
+
   return {
     sectionsListFetching,
     baseSectionId,
@@ -250,5 +387,6 @@ export function useSections({
     deleteSection,
     reExecuteSectionsListQuery,
     reorderSections,
+    getNeighbourSectionSlugs,
   }
 }

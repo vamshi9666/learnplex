@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 
 import { useUser } from '../../lib/hooks/useUser'
 import CustomDraftEditor from './CustomDraftEditor'
+import { useSections } from '../../lib/hooks/useSections'
 
 export default function CustomEditor({
   pageContent,
@@ -100,6 +101,40 @@ export default function CustomEditor({
     })
     NProgress.done()
   }
+
+  const { getNeighbourSectionSlugs, body } = useSections({
+    username,
+    resourceSlug,
+  })
+
+  if (body) return body
+
+  const goTo = async ({ path }: { path: string }) => {
+    if (inEditMode) {
+      await router.push(`/${username}/learn/edit/${resourceSlug}/${path}`)
+    } else {
+      await router.push(`/${username}/learn/${resourceSlug}/${path}`)
+    }
+  }
+
+  const { prevSectionPath, nextSectionPath } = getNeighbourSectionSlugs({
+    sectionId: currentSectionId,
+  })
+
+  const goToPreviousSection = async () => {
+    if (!prevSectionPath) {
+      return
+    }
+    await goTo({ path: prevSectionPath })
+  }
+
+  const goToNextSection = async () => {
+    if (!nextSectionPath) {
+      return
+    }
+    await goTo({ path: nextSectionPath })
+  }
+
   return (
     <CustomDraftEditor
       fork={fork}
@@ -107,6 +142,10 @@ export default function CustomEditor({
       inEditMode={inEditMode}
       editorKey={`editor-${currentSectionId}`}
       pageContent={pageContent}
+      showPrevButton={!!prevSectionPath}
+      showNextButton={!!nextSectionPath}
+      goToNextSection={goToNextSection}
+      goToPreviousSection={goToPreviousSection}
     />
   )
 }
