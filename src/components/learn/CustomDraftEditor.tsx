@@ -8,7 +8,8 @@ import {
   KeyBindingUtil,
   RichUtils,
 } from 'draft-js'
-import { Button } from 'antd'
+import { Button, Space } from 'antd'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 
 export default function CustomDraftEditor({
   pageContent,
@@ -254,6 +255,20 @@ export default function CustomDraftEditor({
             ref={editor}
             spellCheck={true}
           />
+          <br />
+          <div className={'text-center bottom-actions'}>
+            <Space>
+              <Button>
+                <ArrowLeftOutlined />
+                Previous
+              </Button>
+              <Button type={'primary'}>Complete</Button>
+              <Button>
+                Next
+                <ArrowRightOutlined />
+              </Button>
+            </Space>
+          </div>
         </div>
       </div>
     </>
