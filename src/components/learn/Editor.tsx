@@ -62,7 +62,13 @@ export default function CustomEditor({
   const [, savePage] = useMutation(SAVE_PAGE_MUTATION)
   const [, forkResource] = useMutation(FORK_RESOURCE_MUTATION)
 
-  const save = async ({ content }: { content: any }) => {
+  const save = async ({
+    content,
+    setSavedPageContent,
+  }: {
+    content: any
+    setSavedPageContent: React.Dispatch<React.SetStateAction<string>>
+  }) => {
     const pageContentJson = convertToRaw(content)
     const pageContent = JSON.stringify(pageContentJson)
     NProgress.start()
@@ -75,7 +81,8 @@ export default function CustomEditor({
       if (result.error) {
         console.log({ savePageError: result.error })
       } else {
-        console.log({ result })
+        console.log({ result, content: result.data.savePage.page.content })
+        setSavedPageContent(result.data.savePage.page.content)
       }
     })
     NProgress.done()

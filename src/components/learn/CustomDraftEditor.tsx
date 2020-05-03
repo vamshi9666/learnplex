@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   convertFromRaw,
+  convertToRaw,
   DraftBlockType,
   Editor,
   EditorState,
@@ -33,7 +34,13 @@ export default function CustomDraftEditor({
 }: {
   pageContent: string
   fork: () => void
-  save: ({ content }: { content: any }) => void
+  save: ({
+    content,
+    setSavedPageContent,
+  }: {
+    content: any
+    setSavedPageContent: React.Dispatch<React.SetStateAction<string>>
+  }) => void
   inEditMode: boolean
   editorKey: string
   showPrevButton: boolean
@@ -58,6 +65,7 @@ export default function CustomDraftEditor({
   if (pageContent === undefined) {
     pageContent = EMPTY_PAGE_CONTENT
   }
+  const [savedPageContent, setSavedPageContent] = useState(pageContent)
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(convertFromRaw(JSON.parse(pageContent)))
   )
@@ -72,7 +80,7 @@ export default function CustomDraftEditor({
   const handleKeyCommand = (command: string, editorState: EditorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command)
     if (command === SAVE_COMMAND) {
-      save({ content: editorState.getCurrentContent() })
+      save({ content: editorState.getCurrentContent(), setSavedPageContent })
     }
     if (newState) {
       onChange(newState)
@@ -208,7 +216,10 @@ export default function CustomDraftEditor({
           type={'primary'}
           icon={<SaveOutlined />}
           onClick={async (e) =>
-            await save({ content: editorState.getCurrentContent() })
+            await save({
+              content: editorState.getCurrentContent(),
+              setSavedPageContent,
+            })
           }
         >
           Save
@@ -251,6 +262,26 @@ export default function CustomDraftEditor({
       padding: 2,
     },
   }
+
+  const handleWindowClose = (e: any) => {
+    const currentContent = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent())
+    )
+    if (savedPageContent !== currentContent) {
+      e.preventDefault()
+      // TODO: A default message is being shown instead of this, figure out why
+      return (e.returnValue =
+        'You have unsaved changes - are you sure you wish to close?')
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleWindowClose)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose)
+    }
+  })
 
   return (
     <>
@@ -305,7 +336,10 @@ export default function CustomDraftEditor({
               <Button
                 type={'primary'}
                 onClick={async (e) =>
-                  await save({ content: editorState.getCurrentContent() })
+                  await save({
+                    content: editorState.getCurrentContent(),
+                    setSavedPageContent,
+                  })
                 }
                 icon={<SaveOutlined />}
               >

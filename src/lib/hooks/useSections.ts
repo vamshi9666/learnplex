@@ -88,9 +88,6 @@ export function useSections({
     body = undefined
   }
 
-  const renders = useRef(0)
-  console.log('renders hook', renders.current++)
-
   const setSection = ({ updatedSection }: { updatedSection: Section }) => {
     // reExecuteSectionsListQuery()
     setSectionsMap((prevSectionsMap) => {
