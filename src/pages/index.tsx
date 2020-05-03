@@ -7,6 +7,7 @@ import { useMutation } from 'urql'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '../constants'
 import { Resource } from '../graphql/types'
 import ResourceCards from '../components/learn/ResourceCards'
+import { SEO } from '../components/SEO'
 
 export default function Home() {
   const router = useRouter()
@@ -60,6 +61,7 @@ export default function Home() {
 
   return (
     <>
+      <SEO title={'Home'} />
       <Row>
         <Col span={8} offset={8}>
           <Typography>

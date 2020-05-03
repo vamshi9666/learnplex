@@ -22,7 +22,7 @@ export default function App({ Component }: { Component: any }) {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <link rel="stylesheet" type="text/css" href="/nprogress.css" />
+        <link rel="preconnect" href={getServerEndPoint()} />
       </Head>
       <Layout className={'mh-100vh bg-initial'}>
         <Layout.Header className={'bg-initial'}>
