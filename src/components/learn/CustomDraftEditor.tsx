@@ -29,6 +29,7 @@ export default function CustomDraftEditor({
   goToNextSection,
   pageEmpty,
   completeSection,
+  isSectionComplete,
 }: {
   pageContent: string
   fork: () => void
@@ -41,6 +42,7 @@ export default function CustomDraftEditor({
   goToNextSection: () => void
   pageEmpty: boolean
   completeSection: () => void
+  isSectionComplete: boolean
 }) {
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
@@ -308,6 +310,14 @@ export default function CustomDraftEditor({
                 icon={<SaveOutlined />}
               >
                 Save
+              </Button>
+            ) : isSectionComplete ? (
+              <Button
+                type={'primary'}
+                className={'bg-success'}
+                icon={<CheckOutlined />}
+              >
+                Already Completed
               </Button>
             ) : (
               <Button

@@ -3,10 +3,13 @@ import { convertToRaw } from 'draft-js'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
+import { Skeleton } from 'antd'
 
 import { useUser } from '../../lib/hooks/useUser'
 import CustomDraftEditor from './CustomDraftEditor'
 import { useSections } from '../../lib/hooks/useSections'
+import useProgress from '../../lib/hooks/useProgress'
+import InternalServerError from '../error/InternalServerError'
 
 export default function CustomEditor({
   pageContent,
@@ -123,6 +126,15 @@ export default function CustomEditor({
 
   const [, completeSectionMutation] = useMutation(COMPLETE_SECTION_MUTATION)
 
+  const { sectionsMap } = useSections({ resourceSlug, username })
+  const { isSectionComplete, fetching, error } = useProgress({
+    resourceSlug,
+    sectionsMap,
+  })
+
+  if (fetching) return <Skeleton active={true} />
+  if (error) return <InternalServerError message={error.message} />
+
   if (body) return body
 
   const goTo = async ({ path }: { path: string }) => {
@@ -180,6 +192,9 @@ export default function CustomEditor({
       goToPreviousSection={goToPreviousSection}
       pageEmpty={pageContent === EMPTY_PAGE_CONTENT}
       completeSection={completeSection}
+      isSectionComplete={isSectionComplete({
+        section: sectionsMap.get(currentSectionId)!,
+      })}
     />
   )
 }

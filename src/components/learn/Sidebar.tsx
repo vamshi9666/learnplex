@@ -1,5 +1,5 @@
 import { Menu, Button, Skeleton } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   FileOutlined,
   DownOutlined,
@@ -10,11 +10,11 @@ import {
   CheckSquareTwoTone,
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import { useQuery } from 'urql'
 
 import { Section } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
 import InternalServerError from '../error/InternalServerError'
+import useProgress from '../../lib/hooks/useProgress'
 
 interface Props {
   inEditMode: boolean
@@ -40,47 +40,13 @@ export default function Sidebar({
 
   const [openKeys, setOpenKeys] = useState(defaultOpenKeys)
 
-  const USER_PROGRESS_QUERY = `
-    query($resourceSlug: String!) {
-      userProgress(resourceSlug: $resourceSlug) {
-        completedSections {
-          id
-        }
-      }
-    }
-  `
-
-  const [{ data, fetching, error }, reExecuteUserProgressQuery] = useQuery({
-    query: USER_PROGRESS_QUERY,
-    variables: {
-      resourceSlug,
-    },
+  const { fetching, error, isSectionComplete } = useProgress({
+    resourceSlug,
+    sectionsMap,
   })
-
-  useEffect(() => {
-    reExecuteUserProgressQuery()
-  }, [reExecuteUserProgressQuery])
 
   if (fetching || userFetching) return <Skeleton active={true} />
   if (error) return <InternalServerError message={error.message} />
-
-  const completedSectionIds =
-    data.userProgress?.completedSections.map(
-      (section: Section) => section.id
-    ) ?? []
-
-  function isSectionComplete({ section }: { section: Section }): boolean {
-    if (section.sections.length === 0) {
-      return completedSectionIds.includes(section.id)
-    }
-    const subSectionIds = section.sections.map(
-      (currentSection) => currentSection.id
-    )
-
-    return subSectionIds.every((id) =>
-      isSectionComplete({ section: sectionsMap.get(id)! })
-    )
-  }
 
   const sectionMenuItem = ({ sectionId }: { sectionId: string }) => {
     const section = sectionsMap.get(sectionId) as Section

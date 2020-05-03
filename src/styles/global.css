@@ -367,6 +367,10 @@ body {
     background: initial !important;
 }
 
+.bg-success {
+    background: var(--successColor) !important;
+}
+
 .h-100p {
     height: 100% !important;
 }
