@@ -4,6 +4,7 @@ import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 
 import { SEO } from '../../components/SEO'
+import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 
 export default function ForgotPassword() {
   const FORGOT_PASSWORD_MUTATION = `
@@ -29,18 +30,10 @@ export default function ForgotPassword() {
     NProgress.done()
   }
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
-  }
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 8 },
-  }
-
   return (
     <>
       <SEO title={'Forgot Password'} />
-      <Form {...layout} name={'forgot-password'} onFinish={onFinish}>
+      <Form {...FORM_LAYOUT} name={'forgot-password'} onFinish={onFinish}>
         <Form.Item
           name={'email'}
           label={'Email'}
@@ -53,7 +46,7 @@ export default function ForgotPassword() {
         >
           <Input />
         </Form.Item>
-        <Form.Item {...tailLayout}>
+        <Form.Item {...FORM_TAIL_LAYOUT}>
           <Button type={'primary'} htmlType={'submit'}>
             Submit
           </Button>

@@ -6,6 +6,7 @@ import { SEO } from '../../../../components/SEO'
 import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
 import Sidebar from '../../../../components/learn/Sidebar'
 import { useSections } from '../../../../lib/hooks/useSections'
+import { SIDEBAR_COL_LAYOUT } from '../../../../constants'
 
 export default function ViewResourceIndex() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function ViewResourceIndex() {
         body
       ) : (
         <Row>
-          <Col span={6}>
+          <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}

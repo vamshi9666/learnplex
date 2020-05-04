@@ -10,15 +10,7 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { User } from '../graphql/types'
 import InternalServerError from '../components/error/InternalServerError'
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
-}
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 8 },
-}
+import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 
 const validateMessages = {
   types: {
@@ -74,7 +66,7 @@ export default function Register() {
     <>
       <SEO title={'Register'} />
 
-      <Form.Item {...tailLayout}>
+      <Form.Item {...FORM_TAIL_LAYOUT}>
         <Button
           block={true}
           icon={<GithubOutlined />}
@@ -84,12 +76,12 @@ export default function Register() {
         </Button>
       </Form.Item>
 
-      <Form.Item {...tailLayout}>
+      <Form.Item {...FORM_TAIL_LAYOUT}>
         <Divider>(OR)</Divider>
       </Form.Item>
 
       <Form
-        {...layout}
+        {...FORM_LAYOUT}
         name={'register'}
         onFinish={onFinish}
         validateMessages={validateMessages}
@@ -170,7 +162,7 @@ export default function Register() {
           <Input />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+        <Form.Item {...FORM_TAIL_LAYOUT}>
           <Button type={'primary'} htmlType={'submit'}>
             Register
           </Button>

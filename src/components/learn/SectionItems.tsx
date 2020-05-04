@@ -52,7 +52,7 @@ export default function SectionItems({
   }
 
   return (
-    <Timeline>
+    <Timeline className={'mr-5 pr-5'}>
       <DragDropContext
         onDragEnd={(result) =>
           reorder({

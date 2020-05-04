@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Breadcrumb, Col, Divider, Row, Skeleton, Typography } from 'antd'
 import { useMutation, useQuery } from 'urql'
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'
@@ -12,6 +13,11 @@ import ResourceIndex from '../../../../../components/learn/ResourceIndex'
 import { useUser } from '../../../../../lib/hooks/useUser'
 import NotAuthenticated from '../../../../../components/error/NotAuthenticated'
 import NotAuthorized from '../../../../../components/error/NotAuthorized'
+
+import {
+  CONTENT_COL_LAYOUT,
+  SIDEBAR_COL_LAYOUT,
+} from '../../../../../constants'
 
 export default function EditResourceIndex() {
   const router = useRouter()
@@ -67,6 +73,7 @@ export default function EditResourceIndex() {
   })
 
   const { user, fetching: userFetching } = useUser()
+
   if (fetching || userFetching) return <Skeleton active={true} />
 
   if (!user) return <NotAuthenticated />
@@ -113,8 +120,8 @@ export default function EditResourceIndex() {
       {body ? (
         body
       ) : (
-        <Row>
-          <Col span={6}>
+        <Row gutter={[16, 16]} justify={'start'}>
+          <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
               baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
@@ -130,7 +137,7 @@ export default function EditResourceIndex() {
             />
           </Col>
 
-          <Col className={'p-5'} span={18}>
+          <Col className={'p-5'} {...CONTENT_COL_LAYOUT}>
             <Typography>
               <Typography.Title
                 level={2}

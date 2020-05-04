@@ -62,8 +62,8 @@ export default function Home() {
   return (
     <>
       <SEO title={'Home'} />
-      <Row>
-        <Col span={8} offset={8}>
+      <Row justify={'center'}>
+        <Col xs={24} sm={12} md={12} lg={8}>
           <Typography>
             <Typography.Title level={3} className={'text-center'}>
               Search By Resource
@@ -78,18 +78,22 @@ export default function Home() {
         </Col>
       </Row>
       <br />
-      <Row>
-        <Col offset={8} span={8}>
+      <Row justify={'center'} gutter={[16, 16]}>
+        <Col xs={24} sm={6} md={6} lg={4}>
           <Button
             className={'float-left'}
             onClick={() => router.push(`/resources/new`)}
+            block={true}
           >
-            Create New Resource
+            Create Resource
           </Button>
+        </Col>
+        <Col xs={24} sm={6} md={6} lg={4}>
           <Button
             className={'float-right'}
             type={'primary'}
             onClick={() => router.push(`/resources`)}
+            block={true}
           >
             My Resources
           </Button>

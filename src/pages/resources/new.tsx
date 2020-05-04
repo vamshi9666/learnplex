@@ -10,14 +10,7 @@ import { slug } from '../../utils/slug'
 import { useUser } from '../../lib/hooks/useUser'
 import NotAuthenticated from '../../components/error/NotAuthenticated'
 import InternalServerError from '../../components/error/InternalServerError'
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
-}
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 8 },
-}
+import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 
 export default function CreateResource() {
   const [form] = Form.useForm()
@@ -97,7 +90,7 @@ export default function CreateResource() {
     <>
       <SEO title={'New Resource'} />
 
-      <Form form={form} {...layout} onFinish={onFinish}>
+      <Form form={form} {...FORM_LAYOUT} onFinish={onFinish}>
         <Form.Item
           label={'Title'}
           name={'title'}
@@ -140,9 +133,9 @@ export default function CreateResource() {
           <Input />
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item {...FORM_TAIL_LAYOUT}>
           <Button type={'primary'} htmlType={'submit'}>
-            Add Resource
+            Create
           </Button>
           <Button
             className={'float-right'}

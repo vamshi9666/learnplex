@@ -10,14 +10,7 @@ import { slug } from '../../utils/slug'
 import NotAuthorized from '../../components/error/NotAuthorized'
 import NotAuthenticated from '../../components/error/NotAuthenticated'
 import InternalServerError from '../../components/error/InternalServerError'
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
-}
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-}
+import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 
 export default function CreateTopic() {
   const { user, fetching } = useUser()
@@ -75,7 +68,7 @@ export default function CreateTopic() {
     <>
       <SEO title={'New Topic'} />
 
-      <Form form={form} {...layout} onFinish={onFinish}>
+      <Form form={form} {...FORM_LAYOUT} onFinish={onFinish}>
         <Form.Item
           label={'Title'}
           name={'title'}
@@ -100,7 +93,7 @@ export default function CreateTopic() {
           <Input />
         </Form.Item>
 
-        <Form.Item {...tailLayout}>
+        <Form.Item {...FORM_TAIL_LAYOUT}>
           <Button type={'primary'} htmlType={'submit'}>
             Add Topic
           </Button>

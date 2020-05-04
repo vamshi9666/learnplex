@@ -10,6 +10,7 @@ import {
   CheckSquareTwoTone,
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Section } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
@@ -44,6 +45,8 @@ export default function Sidebar({
     resourceSlug,
     sectionsMap,
   })
+
+  const { xs } = useBreakpoint()
 
   if (fetching || userFetching) return <Skeleton active={true} />
   if (error) return <InternalServerError message={error.message} />
@@ -144,7 +147,7 @@ export default function Sidebar({
         onClick={handleClick}
         defaultSelectedKeys={defaultSelectedKeys}
         openKeys={openKeys}
-        className={'position-fixed bg-initial a-menu'}
+        className={`bg-initial a-menu ${xs ? '' : 'position-fixed'}`}
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >

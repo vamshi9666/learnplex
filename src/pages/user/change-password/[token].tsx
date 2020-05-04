@@ -5,7 +5,11 @@ import { useMutation } from 'urql'
 import Cookies from 'js-cookie'
 
 import { SEO } from '../../../components/SEO'
-import { ACCESS_TOKEN_COOKIE } from '../../../constants'
+import {
+  ACCESS_TOKEN_COOKIE,
+  FORM_LAYOUT,
+  FORM_TAIL_LAYOUT,
+} from '../../../constants'
 
 export default function ChangePassword() {
   const router = useRouter()
@@ -17,13 +21,6 @@ export default function ChangePassword() {
     }
   `
   const [, changePassword] = useMutation(CHANGE_PASSWORD_MUTATION)
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
-  }
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 8 },
-  }
 
   const onFinish = async ({ password }: any) => {
     NProgress.start()
@@ -48,7 +45,7 @@ export default function ChangePassword() {
   return (
     <>
       <SEO title={'Change Password'} />
-      <Form {...layout} name={'change-password'} onFinish={onFinish}>
+      <Form {...FORM_LAYOUT} name={'change-password'} onFinish={onFinish}>
         <Form.Item
           name={'password'}
           rules={[
@@ -61,7 +58,7 @@ export default function ChangePassword() {
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item {...tailLayout}>
+        <Form.Item {...FORM_TAIL_LAYOUT}>
           <Button type={'primary'} htmlType={'submit'}>
             Submit
           </Button>

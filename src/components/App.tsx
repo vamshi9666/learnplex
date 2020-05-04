@@ -31,6 +31,7 @@ export default function App({ Component }: { Component: any }) {
             <Header />
           </Provider>
         </Layout.Header>
+        <br />
         <Layout.Content className={'p-5 h-100p'}>{Component}</Layout.Content>
       </Layout>
     </>
