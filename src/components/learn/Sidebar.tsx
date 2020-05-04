@@ -41,7 +41,7 @@ export default function Sidebar({
 
   const [openKeys, setOpenKeys] = useState(defaultOpenKeys)
 
-  const { fetching, error, isSectionComplete } = useProgress({
+  const { fetching, isSectionComplete } = useProgress({
     resourceSlug,
     sectionsMap,
   })
@@ -49,7 +49,6 @@ export default function Sidebar({
   const { xs } = useBreakpoint()
 
   if (fetching || userFetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
 
   const sectionMenuItem = ({ sectionId }: { sectionId: string }) => {
     const section = sectionsMap.get(sectionId) as Section

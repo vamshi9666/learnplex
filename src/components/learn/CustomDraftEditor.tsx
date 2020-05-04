@@ -31,6 +31,7 @@ export default function CustomDraftEditor({
   pageEmpty,
   completeSection,
   isSectionComplete,
+  isLoggedIn,
 }: {
   pageContent: string
   fork: () => void
@@ -50,6 +51,7 @@ export default function CustomDraftEditor({
   pageEmpty: boolean
   completeSection: () => void
   isSectionComplete: boolean
+  isLoggedIn: boolean
 }) {
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
@@ -238,9 +240,20 @@ export default function CustomDraftEditor({
           type={'primary'}
           icon={<EditOutlined />}
           onClick={() => fork()}
+          disabled={!isLoggedIn}
         >
           Edit
         </Button>
+        {!isLoggedIn && (
+          <Alert
+            className={'float-right'}
+            message={
+              'Please login to track your progress or edit this resource'
+            }
+            type={'info'}
+            showIcon={true}
+          />
+        )}
       </>
     )
   }
@@ -359,7 +372,7 @@ export default function CustomDraftEditor({
               <Button
                 type={'primary'}
                 onClick={() => completeSection()}
-                disabled={pageEmpty}
+                disabled={pageEmpty || !isLoggedIn}
                 icon={<CheckOutlined />}
               >
                 Complete

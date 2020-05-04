@@ -20,7 +20,7 @@ export default function useProgress({
     }
   `
 
-  const [{ data, fetching, error }, reExecuteUserProgressQuery] = useQuery({
+  const [{ data, fetching }, reExecuteUserProgressQuery] = useQuery({
     query: USER_PROGRESS_QUERY,
     variables: {
       resourceSlug,
@@ -48,5 +48,5 @@ export default function useProgress({
     )
   }
 
-  return { fetching, error, isSectionComplete }
+  return { fetching, isSectionComplete }
 }

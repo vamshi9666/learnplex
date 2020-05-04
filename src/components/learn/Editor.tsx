@@ -134,13 +134,12 @@ export default function CustomEditor({
   const [, completeSectionMutation] = useMutation(COMPLETE_SECTION_MUTATION)
 
   const { sectionsMap } = useSections({ resourceSlug, username })
-  const { isSectionComplete, fetching, error } = useProgress({
+  const { isSectionComplete, fetching } = useProgress({
     resourceSlug,
     sectionsMap,
   })
 
   if (fetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
 
   if (body) return body
 
@@ -202,6 +201,7 @@ export default function CustomEditor({
       isSectionComplete={isSectionComplete({
         section: sectionsMap.get(currentSectionId)!,
       })}
+      isLoggedIn={!!user}
     />
   )
 }
