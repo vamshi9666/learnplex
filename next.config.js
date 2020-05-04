@@ -8,6 +8,7 @@ const bundleAnalyzerConfig = {
 }
 
 const nextConfig = {
+  target: 'serverless',
   env: {
     SERVER_ENDPOINT: process.env.SERVER_ENDPOINT,
   },

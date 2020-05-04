@@ -1,0 +1,6 @@
+myNextApplication:
+  component: serverless-next.js
+  inputs:
+    domain: "coderplex.in"
+  build:
+    cmd: yarn build
