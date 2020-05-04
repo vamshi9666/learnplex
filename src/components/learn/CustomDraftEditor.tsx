@@ -276,7 +276,9 @@ export default function CustomDraftEditor({
   }
 
   useEffect(() => {
-    window.addEventListener('beforeunload', handleWindowClose)
+    if (inEditMode) {
+      window.addEventListener('beforeunload', handleWindowClose)
+    }
 
     return () => {
       window.removeEventListener('beforeunload', handleWindowClose)
