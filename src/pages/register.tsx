@@ -88,7 +88,7 @@ export default function Register() {
       >
         <Form.Item
           name={'name'}
-          label={'name'}
+          label={'Name'}
           rules={[
             {
               required: true,
@@ -100,7 +100,7 @@ export default function Register() {
 
         <Form.Item
           name={'email'}
-          label={'email'}
+          label={'Email'}
           rules={[
             {
               required: true,

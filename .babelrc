@@ -18,5 +18,10 @@
       },
       "@ant-design/icons"
     ]
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins": ["transform-remove-console"]
+    }
+  }
 }
