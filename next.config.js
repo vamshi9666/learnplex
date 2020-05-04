@@ -1,3 +1,4 @@
+require('dotenv').config()
 const withPlugins = require('next-compose-plugins')
 const withBundleAnalyzer = require('@next/bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
@@ -7,7 +8,9 @@ const bundleAnalyzerConfig = {
 }
 
 const nextConfig = {
-  env: {},
+  env: {
+    SERVER_ENDPOINT: process.env.SERVER_ENDPOINT,
+  },
 }
 
 module.exports = withPlugins(
