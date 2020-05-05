@@ -1,6 +1,8 @@
 import { Button, Result } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
+
+import { logException } from '../../utils/analytics'
 
 export default function InternalServerError({
   message = 'Sorry, something went wrong.',
@@ -8,6 +10,9 @@ export default function InternalServerError({
   message?: string
 }) {
   const router = useRouter()
+  useEffect(() => {
+    logException(`500: ${message}`)
+  }, [message])
   return (
     <Result
       status={'500'}

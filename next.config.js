@@ -11,6 +11,7 @@ const nextConfig = {
   target: 'serverless',
   env: {
     SERVER_ENDPOINT: process.env.SERVER_ENDPOINT,
+    GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID,
   },
 }
 

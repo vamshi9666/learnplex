@@ -33,6 +33,7 @@
     "react": "16.13.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "16.13.1",
+    "react-ga": "^2.7.0",
     "react-is": "^16.13.1",
     "slugify": "^1.4.0",
     "url-join": "^4.0.1",

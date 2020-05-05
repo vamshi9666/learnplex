@@ -8,6 +8,7 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '../constants'
 import { Resource } from '../graphql/types'
 import ResourceCards from '../components/learn/ResourceCards'
 import { SEO } from '../components/SEO'
+import { logEvent } from '../utils/analytics'
 
 export default function Home() {
   const router = useRouter()
@@ -43,6 +44,7 @@ export default function Home() {
 
   const handleChange = (value: string) => {
     setValue(value)
+    logEvent('resource', 'TRIES_TO_SEARCH')
     if (!value) {
       setResources([])
       return

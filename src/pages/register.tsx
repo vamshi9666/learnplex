@@ -11,6 +11,7 @@ import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { User } from '../graphql/types'
 import InternalServerError from '../components/error/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
+import { logEvent } from '../utils/analytics'
 
 const validateMessages = {
   types: {
@@ -40,6 +41,7 @@ export default function Register() {
   const [, register] = useMutation(REGISTER_MUTATION)
 
   const onFinish = async ({ name, email, username, password }: any) => {
+    logEvent('guest', 'TRIES_TO_REGISTER')
     NProgress.start()
     register({
       data: {
@@ -53,6 +55,7 @@ export default function Register() {
         console.log({ 'register error': result.error })
       } else {
         console.log({ result })
+        logEvent('guest', 'REGISTERS')
         await router.push('/')
       }
     })

@@ -9,6 +9,7 @@ import NProgress from 'nprogress'
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
+import { logEvent } from '../utils/analytics'
 
 export default function Login() {
   const router = useRouter()
@@ -26,6 +27,7 @@ export default function Login() {
 
   const onFinish = async ({ email, password }: any) => {
     NProgress.start()
+    logEvent('guest', 'TRIES_TO_LOGIN')
     login({
       email,
       password,
@@ -39,6 +41,7 @@ export default function Login() {
         console.log({ accessToken, result })
         // Cookie will be set by server
         // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
+        logEvent('guest', 'LOGGED_IN')
         await router.push('/')
       }
     })

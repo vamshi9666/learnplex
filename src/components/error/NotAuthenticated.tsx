@@ -1,6 +1,8 @@
 import { Button, Result } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
+
+import { logException } from '../../utils/analytics'
 
 export default function NotAuthenticated({
   message = 'Sorry, you are not authenticated. You need to be logged in to view this page.',
@@ -8,6 +10,9 @@ export default function NotAuthenticated({
   message?: string
 }) {
   const router = useRouter()
+  useEffect(() => {
+    logException(`401: ${message}`)
+  }, [message])
   return (
     <Result
       status={403}
