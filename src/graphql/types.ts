@@ -19,6 +19,7 @@ export type Query = {
   topics: Array<Topic>
   resources: Array<Resource>
   resource?: Maybe<Resource>
+  allResources: Array<Resource>
   baseSection: Section
   sections: Array<Section>
   sectionsList: Array<Section>
