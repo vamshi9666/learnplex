@@ -1,6 +1,3 @@
-import { Col, Row } from 'antd'
-import React from 'react'
-
 export const ACCESS_TOKEN_COOKIE = 'pid'
 export const REFRESH_TOKEN_COOKIE = 'jid'
 

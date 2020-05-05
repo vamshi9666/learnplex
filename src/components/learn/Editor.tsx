@@ -9,7 +9,6 @@ import { useUser } from '../../lib/hooks/useUser'
 import CustomDraftEditor from './CustomDraftEditor'
 import { useSections } from '../../lib/hooks/useSections'
 import useProgress from '../../lib/hooks/useProgress'
-import InternalServerError from '../error/InternalServerError'
 
 export default function CustomEditor({
   pageContent,
@@ -136,6 +135,7 @@ export default function CustomEditor({
   const { sectionsMap } = useSections({ resourceSlug, username })
   const { isSectionComplete, fetching } = useProgress({
     resourceSlug,
+    ownerUsername: username,
     sectionsMap,
   })
 

@@ -6,13 +6,15 @@ import { Section } from '../../graphql/types'
 export default function useProgress({
   resourceSlug,
   sectionsMap,
+  ownerUsername,
 }: {
   resourceSlug: string
+  ownerUsername: string
   sectionsMap: Map<string, Section>
 }) {
   const USER_PROGRESS_QUERY = `
-    query($resourceSlug: String!) {
-      userProgress(resourceSlug: $resourceSlug) {
+    query($resourceSlug: String!, $ownerUsername: String!) {
+      userProgress(resourceSlug: $resourceSlug, ownerUsername: $ownerUsername) {
         completedSections {
           id
         }
@@ -24,6 +26,7 @@ export default function useProgress({
     query: USER_PROGRESS_QUERY,
     variables: {
       resourceSlug,
+      ownerUsername,
     },
   })
 

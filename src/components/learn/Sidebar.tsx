@@ -14,7 +14,6 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Section } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
-import InternalServerError from '../error/InternalServerError'
 import useProgress from '../../lib/hooks/useProgress'
 
 interface Props {
@@ -43,6 +42,7 @@ export default function Sidebar({
 
   const { fetching, isSectionComplete } = useProgress({
     resourceSlug,
+    ownerUsername: username,
     sectionsMap,
   })
 

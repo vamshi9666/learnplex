@@ -45,6 +45,7 @@ export type QuerySectionsListArgs = {
 }
 
 export type QueryUserProgressArgs = {
+  ownerUsername: Scalars['String']
   resourceSlug: Scalars['String']
 }
 

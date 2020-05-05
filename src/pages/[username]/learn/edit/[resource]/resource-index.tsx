@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Breadcrumb, Col, Divider, Row, Skeleton, Typography } from 'antd'
 import { useMutation, useQuery } from 'urql'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'

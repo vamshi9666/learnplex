@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from 'urql'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Skeleton } from 'antd'
 import { DropResult } from 'react-beautiful-dnd'
 
