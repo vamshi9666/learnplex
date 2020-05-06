@@ -386,8 +386,10 @@ export function useSections({
     currentSection.sections.forEach((section) => {
       if (leastOrder === -1) {
         sectionIdWithLeastOrder = section.id
+        leastOrder = section.order
       } else if (leastOrder > section.order) {
         sectionIdWithLeastOrder = section.id
+        leastOrder = section.order
       }
     })
     return getLeastOrderSection({ sectionId: sectionIdWithLeastOrder })
