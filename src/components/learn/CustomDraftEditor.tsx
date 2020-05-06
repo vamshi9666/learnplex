@@ -402,7 +402,7 @@ export default function CustomDraftEditor({
                 className={'bg-success'}
                 icon={<CheckOutlined />}
               >
-                Already Completed
+                Completed
               </Button>
             ) : (
               <Button
