@@ -25,7 +25,7 @@ export default function SectionItem({
   }
   return (
     <Timeline.Item
-      className={'pb-1 font-large'}
+      className={'font-large'}
       dot={
         !currentSection.isPage && (
           <span className={'cursor-pointer'} onClick={() => toggleOpen()}>

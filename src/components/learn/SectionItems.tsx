@@ -18,10 +18,12 @@ export default function SectionItems({
   sections,
   sectionsMap,
   parentSection,
+  topLevel = false,
 }: {
   sections: Section[]
   sectionsMap: Map<string, Section>
   parentSection: Section
+  topLevel?: boolean
 }) {
   const [show, setShow] = useState(false)
   const router = useRouter()
@@ -52,7 +54,7 @@ export default function SectionItems({
   }
 
   return (
-    <Timeline className={'mr-5 pr-5'}>
+    <Timeline className={`${topLevel ? 'p-5' : ''} bg-component`}>
       <DragDropContext
         onDragEnd={(result) =>
           reorder({

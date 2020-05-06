@@ -6,7 +6,7 @@
       {
         "libraryName": "antd",
         "libraryDirectory": "es",
-        "style": "index.css"
+        "style": "index.less"
       }
     ],
     [

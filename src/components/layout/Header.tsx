@@ -22,7 +22,7 @@ export default function Header() {
         </span>
       </div>
       <Menu
-        className={'float-right bg-initial b-0'}
+        className={'float-right bg-initial border-0'}
         mode={'horizontal'}
         selectable={false}
         onClick={async ({ key }) => await router.push(key)}

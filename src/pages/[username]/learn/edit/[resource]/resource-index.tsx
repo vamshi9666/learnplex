@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { Breadcrumb, Col, Divider, Row, Skeleton, Typography } from 'antd'
+import { Breadcrumb, Col, Row, Skeleton, Typography } from 'antd'
 import { useMutation, useQuery } from 'urql'
 
 import { SEO } from '../../../../../components/SEO'
@@ -136,8 +136,8 @@ export default function EditResourceIndex() {
             />
           </Col>
 
-          <Col className={'p-5'} {...CONTENT_COL_LAYOUT}>
-            <Typography>
+          <Col className={'px-5'} {...CONTENT_COL_LAYOUT}>
+            <Typography className={'text-center bg-component pb-1 pt-2'}>
               <Typography.Title
                 level={2}
                 editable={{
@@ -154,7 +154,6 @@ export default function EditResourceIndex() {
                 {data.resource.description}
               </Typography.Paragraph>
             </Typography>
-            <Divider />
 
             <ResourceIndex
               baseSectionId={baseSectionId}

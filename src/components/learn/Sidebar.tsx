@@ -146,13 +146,13 @@ export default function Sidebar({
         onClick={handleClick}
         defaultSelectedKeys={defaultSelectedKeys}
         openKeys={openKeys}
-        className={`bg-initial a-menu ${xs ? '' : 'position-fixed'}`}
+        className={`sidebar-menu ${xs ? '' : 'position-fixed'}`}
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >
         <Menu.Item key={'breadcrumb'}>{breadCrumb}</Menu.Item>
         {(inEditMode || user?.username === username) && (
-          <Menu.Item className={'text-center'} key={'edit-resource-index'}>
+          <Menu.Item className={'text-center px-2'} key={'edit-resource-index'}>
             <Button block={true}>Edit Index</Button>
           </Menu.Item>
         )}

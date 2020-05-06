@@ -51,7 +51,7 @@ export default function ViewResource() {
             />
           </Col>
 
-          <Col className={`${xs ? '' : 'p-5'}`} {...CONTENT_COL_LAYOUT}>
+          <Col className={`${xs ? '' : 'px-5'}`} {...CONTENT_COL_LAYOUT}>
             <CustomEditor
               pageContent={pageContent}
               currentSectionId={currentSectionId}

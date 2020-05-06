@@ -17,6 +17,7 @@ export default function ResourceIndex({
       sections={baseSection.sections}
       sectionsMap={sectionsMap}
       parentSection={baseSection}
+      topLevel={true}
     />
   )
 }

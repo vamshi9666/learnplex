@@ -23,15 +23,17 @@ export default function App({ Component }: { Component: any }) {
       <Head>
         <meta charSet="utf-8" />
       </Head>
-      <Layout className={'mh-100vh bg-initial'}>
-        <Layout.Header className={'bg-initial'}>
+      <Layout className={'mh-100vh'}>
+        <Layout.Header className={''}>
           {/* TODO: Without Provider, useEffect is not running in useUser hook, figure out why */}
           <Provider value={client}>
             <Header />
           </Provider>
         </Layout.Header>
         <br />
-        <Layout.Content className={'p-5 h-100p'}>{Component}</Layout.Content>
+        <Layout.Content className={'py-2 px-5 h-100p'}>
+          {Component}
+        </Layout.Content>
       </Layout>
     </>
   )
