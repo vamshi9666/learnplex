@@ -1,0 +1,12 @@
+{
+  "name": "ej3l148-3wnofvm",
+  "arn": "arn:aws:iam::114186083917:role/ej3l148-3wnofvm",
+  "service": [
+    "edgelambda.amazonaws.com",
+    "lambda.amazonaws.com"
+  ],
+  "policy": {
+    "arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  },
+  "region": "us-east-1"
+}

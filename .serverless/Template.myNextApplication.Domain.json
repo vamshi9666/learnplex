@@ -1,0 +1,13 @@
+{
+  "region": "us-east-1",
+  "privateZone": false,
+  "domain": "coderplex.in",
+  "subdomains": [
+    {
+      "domain": "www.coderplex.in",
+      "distributionId": "E3P3QBIU3W9UE9",
+      "url": "https://d3a8li7ckooshu.cloudfront.net",
+      "type": "awsCloudFront"
+    }
+  ]
+}

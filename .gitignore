@@ -33,5 +33,4 @@ yarn-error.log*
 # editor
 .idea
 
-.serverless
 .serverless_nextjs
