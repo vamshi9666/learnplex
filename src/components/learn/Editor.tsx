@@ -3,7 +3,7 @@ import { convertToRaw } from 'draft-js'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
-import { Skeleton } from 'antd'
+import { message, Skeleton } from 'antd'
 
 import { useUser } from '../../lib/hooks/useUser'
 import CustomDraftEditor from './CustomDraftEditor'
@@ -85,6 +85,7 @@ export default function CustomEditor({
       }
     })
     NProgress.done()
+    message.success('Your changes have been saved.', 1)
   }
 
   const { user } = useUser()

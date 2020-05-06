@@ -223,7 +223,7 @@ export default function CustomDraftEditor({
         {isSaved() ? (
           <Alert
             className={'float-right'}
-            message={'Your changes have been saved.'}
+            message={"You don't have any unsaved changes."}
             type={'success'}
             showIcon={true}
           />
