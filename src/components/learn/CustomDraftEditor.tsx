@@ -18,6 +18,7 @@ import {
   EditOutlined,
 } from '@ant-design/icons'
 import NProgress from 'nprogress'
+import CodeUtils from 'draft-js-code'
 
 export default function CustomDraftEditor({
   pageContent,
@@ -81,7 +82,16 @@ export default function CustomDraftEditor({
   const onChange = (editorState: EditorState) => setEditorState(editorState)
 
   const handleKeyCommand = (command: string, editorState: EditorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command)
+    let newState
+    if (command === TAB_COMMAND) {
+      return 'handled'
+    }
+    if (CodeUtils.hasSelectionInBlock(editorState)) {
+      newState = CodeUtils.handleKeyCommand(editorState, command)
+    }
+    if (!newState) {
+      newState = RichUtils.handleKeyCommand(editorState, command)
+    }
     if (command === SAVE_COMMAND) {
       save({ content: editorState.getCurrentContent(), setSavedPageContent })
     }
@@ -101,22 +111,37 @@ export default function CustomDraftEditor({
   }, [pageContent])
 
   const SAVE_COMMAND = 'my-editor-save'
+  const TAB_COMMAND = 'my-tab-command'
   type SyntheticKeyboardEvent = React.KeyboardEvent<{}>
+
   const mapKeyToEditorCommand = (e: SyntheticKeyboardEvent) => {
+    if (e.keyCode === 9 /* TAB */) {
+      const newEditorState = CodeUtils.onTab(e, editorState)
+      if (newEditorState !== editorState) {
+        onChange(newEditorState)
+      }
+      return TAB_COMMAND
+    }
+    if (CodeUtils.hasSelectionInBlock(editorState)) {
+      return CodeUtils.getKeyBinding(e)
+    }
+
     if (
       e.keyCode === 83 /* `S` key */ &&
       KeyBindingUtil.hasCommandModifier(e)
     ) {
       return SAVE_COMMAND
     }
-    if (e.keyCode === 9 /* TAB */) {
-      const newEditorState = RichUtils.onTab(e, editorState, 4 /* maxDepth */)
-      if (newEditorState !== editorState) {
-        onChange(newEditorState)
-      }
-      return null
-    }
     return getDefaultKeyBinding(e)
+  }
+
+  const handleReturn = (e: SyntheticKeyboardEvent) => {
+    if (!CodeUtils.hasSelectionInBlock(editorState)) {
+      return 'not-handled'
+    }
+
+    onChange(CodeUtils.handleReturn(e, editorState))
+    return 'handled'
   }
 
   const toggleBlockType = (blockType: DraftBlockType | string) => {
@@ -343,6 +368,7 @@ export default function CustomDraftEditor({
             }
             ref={editor}
             spellCheck={true}
+            handleReturn={handleReturn}
           />
           <br />
           <div className={'text-center bottom-actions'}>
