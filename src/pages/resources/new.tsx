@@ -51,7 +51,6 @@ export default function CreateResource() {
 
   const [
     { data: resourcesData, fetching: resourcesFetching, error: resourcesError },
-    reExecuteResourcesQuery,
   ] = useQuery({
     query: RESOURCES_QUERY,
   })
