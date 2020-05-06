@@ -151,7 +151,7 @@ export default function Sidebar({
         mode={'inline'}
         onOpenChange={(e) => setOpenKeys(e)}
         onClick={handleClick}
-        defaultSelectedKeys={defaultSelectedKeys}
+        selectedKeys={defaultSelectedKeys}
         openKeys={openKeys}
         className={`sidebar-menu pt-2 ${xs ? '' : 'position-fixed'}`}
         id={'sidebar'}

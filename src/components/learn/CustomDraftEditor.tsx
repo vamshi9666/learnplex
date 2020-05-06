@@ -9,7 +9,7 @@ import {
   KeyBindingUtil,
   RichUtils,
 } from 'draft-js'
-import { Alert, Button, Space } from 'antd'
+import { Alert, Button, message, Space } from 'antd'
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -19,6 +19,8 @@ import {
 } from '@ant-design/icons'
 import NProgress from 'nprogress'
 import CodeUtils from 'draft-js-code'
+
+import usePreventRouteChangeIf from '../../lib/hooks/usePreventRouteChangeIf'
 
 export default function CustomDraftEditor({
   pageContent,
@@ -331,6 +333,12 @@ export default function CustomDraftEditor({
     return () => {
       window.removeEventListener('beforeunload', handleWindowClose)
     }
+  })
+
+  usePreventRouteChangeIf({
+    shouldPreventRouteChange: inEditMode && !isSaved(),
+    onRouteChangePrevented: () =>
+      message.error('You have some unsaved changes.', 1),
   })
 
   return (
