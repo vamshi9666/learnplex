@@ -17,7 +17,7 @@ export default function Header() {
         onClick={() => router.push('/')}
       >
         <img src={'/logo.png'} alt={'Coderplex Logo'} width={'32'} />
-        <span className={'ml-4 font-large'}>
+        <span className={'ml-2 font-large'}>
           <b>Coderplex</b>
         </span>
       </div>

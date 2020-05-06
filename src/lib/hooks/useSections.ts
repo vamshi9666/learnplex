@@ -77,13 +77,14 @@ export function useSections({
   }, [sectionsListData, sectionsListError, sectionsListFetching])
 
   let body
-  if ((sectionsListFetching && !sectionsListError) || sectionsMap.size === 0) {
+  if (sectionsListError) {
+    body = React.createElement(PageNotFound)
+  } else if (sectionsListFetching || sectionsMap.size === 0) {
     body = React.createElement(Skeleton, {
       active: true,
       paragraph: { rows: 10 },
     })
   } else if (sectionsListError) {
-    body = React.createElement(PageNotFound)
   } else {
     body = undefined
   }

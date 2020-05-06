@@ -45,16 +45,18 @@ export default function useSlugs({
     sectionsMap,
   ])
 
-  let isValidPage = true
-
-  if (!sectionsListFetching && !!currentSectionId) {
-    isValidPage = !!sectionsMap.get(currentSectionId)
-  }
-
   let modifiedBody = body
 
-  if (!isValidPage) {
-    modifiedBody = React.createElement(PageNotFound)
+  if (!body) {
+    let isValidPage = true
+
+    if (!!currentSectionId) {
+      isValidPage = !!sectionsMap.get(currentSectionId)
+    }
+
+    if (!isValidPage) {
+      modifiedBody = React.createElement(PageNotFound)
+    }
   }
 
   const pageContent = sectionsMap.get(currentSectionId)?.page?.content

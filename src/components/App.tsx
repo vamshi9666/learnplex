@@ -26,7 +26,7 @@ export default function App({ Component }: { Component: any }) {
         <meta charSet="utf-8" />
       </Head>
       <Layout className={'mh-100vh'}>
-        <Layout.Header className={''}>
+        <Layout.Header className={'mb-3'}>
           {/* TODO: Without Provider, useEffect is not running in useUser hook, figure out why */}
           <Provider value={client}>
             <Header />
