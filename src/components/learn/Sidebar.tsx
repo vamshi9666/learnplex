@@ -146,7 +146,7 @@ export default function Sidebar({
         onClick={handleClick}
         defaultSelectedKeys={defaultSelectedKeys}
         openKeys={openKeys}
-        className={`sidebar-menu ${xs ? '' : 'position-fixed'}`}
+        className={`sidebar-menu pt-2 ${xs ? '' : 'position-fixed'}`}
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >

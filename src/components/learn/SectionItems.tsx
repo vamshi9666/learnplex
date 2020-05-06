@@ -54,7 +54,7 @@ export default function SectionItems({
   }
 
   return (
-    <Timeline className={`${topLevel ? 'p-5' : ''} bg-component`}>
+    <Timeline className={`${topLevel ? 'p-5' : ''} timeline-bg`}>
       <DragDropContext
         onDragEnd={(result) =>
           reorder({

@@ -4,6 +4,7 @@ import { Layout } from 'antd'
 import { createClient } from '@urql/core'
 import urljoin from 'url-join'
 import { Provider } from 'urql'
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Header } from './layout'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
@@ -18,6 +19,7 @@ export default function App({ Component }: { Component: any }) {
       }
     },
   })
+  const { xs } = useBreakpoint()
   return (
     <>
       <Head>
@@ -31,7 +33,7 @@ export default function App({ Component }: { Component: any }) {
           </Provider>
         </Layout.Header>
         <br />
-        <Layout.Content className={'py-2 px-5 h-100p'}>
+        <Layout.Content className={`pt-3 py-2 ${xs ? 'px-2' : 'px-5'} h-100p`}>
           {Component}
         </Layout.Content>
       </Layout>

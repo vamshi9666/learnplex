@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Breadcrumb, Col, Row, Skeleton, Typography } from 'antd'
 import { useMutation, useQuery } from 'urql'
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'
@@ -12,7 +13,6 @@ import ResourceIndex from '../../../../../components/learn/ResourceIndex'
 import { useUser } from '../../../../../lib/hooks/useUser'
 import NotAuthenticated from '../../../../../components/error/NotAuthenticated'
 import NotAuthorized from '../../../../../components/error/NotAuthorized'
-
 import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,
@@ -20,6 +20,7 @@ import {
 
 export default function EditResourceIndex() {
   const router = useRouter()
+  const { xs } = useBreakpoint()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
   const RESOURCE_QUERY = `
@@ -136,8 +137,8 @@ export default function EditResourceIndex() {
             />
           </Col>
 
-          <Col className={'px-5'} {...CONTENT_COL_LAYOUT}>
-            <Typography className={'text-center bg-component pb-1 pt-2'}>
+          <Col className={`${!xs ? 'px-5' : ''}`} {...CONTENT_COL_LAYOUT}>
+            <Typography className={'text-center pb-1 pt-2'}>
               <Typography.Title
                 level={2}
                 editable={{

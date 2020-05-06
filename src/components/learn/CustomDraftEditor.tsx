@@ -17,6 +17,7 @@ import {
   CheckOutlined,
   EditOutlined,
 } from '@ant-design/icons'
+import NProgress from 'nprogress'
 
 export default function CustomDraftEditor({
   pageContent,
@@ -213,25 +214,27 @@ export default function CustomDraftEditor({
   const ActionControls = ({ editorState }: { editorState: EditorState }) => {
     return inEditMode ? (
       <>
-        <Button
-          className={'mb-3 float-left'}
-          type={'primary'}
-          icon={<SaveOutlined />}
-          onClick={async (e) =>
-            await save({
-              content: editorState.getCurrentContent(),
-              setSavedPageContent,
-            })
-          }
-        >
-          Save
-        </Button>
         <Alert
-          className={'float-right'}
-          message={'You are editing this resource.'}
+          className={'float-left'}
+          message={'You are currently in edit mode.'}
           type={'info'}
           showIcon={true}
         />
+        {isSaved() ? (
+          <Alert
+            className={'float-right'}
+            message={'Your changes have been saved.'}
+            type={'success'}
+            showIcon={true}
+          />
+        ) : (
+          <Alert
+            className={'float-right'}
+            message={'You have some unsaved changes.'}
+            type={'warning'}
+            showIcon={true}
+          />
+        )}
       </>
     ) : (
       <>
@@ -276,11 +279,16 @@ export default function CustomDraftEditor({
     },
   }
 
-  const handleWindowClose = (e: any) => {
+  const isSaved = () => {
     const currentContent = JSON.stringify(
       convertToRaw(editorState.getCurrentContent())
     )
-    if (savedPageContent !== currentContent) {
+    return savedPageContent === currentContent
+  }
+
+  const handleWindowClose = (e: any) => {
+    if (!isSaved()) {
+      NProgress.done()
       e.preventDefault()
       // TODO: A default message is being shown instead of this, figure out why
       return (e.returnValue =
