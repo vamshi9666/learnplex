@@ -161,6 +161,8 @@ export type Mutation = {
   logout: Scalars['Boolean']
   register: Scalars['Boolean']
   revokeTokensForUser: Scalars['Boolean']
+  validateEmail: Scalars['Boolean']
+  validateUsername: Scalars['Boolean']
   sendConfirmationMail: Scalars['Boolean']
   createTopic: Topic
   createResource: Resource
@@ -199,6 +201,14 @@ export type MutationRegisterArgs = {
 
 export type MutationRevokeTokensForUserArgs = {
   userId: Scalars['Float']
+}
+
+export type MutationValidateEmailArgs = {
+  email: Scalars['String']
+}
+
+export type MutationValidateUsernameArgs = {
+  username: Scalars['String']
 }
 
 export type MutationSendConfirmationMailArgs = {
