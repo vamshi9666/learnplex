@@ -9,7 +9,7 @@ import {
   KeyBindingUtil,
   RichUtils,
 } from 'draft-js'
-import { Alert, Button } from 'antd'
+import { Alert, Button, Space } from 'antd'
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -34,6 +34,7 @@ export default function CustomDraftEditor({
   completeSection,
   isSectionComplete,
   isLoggedIn,
+  exitEditMode,
 }: {
   pageContent: string
   fork: () => void
@@ -54,6 +55,7 @@ export default function CustomDraftEditor({
   completeSection: () => void
   isSectionComplete: boolean
   isLoggedIn: boolean
+  exitEditMode: () => void
 }) {
   const EMPTY_PAGE_CONTENT = JSON.stringify({
     entityMap: {},
@@ -122,15 +124,14 @@ export default function CustomDraftEditor({
       }
       return TAB_COMMAND
     }
-    if (CodeUtils.hasSelectionInBlock(editorState)) {
-      return CodeUtils.getKeyBinding(e)
-    }
-
     if (
       e.keyCode === 83 /* `S` key */ &&
       KeyBindingUtil.hasCommandModifier(e)
     ) {
       return SAVE_COMMAND
+    }
+    if (CodeUtils.hasSelectionInBlock(editorState)) {
+      return CodeUtils.getKeyBinding(e)
     }
     return getDefaultKeyBinding(e)
   }
@@ -239,20 +240,21 @@ export default function CustomDraftEditor({
   const ActionControls = ({ editorState }: { editorState: EditorState }) => {
     return inEditMode ? (
       <>
-        <Alert
-          className={'float-left'}
-          message={'You are currently in edit mode.'}
-          type={'info'}
-          showIcon={true}
-        />
-        {isSaved() ? (
+        <Space className={'float-left'}>
           <Alert
-            className={'float-right'}
-            message={"You don't have any unsaved changes."}
-            type={'success'}
+            message={'You are currently in edit mode.'}
+            type={'info'}
             showIcon={true}
           />
-        ) : (
+          <Button
+            type={'primary'}
+            size={'large'}
+            onClick={() => exitEditMode()}
+          >
+            Exit
+          </Button>
+        </Space>
+        {!isSaved() && (
           <Alert
             className={'float-right'}
             message={'You have some unsaved changes.'}

@@ -40,6 +40,9 @@ export default function CreateResource() {
       createResource(data: $data) {
         id
         slug
+        user {
+          username
+        }
         description
       }
     }
@@ -72,8 +75,9 @@ export default function CreateResource() {
         console.log({ 'create resource error': result.error })
       } else {
         console.log({ result })
-        reExecuteResourcesQuery()
-        form.resetFields()
+        const username = result.data.createResource.user.username
+        const resourceSlug = result.data.createResource.slug
+        router.push(`/${username}/learn/edit/${resourceSlug}/resource-index`)
       }
     })
     NProgress.done()

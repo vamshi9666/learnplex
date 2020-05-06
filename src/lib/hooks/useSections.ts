@@ -373,6 +373,35 @@ export function useSections({
     }
   }
 
+  function getLeastOrderSection({ sectionId }: { sectionId: string }): string {
+    const currentSection = sectionsMap.get(sectionId)!
+    if (!currentSection) {
+      return ''
+    }
+    let sectionIdWithLeastOrder = ''
+    let leastOrder = -1
+    if (currentSection.sections.length === 0) {
+      return currentSection.id
+    }
+    currentSection.sections.forEach((section) => {
+      if (leastOrder === -1) {
+        sectionIdWithLeastOrder = section.id
+      } else if (leastOrder > section.order) {
+        sectionIdWithLeastOrder = section.id
+      }
+    })
+    return getLeastOrderSection({ sectionId: sectionIdWithLeastOrder })
+  }
+
+  const firstPagePath = () => {
+    const leastOrderSection = getLeastOrderSection({ sectionId: baseSectionId })
+    if (!leastOrderSection) {
+      return ''
+    }
+    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSection })
+    return slugs.reduce((a, b) => `${a}/${b}`)
+  }
+
   return {
     sectionsListFetching,
     baseSectionId,
@@ -385,5 +414,6 @@ export function useSections({
     reExecuteSectionsListQuery,
     reorderSections,
     getNeighbourSectionSlugs,
+    firstPagePath,
   }
 }

@@ -186,6 +186,12 @@ export default function CustomEditor({
     NProgress.done()
   }
 
+  const exitEditMode = async () => {
+    const slugs = router.query.slugs as string[]
+    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+    await router.push(`/${username}/learn/${resourceSlug}/${slugsPath}`)
+  }
+
   return (
     <CustomDraftEditor
       fork={fork}
@@ -203,6 +209,7 @@ export default function CustomEditor({
         section: sectionsMap.get(currentSectionId)!,
       })}
       isLoggedIn={!!user}
+      exitEditMode={exitEditMode}
     />
   )
 }
