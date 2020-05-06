@@ -7,9 +7,9 @@ import { useUser } from '../../lib/hooks/useUser'
 import { SEO } from '../../components/SEO'
 import { Topic, UserRole } from '../../graphql/types'
 import { slug } from '../../utils/slug'
-import NotAuthorized from '../../components/error/NotAuthorized'
-import NotAuthenticated from '../../components/error/NotAuthenticated'
-import InternalServerError from '../../components/error/InternalServerError'
+import NotAuthorized from '../../components/result/NotAuthorized'
+import NotAuthenticated from '../../components/result/NotAuthenticated'
+import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 
 export default function CreateTopic() {

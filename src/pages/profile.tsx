@@ -2,8 +2,8 @@ import React from 'react'
 import { Skeleton } from 'antd'
 
 import { useUser } from '../lib/hooks/useUser'
-import ComingSoon from '../components/error/ComingSoon'
-import InternalServerError from '../components/error/InternalServerError'
+import ComingSoon from '../components/result/ComingSoon'
+import InternalServerError from '../components/result/InternalServerError'
 
 export default function Profile() {
   const { fetching, error } = useUser()

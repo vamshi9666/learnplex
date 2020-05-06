@@ -4,7 +4,7 @@ import { Skeleton } from 'antd'
 import { DropResult } from 'react-beautiful-dnd'
 
 import { Section } from '../../graphql/types'
-import PageNotFound from '../../components/error/PageNotFound'
+import PageNotFound from '../../components/result/PageNotFound'
 
 export function useSections({
   resourceSlug,

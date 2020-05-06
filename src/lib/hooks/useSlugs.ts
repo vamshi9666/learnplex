@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
 import { setCurrentSectionIdFromSlugs } from '../../utils/setSectionIdFromSlugs'
-import PageNotFound from '../../components/error/PageNotFound'
+import PageNotFound from '../../components/result/PageNotFound'
 
 export default function useSlugs({
   resourceSlug,

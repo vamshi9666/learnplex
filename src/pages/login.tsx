@@ -1,6 +1,6 @@
 import { useMutation } from 'urql'
 import React, { useState } from 'react'
-import { Alert, Button, Divider, Form, Input } from 'antd'
+import { Alert, Button, Divider, Form, Input, Skeleton } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -10,6 +10,8 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
+import { useUser } from '../lib/hooks/useUser'
+import AlreadyLoggedIn from '../components/result/AlreadyLoggedIn'
 
 export default function Login() {
   const router = useRouter()
@@ -46,6 +48,16 @@ export default function Login() {
       }
     })
     NProgress.done()
+  }
+
+  const { user, fetching } = useUser()
+
+  if (fetching) {
+    return <Skeleton active={true} />
+  }
+
+  if (user) {
+    return <AlreadyLoggedIn />
   }
 
   return (

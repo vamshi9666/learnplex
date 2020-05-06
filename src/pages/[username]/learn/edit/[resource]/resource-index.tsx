@@ -11,8 +11,8 @@ import Sidebar from '../../../../../components/learn/Sidebar'
 import { useSections } from '../../../../../lib/hooks/useSections'
 import ResourceIndex from '../../../../../components/learn/ResourceIndex'
 import { useUser } from '../../../../../lib/hooks/useUser'
-import NotAuthenticated from '../../../../../components/error/NotAuthenticated'
-import NotAuthorized from '../../../../../components/error/NotAuthorized'
+import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
+import NotAuthorized from '../../../../../components/result/NotAuthorized'
 import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,

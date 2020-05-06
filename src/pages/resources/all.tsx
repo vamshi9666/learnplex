@@ -1,14 +1,14 @@
 import React from 'react'
 import { Button, Skeleton } from 'antd'
 import { useQuery } from 'urql'
+import { useRouter } from 'next/router'
 
 import { useUser } from '../../lib/hooks/useUser'
-import NotAuthenticated from '../../components/error/NotAuthenticated'
-import InternalServerError from '../../components/error/InternalServerError'
+import NotAuthenticated from '../../components/result/NotAuthenticated'
+import InternalServerError from '../../components/result/InternalServerError'
 import { Resource, UserRole } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
-import { useRouter } from 'next/router'
-import NotAuthorized from '../../components/error/NotAuthorized'
+import NotAuthorized from '../../components/result/NotAuthorized'
 
 export default function MyResources() {
   const router = useRouter()
