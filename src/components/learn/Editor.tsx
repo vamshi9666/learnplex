@@ -105,7 +105,9 @@ export default function CustomEditor({
         const slugs = router.query.slugs as string[]
         const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
         await router.push(
-          `/${user?.username}/learn/edit/${resourceSlug}/${slugsPath}`
+          `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+          `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+          { shallow: true }
         )
       }
     })
@@ -189,7 +191,11 @@ export default function CustomEditor({
   const exitEditMode = async () => {
     const slugs = router.query.slugs as string[]
     const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(`/${username}/learn/${resourceSlug}/${slugsPath}`)
+    await router.push(
+      `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+      `/${username}/learn/${resourceSlug}/${slugsPath}`,
+      { shallow: true }
+    )
   }
 
   return (

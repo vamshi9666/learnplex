@@ -84,7 +84,6 @@ export function useSections({
       active: true,
       paragraph: { rows: 10 },
     })
-  } else if (sectionsListError) {
   } else {
     body = undefined
   }

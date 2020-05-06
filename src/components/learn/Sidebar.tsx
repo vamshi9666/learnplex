@@ -117,24 +117,31 @@ export default function Sidebar({
   )
 
   const handleClick = async (e: any) => {
-    let toEditPage = inEditMode
-    if (e.key === 'edit-resource-index') {
-      toEditPage = true
-    }
     if (e.key === 'breadcrumb') {
       router.reload()
       return
     }
     let path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
     if (e.key === 'edit-resource-index') {
-      path = 'resource-index'
-    }
-    if (toEditPage) {
       return await router.push(
-        `/${username}/learn/edit/${resourceSlug}/${path}`
+        `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
+        `/${username}/learn/edit/${resourceSlug}/resource-index`,
+        { shallow: true }
       )
     }
-    await router.push(`/${username}/learn/${resourceSlug}/${path}`)
+    const slugs = path.split('/')
+    if (inEditMode) {
+      return await router.push(
+        `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+        `/${username}/learn/edit/${resourceSlug}/${path}`,
+        { shallow: true }
+      )
+    }
+    await router.push(
+      `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+      `/${username}/learn/${resourceSlug}/${path}`,
+      { shallow: true }
+    )
   }
   const sidebar = document.getElementById('sidebar')
 
