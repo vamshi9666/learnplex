@@ -1,14 +1,21 @@
-import React from 'react'
-import { convertToRaw } from 'draft-js'
+import React, { useEffect, useState } from 'react'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
-import { message, Skeleton } from 'antd'
+import { Alert, Button, message, Skeleton, Space } from 'antd'
 
 import { useUser } from '../../lib/hooks/useUser'
-import CustomDraftEditor from './CustomDraftEditor'
 import { useSections } from '../../lib/hooks/useSections'
 import useProgress from '../../lib/hooks/useProgress'
+import MarkdownEditor, { mdParser } from './MarkdownEditor'
+import {
+  SaveOutlined,
+  CheckOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
+import usePreventRouteChangeIf from '../../lib/hooks/usePreventRouteChangeIf'
 
 export default function CustomEditor({
   pageContent,
@@ -24,17 +31,6 @@ export default function CustomEditor({
   inEditMode?: boolean
 }) {
   const router = useRouter()
-  const EMPTY_PAGE_CONTENT = JSON.stringify({
-    entityMap: {},
-    blocks: [
-      {
-        text: '',
-        key: 'empty',
-        type: 'unstyled',
-        entityRanges: [],
-      },
-    ],
-  })
   const SAVE_PAGE_MUTATION = `
     mutation($data: SavePageInput!) {
       savePage(data: $data) {
@@ -57,27 +53,22 @@ export default function CustomEditor({
       }
     }
   `
-
   if (pageContent === undefined) {
-    pageContent = EMPTY_PAGE_CONTENT
+    pageContent = ''
   }
-
+  const [editorState, setEditorState] = useState(pageContent)
   const [, savePage] = useMutation(SAVE_PAGE_MUTATION)
   const [, forkResource] = useMutation(FORK_RESOURCE_MUTATION)
 
-  const save = async ({
-    content,
-    setSavedPageContent,
-  }: {
-    content: any
-    setSavedPageContent: React.Dispatch<React.SetStateAction<string>>
-  }) => {
-    const pageContentJson = convertToRaw(content)
-    const pageContent = JSON.stringify(pageContentJson)
+  useEffect(() => {
+    setEditorState(pageContent || '')
+  }, [pageContent])
+
+  const save = async () => {
     NProgress.start()
     savePage({
       data: {
-        pageContent,
+        pageContent: editorState,
         sectionId: currentSectionId,
       },
     }).then((result) => {
@@ -85,7 +76,6 @@ export default function CustomEditor({
         console.log({ savePageError: result.error })
       } else {
         console.log({ result, content: result.data.savePage.page.content })
-        setSavedPageContent(result.data.savePage.page.content)
       }
     })
     NProgress.done()
@@ -145,6 +135,34 @@ export default function CustomEditor({
     sectionsMap,
   })
 
+  const isSaved = () => pageContent === editorState
+
+  const handleWindowClose = (e: any) => {
+    if (!isSaved()) {
+      NProgress.done()
+      e.preventDefault()
+      // TODO: A default message is being shown instead of this, figure out why
+      return (e.returnValue =
+        'You have unsaved changes - are you sure you wish to close?')
+    }
+  }
+
+  useEffect(() => {
+    if (inEditMode) {
+      window.addEventListener('beforeunload', handleWindowClose)
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose)
+    }
+  })
+
+  usePreventRouteChangeIf({
+    shouldPreventRouteChange: !isSaved(),
+    onRouteChangePrevented: () =>
+      message.error('You have some unsaved changes.', 1),
+  })
+
   if (fetching) return <Skeleton active={true} />
 
   if (body) return body
@@ -171,6 +189,7 @@ export default function CustomEditor({
   })
 
   const goToPreviousSection = async () => {
+    console.log('prev')
     if (!prevSectionPath) {
       return
     }
@@ -178,6 +197,7 @@ export default function CustomEditor({
   }
 
   const goToNextSection = async () => {
+    console.log('next')
     if (!nextSectionPath) {
       return
     }
@@ -210,24 +230,123 @@ export default function CustomEditor({
     )
   }
 
+  const TopActionControls = () => {
+    return inEditMode ? (
+      <>
+        <Space className={'float-left'}>
+          <Alert
+            message={'You are currently in edit mode.'}
+            type={'info'}
+            showIcon={true}
+          />
+          <Button
+            type={'primary'}
+            size={'large'}
+            onClick={() => exitEditMode()}
+          >
+            Exit
+          </Button>
+        </Space>
+        {!isSaved() && (
+          <Alert
+            className={'float-right'}
+            message={'You have some unsaved changes.'}
+            type={'warning'}
+            showIcon={true}
+          />
+        )}
+      </>
+    ) : (
+      <>
+        <Button
+          className={'float-left'}
+          type={'primary'}
+          icon={<EditOutlined />}
+          onClick={() => fork()}
+          disabled={!user}
+        >
+          Edit
+        </Button>
+        {!user && (
+          <Alert
+            className={'float-right'}
+            message={
+              'Please login to track your progress or edit this resource'
+            }
+            type={'info'}
+            showIcon={true}
+          />
+        )}
+      </>
+    )
+  }
+
+  const BottomActionControls = () => (
+    <div className={'text-center bg-component border-0 m-0 p-2'}>
+      <Button
+        className={'float-left'}
+        disabled={!prevSectionPath}
+        onClick={() => goToPreviousSection()}
+      >
+        <ArrowLeftOutlined />
+        Previous
+      </Button>
+      {inEditMode ? (
+        <Button
+          type={'primary'}
+          onClick={async (e) => await save()}
+          icon={<SaveOutlined />}
+        >
+          Save
+        </Button>
+      ) : isSectionComplete({
+          section: sectionsMap.get(currentSectionId)!,
+        }) ? (
+        <Button
+          type={'primary'}
+          className={'bg-success'}
+          icon={<CheckOutlined />}
+        >
+          Completed
+        </Button>
+      ) : (
+        <Button
+          type={'primary'}
+          onClick={() => completeSection()}
+          disabled={editorState === '' || !user}
+          icon={<CheckOutlined />}
+        >
+          Complete
+        </Button>
+      )}
+      <Button
+        className={'float-right'}
+        disabled={!nextSectionPath}
+        onClick={() => goToNextSection()}
+      >
+        Next
+        <ArrowRightOutlined />
+      </Button>
+    </div>
+  )
+
   return (
-    <CustomDraftEditor
-      fork={fork}
-      save={save}
-      inEditMode={inEditMode}
-      editorKey={`editor-${currentSectionId}`}
-      pageContent={pageContent}
-      showPrevButton={!!prevSectionPath}
-      showNextButton={!!nextSectionPath}
-      goToNextSection={goToNextSection}
-      goToPreviousSection={goToPreviousSection}
-      pageEmpty={pageContent === EMPTY_PAGE_CONTENT}
-      completeSection={completeSection}
-      isSectionComplete={isSectionComplete({
-        section: sectionsMap.get(currentSectionId)!,
-      })}
-      isLoggedIn={!!user}
-      exitEditMode={exitEditMode}
-    />
+    <>
+      <TopActionControls />
+      <div className={'clearfix'} />
+      {inEditMode ? (
+        <MarkdownEditor
+          editorState={editorState}
+          setEditorState={setEditorState}
+          save={save}
+        />
+      ) : (
+        <div
+          className={'bg-component p-4'}
+          dangerouslySetInnerHTML={{ __html: mdParser.render(editorState) }}
+        />
+      )}
+      <BottomActionControls />
+    </>
   )
 }

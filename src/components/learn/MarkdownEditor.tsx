@@ -1,7 +1,7 @@
+import React from 'react'
 import dynamic from 'next/dynamic'
 import MarkdownIt from 'markdown-it'
 import insert from 'markdown-it-ins'
-import React, { useState } from 'react'
 import hljs from 'highlight.js'
 import { Skeleton } from 'antd'
 
@@ -15,7 +15,7 @@ if (process.browser) {
   KeyboardEventHandler = require('react-keyboard-event-handler')
 }
 
-const mdParser: any = new MarkdownIt({
+export const mdParser: any = new MarkdownIt({
   typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
@@ -29,12 +29,14 @@ const mdParser: any = new MarkdownIt({
 }).use(insert)
 
 export default function MarkdownEditor({
-  pageContent = '',
+  editorState,
+  setEditorState,
+  save,
 }: {
-  pageContent?: string
+  editorState: string
+  setEditorState: React.Dispatch<React.SetStateAction<string>>
+  save: () => void
 }) {
-  const [editorState, setEditorState] = useState(pageContent)
-
   const handleEditorChange = ({ html, text }: any) => {
     setEditorState(text)
     console.log('handleEditorChange', html, text)
@@ -45,25 +47,26 @@ export default function MarkdownEditor({
   }
 
   return (
-    <KeyboardEventHandler
-      handleKeys={['meta+s', 'tab']}
-      onKeyEvent={(key: any, e: any) => {
-        TabManager.enableTab(document.querySelector('textarea'), e)
-        if (key === 'meta+s') {
-          e.preventDefault()
-          // save()
-        }
-        console.log(`do something upon keydown event of ${key}`)
-      }}
-    >
-      {editorState}
-      <MdEditor
-        value={editorState}
-        style={{ height: '500px' }}
-        renderHTML={(text) => mdParser.render(text)}
-        onChange={handleEditorChange}
-        placeholder={'Write something here...'}
-      />
-    </KeyboardEventHandler>
+    <>
+      <KeyboardEventHandler
+        handleKeys={['meta+s', 'tab']}
+        onKeyEvent={(key: any, e: any) => {
+          TabManager.enableTab(document.querySelector('textarea'), e)
+          if (key === 'meta+s') {
+            e.preventDefault()
+            save()
+          }
+          console.log(`do something upon keydown event of ${key}`)
+        }}
+      >
+        <MdEditor
+          value={editorState}
+          style={{ height: '500px' }}
+          renderHTML={(text) => mdParser.render(text)}
+          onChange={handleEditorChange}
+          placeholder={'Write something here...'}
+        />
+      </KeyboardEventHandler>
+    </>
   )
 }
