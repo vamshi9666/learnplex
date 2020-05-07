@@ -244,7 +244,7 @@ export default function Profile() {
                     min: 5,
                   },
                 ]}
-                label={'Password'}
+                label={'New Password'}
               >
                 <Input.Password />
               </Form.Item>
@@ -269,7 +269,7 @@ export default function Profile() {
                     },
                   }),
                 ]}
-                label={'Confirm Password'}
+                label={'Confirm New Password'}
               >
                 <Input.Password />
               </Form.Item>
