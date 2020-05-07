@@ -98,7 +98,7 @@ export default function Home() {
           <Button
             className={'float-right'}
             type={'primary'}
-            onClick={() => router.push(`/resources`)}
+            onClick={() => router.push(`/resources/me`)}
             block={true}
           >
             My Resources
