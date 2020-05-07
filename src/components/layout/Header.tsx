@@ -30,17 +30,17 @@ export default function Header() {
           await router.push(key)
         }}
       >
+        <Menu.Item key={'/resources/all'}>All Resources</Menu.Item>
         {isLoggedIn
           ? [
-              <Menu.SubMenu key={'ii--resources'} title={'Resources'}>
-                <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
+              <Menu.SubMenu key={'user'} title={user?.username}>
+                <Menu.Item key={'/profile'}>Profile Settings</Menu.Item>
                 <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
-                <Menu.Item key={'/resources/all'}>All Resources</Menu.Item>
+                <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
                 {user?.roles.includes(UserRole.Admin) && (
                   <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
                 )}
               </Menu.SubMenu>,
-              <Menu.Item key={'/profile'}>{user.username}</Menu.Item>,
               <Menu.Item key={'/logout'}>Logout</Menu.Item>,
             ]
           : [
