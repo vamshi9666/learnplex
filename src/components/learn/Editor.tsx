@@ -50,6 +50,10 @@ export default function CustomEditor({
     mutation($data: ForkResourceInput!) {
       forkResource(data: $data) {
         id
+        slug
+        user {
+          username
+        }
       }
     }
   `
@@ -102,11 +106,10 @@ export default function CustomEditor({
         console.log({ forkResourceError: result.error })
       } else {
         console.log({ result })
-        const slugs = router.query.slugs as string[]
-        const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+        const forkedResource = result.data.forkResource
         await router.push(
-          `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-          `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+          `/[username]/learn/edit/[resource]/resource-index?username=${forkedResource.user.username}&resource=${forkedResource.slug}`,
+          `/${forkedResource.user.username}/learn/edit/${forkedResource.slug}/resource-index`,
           { shallow: true }
         )
       }

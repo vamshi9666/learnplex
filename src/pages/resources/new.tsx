@@ -133,7 +133,7 @@ export default function CreateResource() {
           name={'description'}
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input.TextArea autoSize={{ minRows: 3, maxRows: 8 }} />
         </Form.Item>
 
         <Form.Item {...FORM_TAIL_LAYOUT}>
