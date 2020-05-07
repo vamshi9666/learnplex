@@ -23,6 +23,7 @@ export function useSections({
         isPage
         hasSubSections
         order
+        depth
         sections {
           id
           order

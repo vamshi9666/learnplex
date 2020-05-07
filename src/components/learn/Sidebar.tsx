@@ -1,4 +1,4 @@
-import { Menu, Button, Skeleton } from 'antd'
+import { Menu, Button, Skeleton, Typography } from 'antd'
 import React, { useState } from 'react'
 import {
   FileOutlined,
@@ -59,11 +59,16 @@ export default function Sidebar({
     if (!section.hasSubSections) {
       return (
         <Menu.Item key={section.slug} id={section.id}>
-          <div>
+          <Typography>
             <span className={'mr-3'}>
               <FileOutlined />
             </span>
-            <span>{section.title}</span>
+            <Typography.Text
+              style={{ width: `${75 - section.depth * 3}%` }}
+              ellipsis={true}
+            >
+              {section.title}
+            </Typography.Text>
             <span className={'float-right'}>
               {isSectionComplete({ section }) ? (
                 <CheckCircleTwoTone twoToneColor={'#52c41a'} />
@@ -71,7 +76,7 @@ export default function Sidebar({
                 <CheckCircleOutlined />
               )}
             </span>
-          </div>
+          </Typography>
         </Menu.Item>
       )
     }
@@ -79,7 +84,7 @@ export default function Sidebar({
       <Menu.SubMenu
         key={section.slug}
         title={
-          <div>
+          <Typography>
             <span className={'mr-3'}>
               {openKeys.includes(section.slug) ? (
                 <DownOutlined />
@@ -87,7 +92,12 @@ export default function Sidebar({
                 <RightOutlined />
               )}
             </span>
-            <span>{section.title}</span>
+            <Typography.Text
+              style={{ width: `${75 - section.depth * 3}%` }}
+              ellipsis={true}
+            >
+              {section.title}
+            </Typography.Text>
             <span className={'float-right'}>
               {isSectionComplete({ section }) ? (
                 <CheckSquareTwoTone twoToneColor={'#52c41a'} />
@@ -95,7 +105,7 @@ export default function Sidebar({
                 <CheckSquareOutlined />
               )}
             </span>
-          </div>
+          </Typography>
         }
       >
         {sortedSections.map((currentSection) =>
