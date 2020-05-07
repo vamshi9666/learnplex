@@ -8,6 +8,7 @@ import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
+import { SEO } from '../../components/SEO'
 
 export default function MyResources() {
   const router = useRouter()
@@ -45,14 +46,20 @@ export default function MyResources() {
   const resources = data.resources as Resource[]
 
   return (
-    <ResourceCards
-      resources={resources}
-      description={"You don't have any resources yet."}
-      actionsIfEmpty={
-        <Button type={'primary'} onClick={() => router.push('/resources/new')}>
-          Create New Resource
-        </Button>
-      }
-    />
+    <>
+      <SEO title={'My Resources'} />
+      <ResourceCards
+        resources={resources}
+        description={"You don't have any resources yet."}
+        actionsIfEmpty={
+          <Button
+            type={'primary'}
+            onClick={() => router.push('/resources/new')}
+          >
+            Create New Resource
+          </Button>
+        }
+      />
+    </>
   )
 }

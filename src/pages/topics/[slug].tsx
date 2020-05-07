@@ -6,6 +6,8 @@ import { useRouter } from 'next/router'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 import PageNotFound from '../../components/result/PageNotFound'
+import { SEO } from '../../components/SEO'
+import { titleCase } from '../../utils/upperCamelCase'
 
 export default function TopicResources() {
   const router = useRouter()
@@ -39,9 +41,12 @@ export default function TopicResources() {
   const resources = data.resourcesByTopic as Resource[]
 
   return (
-    <ResourceCards
-      resources={resources}
-      description={`${router.query.slug} doesn't have any resources yet.`}
-    />
+    <>
+      <SEO title={`Resources | ${titleCase(router.query.slug as string)}`} />
+      <ResourceCards
+        resources={resources}
+        description={`${router.query.slug} doesn't have any resources yet.`}
+      />
+    </>
   )
 }

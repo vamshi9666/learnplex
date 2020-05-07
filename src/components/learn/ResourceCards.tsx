@@ -3,7 +3,6 @@ import React from 'react'
 import { useRouter } from 'next/router'
 
 import { Resource } from '../../graphql/types'
-import { SEO } from '../SEO'
 import { TagOutlined, UserOutlined } from '@ant-design/icons'
 
 export default function ResourceCards({
@@ -39,8 +38,6 @@ export default function ResourceCards({
 
   return (
     <>
-      <SEO title={'My Resources'} />
-
       <Row gutter={[16, 16]}>
         {resources.map((resource) => (
           <Col key={resource.id} xs={24} sm={8} md={6}>

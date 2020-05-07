@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import { useUser } from '../lib/hooks/useUser'
 import InternalServerError from '../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
+import { SEO } from '../components/SEO'
 
 export default function Profile() {
   const { user, fetching, error } = useUser()
@@ -103,182 +104,185 @@ export default function Profile() {
   }
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col sm={8} md={6} lg={5} xs={24}>
-        <Menu
-          mode={xs ? 'horizontal' : 'inline'}
-          selectedKeys={[selectedKey]}
-          onClick={({ key }) => setSelectedKey(key)}
-        >
-          <Menu.Item key={'basic'}>Basic Settings</Menu.Item>
-          <Menu.Item key={'security'}>Security Settings</Menu.Item>
-        </Menu>
-      </Col>
-      <Col sm={16} md={18} lg={17} xs={24}>
-        {selectedKey === BASIC && (
-          <Form
-            form={updateUserForm}
-            {...FORM_LAYOUT}
-            name={'update-user'}
-            onFinish={onFinish}
-            initialValues={{
-              name: user.name,
-              email: user.email,
-              username: user?.username,
-            }}
+    <>
+      <SEO title={'Profile'} />
+      <Row gutter={[16, 16]}>
+        <Col sm={8} md={6} lg={5} xs={24}>
+          <Menu
+            mode={xs ? 'horizontal' : 'inline'}
+            selectedKeys={[selectedKey]}
+            onClick={({ key }) => setSelectedKey(key)}
           >
-            <Form.Item
-              name={'name'}
-              label={'Name'}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+            <Menu.Item key={'basic'}>Basic Settings</Menu.Item>
+            <Menu.Item key={'security'}>Security Settings</Menu.Item>
+          </Menu>
+        </Col>
+        <Col sm={16} md={18} lg={17} xs={24}>
+          {selectedKey === BASIC && (
+            <Form
+              form={updateUserForm}
+              {...FORM_LAYOUT}
+              name={'update-user'}
+              onFinish={onFinish}
+              initialValues={{
+                name: user.name,
+                email: user.email,
+                username: user?.username,
+              }}
             >
-              <Input />
-            </Form.Item>
+              <Form.Item
+                name={'name'}
+                label={'Name'}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-            <Form.Item
-              name={'email'}
-              label={'Email'}
-              rules={[
-                {
-                  required: true,
-                  type: 'email',
-                },
-                () => ({
-                  validator(rule, value) {
-                    if (!value || value === user?.email) {
-                      return Promise.resolve()
-                    }
-                    return validateEmail({ email: value }).then((result) => {
-                      if (result.error) {
-                        console.log({ validateEmailError: result.error })
-                        return Promise.reject('Something went wrong!')
-                      } else {
-                        const valid = result.data.validateEmail
-                        if (!valid) {
-                          return Promise.reject(
-                            'There is already an account with this email id!'
-                          )
-                        }
+              <Form.Item
+                name={'email'}
+                label={'Email'}
+                rules={[
+                  {
+                    required: true,
+                    type: 'email',
+                  },
+                  () => ({
+                    validator(rule, value) {
+                      if (!value || value === user?.email) {
                         return Promise.resolve()
                       }
-                    })
-                  },
-                }),
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              name={'username'}
-              rules={[
-                {
-                  required: true,
-                },
-                () => ({
-                  validator(rule, value) {
-                    if (!value || value === user?.username) {
-                      return Promise.resolve()
-                    }
-                    return validateUsername({ username: value }).then(
-                      (result) => {
+                      return validateEmail({ email: value }).then((result) => {
                         if (result.error) {
-                          console.log({ validateUsernameError: result.error })
+                          console.log({ validateEmailError: result.error })
                           return Promise.reject('Something went wrong!')
                         } else {
-                          const valid = result.data.validateUsername
+                          const valid = result.data.validateEmail
                           if (!valid) {
                             return Promise.reject(
-                              'There is already an account with this username!'
+                              'There is already an account with this email id!'
                             )
                           }
                           return Promise.resolve()
                         }
+                      })
+                    },
+                  }),
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                name={'username'}
+                rules={[
+                  {
+                    required: true,
+                  },
+                  () => ({
+                    validator(rule, value) {
+                      if (!value || value === user?.username) {
+                        return Promise.resolve()
                       }
-                    )
-                  },
-                }),
-              ]}
-              label={'Username'}
-            >
-              <Input />
-            </Form.Item>
+                      return validateUsername({ username: value }).then(
+                        (result) => {
+                          if (result.error) {
+                            console.log({ validateUsernameError: result.error })
+                            return Promise.reject('Something went wrong!')
+                          } else {
+                            const valid = result.data.validateUsername
+                            if (!valid) {
+                              return Promise.reject(
+                                'There is already an account with this username!'
+                              )
+                            }
+                            return Promise.resolve()
+                          }
+                        }
+                      )
+                    },
+                  }),
+                ]}
+                label={'Username'}
+              >
+                <Input />
+              </Form.Item>
 
-            <Form.Item {...FORM_TAIL_LAYOUT}>
-              <Button type={'primary'} htmlType={'submit'}>
-                Update Information
-              </Button>
-            </Form.Item>
-          </Form>
-        )}
-        {selectedKey === SECURITY && (
-          <Form
-            {...FORM_LAYOUT}
-            form={updatePasswordForm}
-            name={'update-password'}
-            onFinish={onFinishPassword}
-          >
-            <Form.Item
-              name={'current_password'}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-              label={'Current Password'}
+              <Form.Item {...FORM_TAIL_LAYOUT}>
+                <Button type={'primary'} htmlType={'submit'}>
+                  Update Information
+                </Button>
+              </Form.Item>
+            </Form>
+          )}
+          {selectedKey === SECURITY && (
+            <Form
+              {...FORM_LAYOUT}
+              form={updatePasswordForm}
+              name={'update-password'}
+              onFinish={onFinishPassword}
             >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name={'password'}
-              rules={[
-                {
-                  required: true,
-                  min: 5,
-                },
-              ]}
-              label={'Password'}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name={'confirm_password'}
-              rules={[
-                {
-                  required: true,
-                  min: 5,
-                },
-                () => ({
-                  validator(rule, value) {
-                    if (!value) {
+              <Form.Item
+                name={'current_password'}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label={'Current Password'}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name={'password'}
+                rules={[
+                  {
+                    required: true,
+                    min: 5,
+                  },
+                ]}
+                label={'Password'}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name={'confirm_password'}
+                rules={[
+                  {
+                    required: true,
+                    min: 5,
+                  },
+                  () => ({
+                    validator(rule, value) {
+                      if (!value) {
+                        return Promise.resolve()
+                      }
+                      if (
+                        value !== updatePasswordForm.getFieldValue('password')
+                      ) {
+                        return Promise.reject('Passwords do not match')
+                      }
                       return Promise.resolve()
-                    }
-                    if (
-                      value !== updatePasswordForm.getFieldValue('password')
-                    ) {
-                      return Promise.reject('Passwords do not match')
-                    }
-                    return Promise.resolve()
-                  },
-                }),
-              ]}
-              label={'Confirm Password'}
-            >
-              <Input.Password />
-            </Form.Item>
+                    },
+                  }),
+                ]}
+                label={'Confirm Password'}
+              >
+                <Input.Password />
+              </Form.Item>
 
-            <Form.Item {...FORM_TAIL_LAYOUT}>
-              <Button type={'primary'} htmlType={'submit'}>
-                Update Password
-              </Button>
-            </Form.Item>
-          </Form>
-        )}
-      </Col>
-    </Row>
+              <Form.Item {...FORM_TAIL_LAYOUT}>
+                <Button type={'primary'} htmlType={'submit'}>
+                  Update Password
+                </Button>
+              </Form.Item>
+            </Form>
+          )}
+        </Col>
+      </Row>
+    </>
   )
 }

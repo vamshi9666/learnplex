@@ -29,7 +29,7 @@ export default function EditResource() {
 
   return (
     <>
-      <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
+      <SEO title={`Edit ${upperCamelCase(resourceSlug)}`} />
       {body ? (
         body
       ) : (

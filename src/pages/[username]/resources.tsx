@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 import PageNotFound from '../../components/result/PageNotFound'
+import { SEO } from '../../components/SEO'
 
 export default function UserResources() {
   const router = useRouter()
@@ -39,9 +40,12 @@ export default function UserResources() {
   const resources = data.resourcesByUsername as Resource[]
 
   return (
-    <ResourceCards
-      resources={resources}
-      description={`${router.query.username} doesn't have any resources yet.`}
-    />
+    <>
+      <SEO title={`Resources | ${router.query.username}`} />
+      <ResourceCards
+        resources={resources}
+        description={`${router.query.username} doesn't have any resources yet.`}
+      />
+    </>
   )
 }
