@@ -10,7 +10,7 @@ export default function AlreadyLoggedIn() {
       status={'success'}
       title={
         <Space>
-          <span>You are already logged in!</span>
+          <span>You are logged in!</span>
           <SmileTwoTone />
         </Space>
       }
