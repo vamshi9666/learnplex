@@ -16,6 +16,9 @@ if (process.browser) {
 }
 
 export const mdParser: any = new MarkdownIt({
+  html: true,
+  linkify: true,
+  breaks: true,
   typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
@@ -61,7 +64,7 @@ export default function MarkdownEditor({
       >
         <MdEditor
           value={editorState}
-          htmlClass={'h-100p'}
+          style={{ minHeight: '75vh' }}
           renderHTML={(text) => mdParser.render(text)}
           onChange={handleEditorChange}
           placeholder={'Write something here...'}

@@ -291,7 +291,10 @@ export default function CustomEditor({
   }
 
   const BottomActionControls = () => (
-    <div className={'text-center bg-component border-0 m-0 p-2'}>
+    <div
+      className={'text-center bg-component border-0 m-0 p-2'}
+      style={{ position: 'sticky', bottom: 0 }}
+    >
       <Button
         className={'float-left'}
         disabled={!prevSectionPath}
