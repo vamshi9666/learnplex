@@ -18,12 +18,23 @@ export type Query = {
   users: Array<User>
   topics: Array<Topic>
   resources: Array<Resource>
+  resourcesByUsername: Array<Resource>
+  resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
   allResources: Array<Resource>
+  allVerifiedResources: Array<Resource>
   baseSection: Section
   sections: Array<Section>
   sectionsList: Array<Section>
   userProgress?: Maybe<Progress>
+}
+
+export type QueryResourcesByUsernameArgs = {
+  username: Scalars['String']
+}
+
+export type QueryResourcesByTopicArgs = {
+  slug: Scalars['String']
 }
 
 export type QueryResourceArgs = {
@@ -176,6 +187,8 @@ export type Mutation = {
   updateResourceDescription: Resource
   updateResourceTitle: Resource
   searchResources: Array<Resource>
+  updateUser: Scalars['Boolean']
+  updatePassword: Scalars['Boolean']
 }
 
 export type MutationChangePasswordArgs = {
@@ -265,6 +278,14 @@ export type MutationSearchResourcesArgs = {
   value: Scalars['String']
 }
 
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  data: UpdatePasswordInput
+}
+
 export type ChangePasswordInput = {
   password: Scalars['String']
   token: Scalars['String']
@@ -315,4 +336,15 @@ export type ForkResourceInput = {
 
 export type CompleteSectionInput = {
   sectionId: Scalars['String']
+}
+
+export type UpdateUserInput = {
+  name: Scalars['String']
+  email: Scalars['String']
+  username: Scalars['String']
+}
+
+export type UpdatePasswordInput = {
+  password: Scalars['String']
+  currentPassword: Scalars['String']
 }

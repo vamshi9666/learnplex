@@ -25,6 +25,10 @@ export default function Home() {
         user {
           username
         }
+        topic {
+          title
+          slug
+        }
       }
     }
   `

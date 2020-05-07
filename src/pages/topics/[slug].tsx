@@ -1,15 +1,17 @@
 import React from 'react'
 import { Skeleton } from 'antd'
 import { useQuery } from 'urql'
+import { useRouter } from 'next/router'
 
-import InternalServerError from '../../components/result/InternalServerError'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
+import PageNotFound from '../../components/result/PageNotFound'
 
-export default function VerifiedResources() {
-  const ALL_VERIFIED_RESOURCES_QUERY = `
-    query {
-      allVerifiedResources {
+export default function TopicResources() {
+  const router = useRouter()
+  const RESOURCES_BY_TOPIC_QUERY = `
+    query($slug: String!) {
+      resourcesByTopic(slug: $slug) {
         id
         title
         description
@@ -25,18 +27,21 @@ export default function VerifiedResources() {
     }
   `
   const [{ data, fetching, error }] = useQuery({
-    query: ALL_VERIFIED_RESOURCES_QUERY,
+    query: RESOURCES_BY_TOPIC_QUERY,
+    variables: {
+      slug: router.query.slug,
+    },
   })
 
   if (fetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
+  if (error) return <PageNotFound />
 
-  const resources = data.allVerifiedResources as Resource[]
+  const resources = data.resourcesByTopic as Resource[]
 
   return (
     <ResourceCards
       resources={resources}
-      description={"There aren't any verified resources yet."}
+      description={`${router.query.slug} doesn't have any resources yet.`}
     />
   )
 }

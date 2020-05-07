@@ -64,6 +64,7 @@ export default function Register() {
   }
 
   const { user, fetching } = useUser()
+  const [form] = Form.useForm()
 
   console.log({ user, fetching })
 
@@ -94,6 +95,7 @@ export default function Register() {
       </Form.Item>
 
       <Form
+        form={form}
         {...FORM_LAYOUT}
         name={'register'}
         onFinish={onFinish}
@@ -154,6 +156,30 @@ export default function Register() {
             },
           ]}
           label={'Password'}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
+          name={'confirm_password'}
+          rules={[
+            {
+              required: true,
+              min: 5,
+            },
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.resolve()
+                }
+                if (value !== form.getFieldValue('password')) {
+                  return Promise.reject('Passwords do not match')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+          label={'Confirm Password'}
         >
           <Input.Password />
         </Form.Item>

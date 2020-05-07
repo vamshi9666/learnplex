@@ -1,3 +1,4 @@
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Form, Input } from 'antd'
 import NProgress from 'nprogress'
@@ -21,6 +22,7 @@ export default function ChangePassword() {
     }
   `
   const [, changePassword] = useMutation(CHANGE_PASSWORD_MUTATION)
+  const [form] = Form.useForm()
 
   const onFinish = async ({ password }: any) => {
     NProgress.start()
@@ -45,7 +47,12 @@ export default function ChangePassword() {
   return (
     <>
       <SEO title={'Change Password'} />
-      <Form {...FORM_LAYOUT} name={'change-password'} onFinish={onFinish}>
+      <Form
+        form={form}
+        {...FORM_LAYOUT}
+        name={'change-password'}
+        onFinish={onFinish}
+      >
         <Form.Item
           name={'password'}
           rules={[
@@ -55,6 +62,29 @@ export default function ChangePassword() {
             },
           ]}
           label={'New Password'}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name={'confirm_password'}
+          rules={[
+            {
+              required: true,
+              min: 5,
+            },
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.resolve()
+                }
+                if (value !== form.getFieldValue('password')) {
+                  return Promise.reject('Passwords do not match')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+          label={'Confirm Password'}
         >
           <Input.Password />
         </Form.Item>

@@ -1,9 +1,10 @@
-import { Card, Col, Empty, Row } from 'antd'
+import { Card, Col, Empty, Row, Space, Tag, Typography } from 'antd'
 import React from 'react'
 import { useRouter } from 'next/router'
 
 import { Resource } from '../../graphql/types'
 import { SEO } from '../SEO'
+import { TagOutlined, UserOutlined } from '@ant-design/icons'
 
 export default function ResourceCards({
   resources,
@@ -17,6 +18,25 @@ export default function ResourceCards({
   actionsIfEmpty?: any
 }) {
   const router = useRouter()
+
+  const goToTopic = async ({ e, slug }: { e: any; slug: string }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    await router.push(`/topics/${slug}`)
+  }
+
+  const goToUserResources = async ({
+    e,
+    username,
+  }: {
+    e: any
+    username: string
+  }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    await router.push(`/${username}/resources`)
+  }
+
   return (
     <>
       <SEO title={'My Resources'} />
@@ -33,13 +53,41 @@ export default function ResourceCards({
             >
               <Card.Meta
                 title={`${resource.title}`}
-                description={resource.description}
-                className={'overflow-scroll'}
+                description={
+                  <Typography.Paragraph
+                    ellipsis={{
+                      rows: 3,
+                    }}
+                  >
+                    {resource.description}
+                  </Typography.Paragraph>
+                }
+                // className={'overflow-scroll'}
                 style={{
                   height: '100px',
                 }}
               />
-              by {resource.user.username}
+              <br />
+              <Space style={{ overflowWrap: 'normal' }}>
+                <Tag
+                  className={'cursor-pointer'}
+                  color={'blue'}
+                  icon={<UserOutlined />}
+                  onClick={(e) =>
+                    goToUserResources({ e, username: resource.user.username })
+                  }
+                >
+                  {resource.user.username}
+                </Tag>
+                <Tag
+                  className={'cursor-pointer'}
+                  onClick={(e) => goToTopic({ e, slug: resource.topic.slug })}
+                  color={'magenta'}
+                  icon={<TagOutlined />}
+                >
+                  {resource.topic.slug}
+                </Tag>
+              </Space>
             </Card>
           </Col>
         ))}

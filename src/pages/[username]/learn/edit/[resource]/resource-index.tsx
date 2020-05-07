@@ -148,6 +148,7 @@ export default function EditResourceIndex() {
                 {titleCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph
+                ellipsis={{ rows: 3, expandable: true }}
                 editable={{
                   onChange: (value) => updateDescription(value),
                 }}

@@ -3,15 +3,17 @@ import { Button, Skeleton } from 'antd'
 import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
 
+import { useUser } from '../../lib/hooks/useUser'
+import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 
 export default function MyResources() {
   const router = useRouter()
-  const ALL_RESOURCES_QUERY = `
+  const RESOURCES_QUERY = `
     query {
-      allResources {
+      resources {
         id
         title
         description
@@ -26,14 +28,21 @@ export default function MyResources() {
       }
     }
   `
-  const [{ data, fetching, error }] = useQuery({
-    query: ALL_RESOURCES_QUERY,
+  const { user, fetching, error } = useUser()
+  const [
+    { data, fetching: resourcesFetching, error: resourcesError },
+  ] = useQuery({
+    query: RESOURCES_QUERY,
   })
 
   if (fetching) return <Skeleton active={true} />
+  if (!user) return <NotAuthenticated />
   if (error) return <InternalServerError message={error.message} />
 
-  const resources = data.allResources as Resource[]
+  if (resourcesFetching) return <Skeleton active={true} />
+  if (resourcesError) return <InternalServerError />
+
+  const resources = data.resources as Resource[]
 
   return (
     <ResourceCards

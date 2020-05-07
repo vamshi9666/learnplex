@@ -21,7 +21,7 @@ export default function Profile() {
   `
 
   const UPDATE_PASSWORD_MUTATION = `
-    mutation($data: PasswordInput!) {
+    mutation($data: UpdatePasswordInput!) {
       updatePassword(data: $data)
     }
   `
@@ -70,10 +70,11 @@ export default function Profile() {
     })
   }
 
-  const onFinishPassword = ({ password }: any) => {
+  const onFinishPassword = ({ current_password, password }: any) => {
     updatePassword({
       data: {
         password,
+        currentPassword: current_password,
       },
     }).then((result) => {
       if (result.error) {
@@ -210,6 +211,17 @@ export default function Profile() {
             name={'update-password'}
             onFinish={onFinishPassword}
           >
+            <Form.Item
+              name={'current_password'}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label={'Current Password'}
+            >
+              <Input.Password />
+            </Form.Item>
             <Form.Item
               name={'password'}
               rules={[

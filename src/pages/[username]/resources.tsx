@@ -1,17 +1,17 @@
 import React from 'react'
-import { Button, Skeleton } from 'antd'
+import { Skeleton } from 'antd'
 import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
 
-import InternalServerError from '../../components/result/InternalServerError'
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
+import PageNotFound from '../../components/result/PageNotFound'
 
-export default function MyResources() {
+export default function UserResources() {
   const router = useRouter()
-  const ALL_RESOURCES_QUERY = `
-    query {
-      allResources {
+  const RESOURCES_BY_USERNAME_QUERY = `
+    query($username: String!) {
+      resourcesByUsername(username: $username) {
         id
         title
         description
@@ -27,23 +27,21 @@ export default function MyResources() {
     }
   `
   const [{ data, fetching, error }] = useQuery({
-    query: ALL_RESOURCES_QUERY,
+    query: RESOURCES_BY_USERNAME_QUERY,
+    variables: {
+      username: router.query.username,
+    },
   })
 
   if (fetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
+  if (error) return <PageNotFound />
 
-  const resources = data.allResources as Resource[]
+  const resources = data.resourcesByUsername as Resource[]
 
   return (
     <ResourceCards
       resources={resources}
-      description={"You don't have any resources yet."}
-      actionsIfEmpty={
-        <Button type={'primary'} onClick={() => router.push('/resources/new')}>
-          Create New Resource
-        </Button>
-      }
+      description={`${router.query.username} doesn't have any resources yet.`}
     />
   )
 }
