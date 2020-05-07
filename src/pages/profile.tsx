@@ -1,5 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Col, Form, Input, Menu, message, Row, Skeleton } from 'antd'
+import {
+  Button,
+  Col,
+  Form,
+  Grid,
+  Input,
+  Menu,
+  message,
+  Row,
+  Skeleton,
+} from 'antd'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
 
@@ -44,6 +54,7 @@ export default function Profile() {
   const [, updatePassword] = useMutation(UPDATE_PASSWORD_MUTATION)
   const [updatePasswordForm] = Form.useForm()
   const [updateUserForm] = Form.useForm()
+  const { xs } = Grid.useBreakpoint()
 
   if (fetching) return <Skeleton active={true} />
   if (error) return <InternalServerError message={error.message} />
@@ -93,9 +104,9 @@ export default function Profile() {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col span={4}>
+      <Col sm={8} md={6} lg={5} xs={24}>
         <Menu
-          mode={'inline'}
+          mode={xs ? 'horizontal' : 'inline'}
           selectedKeys={[selectedKey]}
           onClick={({ key }) => setSelectedKey(key)}
         >
@@ -103,7 +114,7 @@ export default function Profile() {
           <Menu.Item key={'security'}>Security Settings</Menu.Item>
         </Menu>
       </Col>
-      <Col span={20}>
+      <Col sm={16} md={18} lg={17} xs={24}>
         {selectedKey === BASIC && (
           <Form
             form={updateUserForm}
