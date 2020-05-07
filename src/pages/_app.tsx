@@ -4,6 +4,8 @@ import 'isomorphic-unfetch'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 
+import 'react-markdown-editor-lite/lib/index.css'
+import 'highlight.js/styles/a11y-light.css'
 import 'draft-js/dist/Draft.css'
 import '../styles/nprogress.css'
 import 'antd/dist/antd.less'
