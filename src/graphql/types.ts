@@ -189,6 +189,7 @@ export type Mutation = {
   searchResources: Array<Resource>
   updateUser: Scalars['Boolean']
   updatePassword: Scalars['Boolean']
+  updateUserDetailsAsAdmin: Scalars['Boolean']
 }
 
 export type MutationChangePasswordArgs = {
@@ -286,6 +287,10 @@ export type MutationUpdatePasswordArgs = {
   data: UpdatePasswordInput
 }
 
+export type MutationUpdateUserDetailsAsAdminArgs = {
+  data: UpdateUserOptionalInput
+}
+
 export type ChangePasswordInput = {
   password: Scalars['String']
   token: Scalars['String']
@@ -347,4 +352,11 @@ export type UpdateUserInput = {
 export type UpdatePasswordInput = {
   password: Scalars['String']
   currentPassword: Scalars['String']
+}
+
+export type UpdateUserOptionalInput = {
+  name?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  username?: Maybe<Scalars['String']>
+  currentUsername: Scalars['String']
 }
