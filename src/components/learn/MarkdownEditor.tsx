@@ -61,7 +61,7 @@ export default function MarkdownEditor({
       >
         <MdEditor
           value={editorState}
-          style={{ height: '500px' }}
+          htmlClass={'h-100p'}
           renderHTML={(text) => mdParser.render(text)}
           onChange={handleEditorChange}
           placeholder={'Write something here...'}

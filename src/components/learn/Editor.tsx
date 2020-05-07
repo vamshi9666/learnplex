@@ -230,6 +230,10 @@ export default function CustomEditor({
     )
   }
 
+  const reset = () => {
+    setEditorState(pageContent || '')
+  }
+
   const TopActionControls = () => {
     return inEditMode ? (
       <>
@@ -248,12 +252,17 @@ export default function CustomEditor({
           </Button>
         </Space>
         {!isSaved() && (
-          <Alert
-            className={'float-right'}
-            message={'You have some unsaved changes.'}
-            type={'warning'}
-            showIcon={true}
-          />
+          <Space className={'float-right'}>
+            <Button type={'primary'} size={'large'} onClick={() => reset()}>
+              Reset
+            </Button>
+            <Alert
+              className={'float-right'}
+              message={'You have some unsaved changes.'}
+              type={'warning'}
+              showIcon={true}
+            />
+          </Space>
         )}
       </>
     ) : (
