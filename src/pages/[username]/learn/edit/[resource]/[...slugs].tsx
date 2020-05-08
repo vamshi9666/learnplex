@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Breadcrumb, Col, Row } from 'antd'
+import { Breadcrumb, Col, Row, Skeleton } from 'antd'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
@@ -12,6 +12,9 @@ import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,
 } from '../../../../../constants'
+import { useUser } from '../../../../../lib/hooks/useUser'
+import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
+import NotAuthorized from '../../../../../components/result/NotAuthorized'
 
 export default function EditResource() {
   const router = useRouter()
@@ -26,6 +29,12 @@ export default function EditResource() {
     pageContent,
   } = useSlugs({ resourceSlug, username, slugs })
   const { xs } = useBreakpoint()
+
+  const { user, fetching } = useUser()
+
+  if (fetching) return <Skeleton active={true} />
+  if (!user) return <NotAuthenticated />
+  if (username !== user.username) return <NotAuthorized />
 
   return (
     <>
