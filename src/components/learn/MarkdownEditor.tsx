@@ -15,8 +15,8 @@ if (process.browser) {
   KeyboardEventHandler = require('react-keyboard-event-handler')
 }
 
-export const mdParser: any = new MarkdownIt({
-  html: true,
+const mdParser: any = new MarkdownIt({
+  html: false,
   linkify: true,
   breaks: true,
   typographer: true,
@@ -32,10 +32,12 @@ export const mdParser: any = new MarkdownIt({
 }).use(insert)
 
 export default function MarkdownEditor({
+  inEditMode,
   editorState,
   setEditorState,
   save,
 }: {
+  inEditMode: boolean
   editorState: string
   setEditorState: React.Dispatch<React.SetStateAction<string>>
   save: () => void
@@ -52,7 +54,7 @@ export default function MarkdownEditor({
   return (
     <>
       <KeyboardEventHandler
-        handleKeys={['meta+s', 'tab']}
+        handleKeys={['meta+s', 'tab', 'meta+b']}
         onKeyEvent={(key: any, e: any) => {
           TabManager.enableTab(document.querySelector('textarea'), e)
           if (key === 'meta+s') {
@@ -62,13 +64,30 @@ export default function MarkdownEditor({
           console.log(`do something upon keydown event of ${key}`)
         }}
       >
-        <MdEditor
-          value={editorState}
-          style={{ minHeight: '75vh' }}
-          renderHTML={(text) => mdParser.render(text)}
-          onChange={handleEditorChange}
-          placeholder={'Write something here...'}
-        />
+        {inEditMode ? (
+          <MdEditor
+            value={editorState}
+            style={{ minHeight: '75vh' }}
+            renderHTML={(text: string) => mdParser.render(text)}
+            onChange={handleEditorChange}
+            placeholder={'Write something here...'}
+          />
+        ) : (
+          <MdEditor
+            readOnly={true}
+            config={{
+              view: {
+                menu: true,
+                html: true,
+                md: false,
+              },
+            }}
+            value={editorState}
+            renderHTML={(text: string) => mdParser.render(text)}
+            placeholder={'There is nothing here...'}
+            plugins={['full-screen']}
+          />
+        )}
       </KeyboardEventHandler>
     </>
   )

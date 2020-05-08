@@ -7,7 +7,7 @@ import { Alert, Button, message, Skeleton, Space } from 'antd'
 import { useUser } from '../../lib/hooks/useUser'
 import { useSections } from '../../lib/hooks/useSections'
 import useProgress from '../../lib/hooks/useProgress'
-import MarkdownEditor, { mdParser } from './MarkdownEditor'
+import MarkdownEditor from './MarkdownEditor'
 import {
   SaveOutlined,
   CheckOutlined,
@@ -346,18 +346,14 @@ export default function CustomEditor({
     <>
       <TopActionControls />
       <div className={'clearfix'} />
-      {inEditMode ? (
-        <MarkdownEditor
-          editorState={editorState}
-          setEditorState={setEditorState}
-          save={save}
-        />
-      ) : (
-        <div
-          className={'bg-component p-4'}
-          dangerouslySetInnerHTML={{ __html: mdParser.render(editorState) }}
-        />
-      )}
+
+      <MarkdownEditor
+        editorState={editorState}
+        setEditorState={setEditorState}
+        save={save}
+        inEditMode={inEditMode}
+      />
+
       <BottomActionControls />
     </>
   )
