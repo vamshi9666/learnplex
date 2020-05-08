@@ -30,13 +30,13 @@ const getYoutubeIframeMarkup = ({ url }: { url: string }) => {
   if (!videoId) {
     return ''
   }
-  return `<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+  return `<iframe width="700" height="393" src="https://www.youtube-nocookie.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
 }
 
 const mdParser: any = new MarkdownIt({
   html: false,
   linkify: true,
-  breaks: true,
+  breaks: false,
   typographer: true,
   highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
@@ -51,24 +51,19 @@ const mdParser: any = new MarkdownIt({
   .use(insert)
   .use(markdownItContainer, 'youtube', {
     validate: function (params: string) {
-      return params.trim().match(/^youtube$/)
+      return params.trim().match(/^youtube\s*\[(.*)]$/)
     },
     render: function (tokens: Token[], idx: number) {
       if (tokens[idx].type === 'container_youtube_open') {
-        let urlsIndex
-        if (tokens[idx + 1].type === 'code_block') {
-          urlsIndex = idx + 1
-        } else {
-          urlsIndex = idx + 2
+        const matches = tokens[idx].info.trim().match(/^youtube\s*\[(.*)]$/)
+        if (matches && matches[1]) {
+          return (
+            '<div class="text-center video-container">' +
+            getYoutubeIframeMarkup({ url: matches[1].trim() }) +
+            '</div><div class="text-center font-weight-light text-capitalize">'
+          )
         }
-        const urls = tokens[urlsIndex].content
-          .split('\n')
-          .map((url) => url.trim())
-        let markup = '<div>'
-        for (const url of urls) {
-          markup += getYoutubeIframeMarkup({ url })
-        }
-        return markup
+        return
       } else if (tokens[idx].type === 'container_youtube_close') {
         return '</div>'
       }
