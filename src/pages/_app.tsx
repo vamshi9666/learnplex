@@ -10,9 +10,9 @@ import '../styles/nprogress.css'
 import 'antd/dist/antd.less'
 import '../styles/global.less'
 import '../styles/lessvars.less'
-import App from '../components/App'
 import withUrql from '../lib/withUrqlClient'
 import { initGA, logPageView } from '../utils/analytics'
+import { getSiteLayout } from '../components/layouts/SiteLayout'
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`)
@@ -28,7 +28,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     Router.events.on('routeChangeComplete', logPageView)
   }, [])
 
-  return <App Component={<Component {...pageProps} />} />
+  const getLayout = (Component as any).getLayout || getSiteLayout
+
+  return getLayout(<Component {...pageProps} />)
 }
 
 export default withUrql(MyApp)

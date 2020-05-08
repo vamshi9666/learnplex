@@ -6,10 +6,10 @@ import urljoin from 'url-join'
 import { Provider } from 'urql'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
-import { Header } from './layout'
-import { getServerEndPoint } from '../utils/getServerEndPoint'
+import { getServerEndPoint } from '../../../utils/getServerEndPoint'
+import Header from './Header'
 
-export default function App({ Component }: { Component: any }) {
+export default function SiteLayout({ children }: { children: any }) {
   const client = createClient({
     url: urljoin(getServerEndPoint(), 'graphql'),
     requestPolicy: 'network-only',
@@ -34,9 +34,12 @@ export default function App({ Component }: { Component: any }) {
         </Layout.Header>
         <br />
         <Layout.Content className={`pt-3 py-2 ${xs ? 'px-2' : 'px-5'} h-100p`}>
-          {Component}
+          {children}
         </Layout.Content>
       </Layout>
     </>
   )
 }
+
+const getLayout = (page: any) => <SiteLayout>{page}</SiteLayout>
+export { getLayout as getSiteLayout }

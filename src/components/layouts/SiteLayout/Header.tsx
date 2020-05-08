@@ -2,8 +2,8 @@ import React from 'react'
 import { Menu, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 
-import { useUser } from '../../lib/hooks/useUser'
-import { UserRole } from '../../graphql/types'
+import { useUser } from '../../../lib/hooks/useUser'
+import { UserRole } from '../../../graphql/types'
 
 export default function Header() {
   const router = useRouter()
