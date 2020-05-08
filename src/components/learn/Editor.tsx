@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
-import { Alert, Button, message, Skeleton, Space } from 'antd'
+import { Alert, Button, message, Skeleton, Space, Typography } from 'antd'
 
 import { useUser } from '../../lib/hooks/useUser'
 import { useSections } from '../../lib/hooks/useSections'
@@ -42,23 +42,11 @@ export default function CustomEditor({
       }
     }
   `
-  const FORK_RESOURCE_MUTATION = `
-    mutation($data: ForkResourceInput!) {
-      forkResource(data: $data) {
-        id
-        slug
-        user {
-          username
-        }
-      }
-    }
-  `
   if (pageContent === undefined) {
     pageContent = ''
   }
   const [editorState, setEditorState] = useState(pageContent)
   const [, savePage] = useMutation(SAVE_PAGE_MUTATION)
-  const [, forkResource] = useMutation(FORK_RESOURCE_MUTATION)
 
   useEffect(() => {
     setEditorState(pageContent || '')
@@ -83,29 +71,6 @@ export default function CustomEditor({
   }
 
   const { user } = useUser()
-
-  const fork = () => {
-    NProgress.start()
-    forkResource({
-      data: {
-        username,
-        resourceSlug,
-      },
-    }).then(async (result) => {
-      if (result.error) {
-        console.log({ forkResourceError: result.error })
-      } else {
-        console.log({ result })
-        const forkedResource = result.data.forkResource
-        await router.push(
-          `/[username]/learn/edit/[resource]/resource-index?username=${forkedResource.user.username}&resource=${forkedResource.slug}`,
-          `/${forkedResource.user.username}/learn/edit/${forkedResource.slug}/resource-index`,
-          { shallow: true }
-        )
-      }
-    })
-    NProgress.done()
-  }
 
   const { getNeighbourSectionSlugs, body } = useSections({
     username,
@@ -234,6 +199,16 @@ export default function CustomEditor({
     setEditorState(pageContent || '')
   }
 
+  const goToEditPage = async () => {
+    const slugs = router.query.slugs as string[]
+    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+    await router.push(
+      `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${router.query.slugs}`,
+      `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+      { shallow: true }
+    )
+  }
+
   const TopActionControls = () => {
     return inEditMode ? (
       <>
@@ -267,18 +242,20 @@ export default function CustomEditor({
       </>
     ) : (
       <>
-        <Button
-          className={'float-left'}
-          type={'primary'}
-          icon={<EditOutlined />}
-          onClick={() => fork()}
-          disabled={!user}
-        >
-          Edit
-        </Button>
+        {username === user?.username && (
+          <Button
+            className={'float-left'}
+            type={'primary'}
+            icon={<EditOutlined />}
+            onClick={() => goToEditPage()}
+            disabled={!user}
+          >
+            Edit
+          </Button>
+        )}
         {!user && (
           <Alert
-            className={'float-right'}
+            className={'float-left'}
             message={
               'Please login to track your progress or edit this resource'
             }
@@ -306,7 +283,7 @@ export default function CustomEditor({
       {inEditMode ? (
         <Button
           type={'primary'}
-          onClick={async (e) => await save()}
+          onClick={async () => await save()}
           icon={<SaveOutlined />}
         >
           Save
@@ -346,7 +323,11 @@ export default function CustomEditor({
     <>
       <TopActionControls />
       <div className={'clearfix'} />
-
+      <Typography className={'text-center'}>
+        <Typography.Title level={2}>
+          {sectionsMap.get(currentSectionId)?.title}
+        </Typography.Title>
+      </Typography>
       <MarkdownEditor
         editorState={editorState}
         setEditorState={setEditorState}

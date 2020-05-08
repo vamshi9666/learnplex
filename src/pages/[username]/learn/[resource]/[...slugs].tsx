@@ -27,7 +27,7 @@ export default function ViewResource() {
 
   return (
     <>
-      <SEO title={`Learn ${upperCamelCase(resourceSlug)}`} />
+      <SEO title={`${upperCamelCase(resourceSlug)}`} />
       {body ? (
         body
       ) : (
