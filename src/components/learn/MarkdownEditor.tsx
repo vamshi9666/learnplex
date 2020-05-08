@@ -5,7 +5,7 @@ import insert from 'markdown-it-ins'
 import hljs from 'highlight.js'
 import { Skeleton } from 'antd'
 
-import { TabManager } from './lib/TabManager'
+import { KeyboardShortcuts } from './lib/KeyboardShortcuts'
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -54,14 +54,31 @@ export default function MarkdownEditor({
   return (
     <>
       <KeyboardEventHandler
-        handleKeys={['meta+s', 'tab', 'meta+b']}
-        onKeyEvent={(key: any, e: any) => {
-          TabManager.enableTab(document.querySelector('textarea'), e)
+        handleKeys={[
+          'tab',
+          'meta+s',
+          'meta+b',
+          'meta+i',
+          'meta+u',
+          'meta+k',
+          'alt+shift+1',
+          'alt+shift+2',
+          'alt+shift+3',
+          'alt+shift+4',
+          'alt+shift+5',
+        ]}
+        onKeyEvent={(key: string, e: KeyboardEvent) => {
+          console.log({ e })
           if (key === 'meta+s') {
             e.preventDefault()
             save()
+            return
           }
-          console.log(`do something upon keydown event of ${key}`)
+          KeyboardShortcuts.handle(
+            document.querySelector('textarea')!,
+            e,
+            setEditorState
+          )
         }}
       >
         {inEditMode ? (
