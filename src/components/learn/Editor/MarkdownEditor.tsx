@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { message, Skeleton, Typography } from 'antd'
 import NProgress from 'nprogress'
@@ -114,6 +114,7 @@ export default function MarkdownEditor({
             onIdle={() => save({ editorState })}
             debounce={250}
             timeout={1000}
+            startOnMount={false}
           />
         )}
         {inEditMode ? (

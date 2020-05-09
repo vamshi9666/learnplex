@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { Button, Empty, Skeleton } from 'antd'
 
 import { useSections } from '../../../../lib/hooks/useSections'
-import Page404 from '../../../404'
 import { useUser } from '../../../../lib/hooks/useUser'
 
 export default function ViewResourceIndex() {

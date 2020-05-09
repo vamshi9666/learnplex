@@ -1,8 +1,9 @@
-import { Form, Input, Modal } from 'antd'
+import { Button, Form, Input, Modal, Typography } from 'antd'
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'urql'
 import NProgress from 'nprogress'
+import { FileMarkdownOutlined } from '@ant-design/icons'
 
 import { slug } from '../../utils/slug'
 import { Section } from '../../graphql/types'
@@ -48,12 +49,19 @@ export default function NewSectionModal({
   const resourceSlug = router.query.resource as string
   const { setSection } = useSections({ username, resourceSlug })
   const [, addSectionMutation] = useMutation(ADD_SECTION_MUTATION)
-  const addSection = ({ title }: { title: string }) => {
+  const addSection = ({
+    title,
+    content,
+  }: {
+    title: string
+    content: string
+  }) => {
     NProgress.start()
     addSectionMutation({
       data: {
         title: title,
         parentSectionId: parentSection.id,
+        content,
       },
     }).then((result) => {
       if (result.error) {
@@ -82,7 +90,7 @@ export default function NewSectionModal({
           form={form}
           name={'new-section-form'}
           initialValues={{ title: '' }}
-          onFinish={({ title }) => addSection({ title })}
+          onFinish={({ title, content }) => addSection({ title, content })}
         >
           <Form.Item
             name={'title'}
@@ -109,6 +117,41 @@ export default function NewSectionModal({
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name={'content'}
+            label={'Content'}
+            help={
+              <>
+                <Button
+                  type={'link'}
+                  target={'_blank'}
+                  href={
+                    'https://guides.github.com/features/mastering-markdown/'
+                  }
+                  className={'p-0 m-0'}
+                  icon={<FileMarkdownOutlined />}
+                >
+                  Styling with Markdown is supported.
+                </Button>
+                <Typography>
+                  <Typography.Text>
+                    <b>Note:</b> If you add content for this section, there
+                    cannot be any more subsections for this page.
+                    <br />
+                    <br />
+                    You can always add/edit content later.
+                  </Typography.Text>
+                </Typography>
+              </>
+            }
+          >
+            <Input.TextArea
+              autoSize={{
+                minRows: 3,
+                maxRows: 10,
+              }}
+            />
           </Form.Item>
         </Form>
       </Modal>

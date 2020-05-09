@@ -317,6 +317,7 @@ export type CreateResourceInput = {
 export type AddSectionInput = {
   parentSectionId: Scalars['String']
   title: Scalars['String']
+  content?: Maybe<Scalars['String']>
 }
 
 export type UpdateSectionInput = {
