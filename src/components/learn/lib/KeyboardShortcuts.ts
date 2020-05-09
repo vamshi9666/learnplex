@@ -9,25 +9,29 @@ export const KeyboardShortcuts = {
     },
     BOLD: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyB' && keyEvent.metaKey,
+        (keyEvent.code === 'KeyB' && keyEvent.metaKey) ||
+        (keyEvent.code === 'KeyB' && keyEvent.ctrlKey),
       left: '**',
       right: '**',
     },
     ITALIC: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyI' && keyEvent.metaKey,
+        (keyEvent.code === 'KeyI' && keyEvent.metaKey) ||
+        (keyEvent.code === 'KeyI' && keyEvent.ctrlKey),
       left: '*',
       right: '*',
     },
     UNDERLINE: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyU' && keyEvent.metaKey,
+        (keyEvent.code === 'KeyU' && keyEvent.metaKey) ||
+        (keyEvent.code === 'KeyU' && keyEvent.ctrlKey),
       left: '++',
       right: '++',
     },
     HYPERLINK: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyK' && keyEvent.metaKey,
+        (keyEvent.code === 'KeyK' && keyEvent.metaKey) ||
+        (keyEvent.code === 'KeyK' && keyEvent.ctrlKey),
       left: '[',
       right: ']()',
     },
@@ -63,8 +67,8 @@ export const KeyboardShortcuts = {
     },
     YOUTUBE: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyY' && keyEvent.metaKey,
-      left: ':::youtube [',
+        keyEvent.code === 'KeyY' && keyEvent.shiftKey,
+      left: ':::yt [',
       right: ']\nVideo caption\n:::',
     },
   },

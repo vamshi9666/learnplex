@@ -51,11 +51,11 @@ const mdParser: any = new MarkdownIt({
   .use(insert)
   .use(markdownItContainer, 'youtube', {
     validate: function (params: string) {
-      return params.trim().match(/^youtube\s*\[(.*)]$/)
+      return params.trim().match(/^yt\s*\[(.*)]$/)
     },
     render: function (tokens: Token[], idx: number) {
       if (tokens[idx].type === 'container_youtube_open') {
-        const matches = tokens[idx].info.trim().match(/^youtube\s*\[(.*)]$/)
+        const matches = tokens[idx].info.trim().match(/^yt\s*\[(.*)]$/)
         if (matches && matches[1]) {
           return (
             '<div class="text-center video-container">' +
@@ -100,7 +100,12 @@ export default function MarkdownEditor({
           'meta+i',
           'meta+u',
           'meta+k',
-          'meta+y',
+          'ctrl+s',
+          'ctrl+b',
+          'ctrl+i',
+          'ctrl+u',
+          'ctrl+k',
+          'shift+y',
           'alt+shift+1',
           'alt+shift+2',
           'alt+shift+3',
@@ -108,8 +113,8 @@ export default function MarkdownEditor({
           'alt+shift+5',
         ]}
         onKeyEvent={(key: string, e: KeyboardEvent) => {
-          console.log({ e })
-          if (key === 'meta+s') {
+          console.log({ e, key })
+          if (key === 'meta+s' || key === 'ctrl+s') {
             e.preventDefault()
             save()
             return
