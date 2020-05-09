@@ -73,10 +73,9 @@ export const KeyboardShortcuts = {
     },
   },
   getType: function (keyEvent: KeyboardEvent) {
-    const types = Object.keys(this.types)
-    for (const currType of types) {
-      // @ts-ignore
-      if (this.types[currType].isTrue(keyEvent)) {
+    const keyTypes = Object.keys(this.types)
+    for (const currType of keyTypes) {
+      if ((this.types as any)[currType].isTrue(keyEvent)) {
         return currType
       }
     }
