@@ -115,6 +115,7 @@ export default function MarkdownEditor({
             debounce={250}
             timeout={1000}
             startOnMount={false}
+            events={['keydown', 'mousedown']}
           />
         )}
         {inEditMode ? (
