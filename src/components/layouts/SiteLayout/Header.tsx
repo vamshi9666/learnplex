@@ -30,7 +30,7 @@ export default function Header() {
           await router.push(key)
         }}
       >
-        <Menu.Item key={'/resources/all'}>All Resources</Menu.Item>
+        <Menu.Item key={'/learn'}>All Resources</Menu.Item>
         {isLoggedIn
           ? [
               <Menu.SubMenu key={'user'} title={user?.username}>

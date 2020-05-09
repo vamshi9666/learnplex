@@ -3,10 +3,10 @@ import { Button, Skeleton } from 'antd'
 import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
 
-import InternalServerError from '../../components/result/InternalServerError'
-import { Resource } from '../../graphql/types'
-import ResourceCards from '../../components/learn/ResourceCards'
-import { SEO } from '../../components/SEO'
+import InternalServerError from '../components/result/InternalServerError'
+import { Resource } from '../graphql/types'
+import ResourceCards from '../components/learn/ResourceCards'
+import { SEO } from '../components/SEO'
 
 export default function AllResources() {
   const router = useRouter()
