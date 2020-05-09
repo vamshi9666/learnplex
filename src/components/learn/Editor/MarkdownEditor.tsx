@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { message, Skeleton, Typography } from 'antd'
 import NProgress from 'nprogress'
+import IdleTimer from 'react-idle-timer'
 
 import usePreventRouteChangeIf from '../../../lib/hooks/usePreventRouteChangeIf'
 import TopActionControls from './TopActionControls'
@@ -107,6 +108,14 @@ export default function MarkdownEditor({
         save={() => save({ editorState })}
         setEditorState={setEditorState}
       >
+        {inEditMode && (
+          <IdleTimer
+            element={document}
+            onIdle={() => save({ editorState })}
+            debounce={250}
+            timeout={1000}
+          />
+        )}
         {inEditMode ? (
           <MdEditor
             value={editorState}

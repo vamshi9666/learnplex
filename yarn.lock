@@ -9074,6 +9074,11 @@ react-ga@^2.7.0:
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
   integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
 
+react-idle-timer@^4.2.12:
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-4.2.12.tgz#3756e3256cd225f319ed093b3d5ebe0d98fcc498"
+  integrity sha512-YD/2Oe4PU5uRv/TH6zTxykKMHpRHWHPEWCUohda81o/jzsrlgyUrklfy46fd8WjgYhlNkJKsiX/GXJAQQC1hcQ==
+
 react-is@16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
