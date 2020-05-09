@@ -72,7 +72,7 @@ export default function BottomActionControls({
       )}
       <Button
         className={'float-right'}
-        disabled={showNextSection}
+        disabled={!showNextSection}
         onClick={() => goToNextSection()}
       >
         Next
