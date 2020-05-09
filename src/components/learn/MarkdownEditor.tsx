@@ -100,6 +100,7 @@ export default function MarkdownEditor({
           'meta+i',
           'meta+u',
           'meta+k',
+          'meta+y',
           'alt+shift+1',
           'alt+shift+2',
           'alt+shift+3',

@@ -61,6 +61,12 @@ export const KeyboardShortcuts = {
       left: '\n##### ',
       right: '\n',
     },
+    YOUTUBE: {
+      isTrue: (keyEvent: KeyboardEvent) =>
+        keyEvent.code === 'KeyY' && keyEvent.metaKey,
+      left: ':::youtube [',
+      right: ']\nVideo caption\n:::',
+    },
   },
   getType: function (keyEvent: KeyboardEvent) {
     const types = Object.keys(this.types)
@@ -83,7 +89,8 @@ export const KeyboardShortcuts = {
       textBox,
       currentType.left,
       currentType.right,
-      setEditorState
+      setEditorState,
+      this.getType(keyEvent)
     )
     this.blockKeyEvent(keyEvent)
   },
@@ -98,7 +105,8 @@ export const KeyboardShortcuts = {
     textBox: HTMLTextAreaElement,
     left: string,
     right: string,
-    setEditorState: React.Dispatch<React.SetStateAction<string>>
+    setEditorState: React.Dispatch<React.SetStateAction<string>>,
+    currentType?: string
   ) {
     const selectionStart = this.getStartCaretPosition(textBox)
     const selectionEnd = this.getEndCaretPosition(textBox)
@@ -107,11 +115,20 @@ export const KeyboardShortcuts = {
     const postText = textBox.value.substring(selectionEnd, textBox.value.length)
     textBox.value = preText + left + selectedText + right + postText
     setEditorState(textBox.value)
-    this.setSelected(
-      textBox,
-      selectionStart + left.length,
-      selectionEnd + left.length
-    )
+
+    if (currentType === 'YOUTUBE') {
+      this.setSelected(
+        textBox,
+        left.length + selectionEnd + 2,
+        left.length + selectionEnd + 15
+      )
+    } else {
+      this.setSelected(
+        textBox,
+        selectionStart + left.length,
+        selectionEnd + left.length
+      )
+    }
   },
   setSelected: function (
     item: HTMLTextAreaElement,
