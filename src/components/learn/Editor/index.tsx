@@ -141,26 +141,6 @@ export default function CustomEditor({
     NProgress.done()
   }
 
-  const exitEditMode = async () => {
-    const slugs = router.query.slugs as string[]
-    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(
-      `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/${resourceSlug}/${slugsPath}`,
-      { shallow: true }
-    )
-  }
-
-  const goToEditPage = async () => {
-    const slugs = router.query.slugs as string[]
-    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(
-      `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${router.query.slugs}`,
-      `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
-      { shallow: true }
-    )
-  }
-
   return (
     <MarkdownEditor
       inEditMode={inEditMode}
@@ -175,9 +155,6 @@ export default function CustomEditor({
       isSectionComplete={isSectionComplete({
         section: sectionsMap.get(currentSectionId)!,
       })}
-      username={username}
-      goToEditPage={goToEditPage}
-      exitEditMode={exitEditMode}
     />
   )
 }

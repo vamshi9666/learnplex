@@ -5,7 +5,6 @@ import NProgress from 'nprogress'
 import IdleTimer from 'react-idle-timer'
 
 import usePreventRouteChangeIf from '../../../lib/hooks/usePreventRouteChangeIf'
-import TopActionControls from './TopActionControls'
 import BottomActionControls from './BottomActionControls'
 import CustomKeyboardEventHandler from './CustomKeyboardEventHandler'
 import customMdParser from './lib/customMdParser'
@@ -25,9 +24,6 @@ export default function MarkdownEditor({
   goToNextSection,
   completeSection,
   isSectionComplete,
-  username,
-  goToEditPage,
-  exitEditMode,
 }: {
   inEditMode: boolean
   save: ({ editorState }: { editorState: string }) => void
@@ -39,9 +35,6 @@ export default function MarkdownEditor({
   goToNextSection: () => void
   completeSection: () => void
   isSectionComplete: boolean
-  username: string
-  goToEditPage: () => void
-  exitEditMode: () => void
 }) {
   const [editorState, setEditorState] = useState(pageContent)
   const handleEditorChange = ({ text }: { text: string }) => {
@@ -92,15 +85,8 @@ export default function MarkdownEditor({
 
   return (
     <>
-      <TopActionControls
-        inEditMode={inEditMode}
-        isSaved={isSaved()}
-        username={username}
-        goToEditPage={goToEditPage}
-        exitEditMode={exitEditMode}
-      />
       <div className={'clearfix'} />
-      <Typography className={'text-center'}>
+      <Typography>
         <Typography.Title level={2}>{title}</Typography.Title>
       </Typography>
 
