@@ -374,7 +374,11 @@ export function useSections({
     }
   }
 
-  function getLeastOrderSection({ sectionId }: { sectionId: string }): string {
+  function getLeastOrderSectionId({
+    sectionId,
+  }: {
+    sectionId: string
+  }): string {
     const currentSection = sectionsMap.get(sectionId)!
     if (!currentSection) {
       return ''
@@ -393,15 +397,17 @@ export function useSections({
         leastOrder = section.order
       }
     })
-    return getLeastOrderSection({ sectionId: sectionIdWithLeastOrder })
+    return getLeastOrderSectionId({ sectionId: sectionIdWithLeastOrder })
   }
 
   const firstPagePath = () => {
-    const leastOrderSection = getLeastOrderSection({ sectionId: baseSectionId })
-    if (!leastOrderSection) {
+    const leastOrderSectionId = getLeastOrderSectionId({
+      sectionId: baseSectionId,
+    })
+    if (leastOrderSectionId === baseSectionId) {
       return ''
     }
-    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSection })
+    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSectionId })
     return slugs.reduce((a, b) => `${a}/${b}`)
   }
 

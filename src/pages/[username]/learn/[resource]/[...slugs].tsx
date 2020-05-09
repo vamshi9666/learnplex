@@ -21,6 +21,7 @@ export default function ViewResource() {
     currentSectionId,
     body,
     pageContent,
+    keys,
   } = useSlugs({ resourceSlug, username, slugs })
 
   const { xs } = useBreakpoint()
@@ -34,8 +35,8 @@ export default function ViewResource() {
         <Row>
           <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
-              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-              defaultOpenKeys={slugs}
+              defaultSelectedKeys={[keys[keys.length - 1] as string]}
+              defaultOpenKeys={keys}
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}
               inEditMode={false}

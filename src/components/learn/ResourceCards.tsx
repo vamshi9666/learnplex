@@ -45,7 +45,9 @@ export default function ResourceCards({
               key={resource.id}
               hoverable
               onClick={() =>
-                router.push(`/${resource.user.username}/learn/${resource.slug}`)
+                router.push(
+                  `/${resource.user.username}/learn/${resource.slug}/${resource.firstPageSlugsPath}`
+                )
               }
             >
               <Card.Meta

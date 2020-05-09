@@ -27,6 +27,7 @@ export default function EditResource() {
     currentSectionId,
     body,
     pageContent,
+    keys,
   } = useSlugs({ resourceSlug, username, slugs })
   const { xs } = useBreakpoint()
 
@@ -46,8 +47,8 @@ export default function EditResource() {
           <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
               key={'sidebar'}
-              defaultSelectedKeys={[slugs[slugs.length - 1] as string]}
-              defaultOpenKeys={slugs}
+              defaultSelectedKeys={[keys[keys.length - 1] as string]}
+              defaultOpenKeys={keys}
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}
               inEditMode={true}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
-import { setCurrentSectionIdFromSlugs } from '../../utils/setSectionIdFromSlugs'
 import PageNotFound from '../../components/result/PageNotFound'
 
 export default function useSlugs({
@@ -22,28 +21,21 @@ export default function useSlugs({
     sectionsListData,
     body,
   } = useSections({ resourceSlug, username })
+  const [keys, setKeys] = useState([] as string[])
 
   useEffect(() => {
-    if (
-      slugs.length &&
-      !sectionsListFetching &&
-      !sectionsListError &&
-      !!baseSectionId
-    ) {
-      setCurrentSectionIdFromSlugs({
-        baseSectionId,
-        slugs,
-        sectionsMap,
-        setCurrentSectionId,
+    const tempKeys = []
+    for (let depth = 0; depth < slugs.length; depth++) {
+      const sectionIds = Array.from(sectionsMap.keys())
+      const [id] = sectionIds.filter((sectionId) => {
+        const section = sectionsMap.get(sectionId)!
+        return section.depth === depth && section.slug === slugs[depth]
       })
+      tempKeys.push(id)
     }
-  }, [
-    slugs,
-    baseSectionId,
-    sectionsListError,
-    sectionsListFetching,
-    sectionsMap,
-  ])
+    setCurrentSectionId(tempKeys[tempKeys.length - 1])
+    setKeys(tempKeys)
+  }, [sectionsMap, slugs])
 
   let modifiedBody = body
 
@@ -70,5 +62,6 @@ export default function useSlugs({
     sectionsListError,
     sectionsMap,
     sectionsListData,
+    keys,
   }
 }

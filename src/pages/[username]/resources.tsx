@@ -24,6 +24,7 @@ export default function UserResources() {
           title
           slug
         }
+        firstPageSlugsPath
       }
     }
   `

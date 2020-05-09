@@ -8,7 +8,7 @@ import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 import { SEO } from '../../components/SEO'
 
-export default function MyResources() {
+export default function AllResources() {
   const router = useRouter()
   const ALL_RESOURCES_QUERY = `
     query {
@@ -24,6 +24,7 @@ export default function MyResources() {
           title
           slug
         }
+        firstPageSlugsPath
       }
     }
   `

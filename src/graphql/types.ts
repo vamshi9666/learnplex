@@ -103,6 +103,7 @@ export type Resource = {
   createdDate: Scalars['DateTime']
   updatedDate: Scalars['DateTime']
   version: Scalars['Int']
+  firstPageSlugsPath: Scalars['String']
 }
 
 export type Section = {

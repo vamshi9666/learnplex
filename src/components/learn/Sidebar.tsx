@@ -1,13 +1,14 @@
 import { Menu, Button, Skeleton, Typography } from 'antd'
 import React, { useState } from 'react'
 import {
-  FileOutlined,
+  FileTextOutlined,
   DownOutlined,
   RightOutlined,
   CheckCircleOutlined,
   CheckSquareOutlined,
   CheckCircleTwoTone,
   CheckSquareTwoTone,
+  FileOutlined,
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
@@ -58,10 +59,10 @@ export default function Sidebar({
     })
     if (!section.hasSubSections) {
       return (
-        <Menu.Item key={section.slug} id={section.id}>
+        <Menu.Item key={section.id} id={section.id}>
           <Typography>
             <span className={'mr-3'}>
-              <FileOutlined />
+              {section.page ? <FileTextOutlined /> : <FileOutlined />}
             </span>
             <Typography.Text
               style={{ width: `${75 - section.depth * 3}%` }}
@@ -82,11 +83,11 @@ export default function Sidebar({
     }
     return (
       <Menu.SubMenu
-        key={section.slug}
+        key={section.id}
         title={
           <Typography>
             <span className={'mr-3'}>
-              {openKeys.includes(section.slug) ? (
+              {openKeys.includes(section.id) ? (
                 <DownOutlined />
               ) : (
                 <RightOutlined />
@@ -131,7 +132,6 @@ export default function Sidebar({
       router.reload()
       return
     }
-    let path = e.keyPath.reduce((a: string, b: string) => `${b}/${a}`)
     if (e.key === 'edit-resource-index') {
       return await router.push(
         `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
@@ -139,6 +139,9 @@ export default function Sidebar({
         { shallow: true }
       )
     }
+    let path = e.keyPath
+      .map((id: string) => sectionsMap.get(id)!.slug)
+      .reduce((a: string, b: string) => `${b}/${a}`)
     const slugs = path.split('/')
     if (inEditMode) {
       return await router.push(

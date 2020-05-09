@@ -25,6 +25,7 @@ export default function TopicResources() {
           title
           slug
         }
+        firstPageSlugsPath
       }
     }
   `

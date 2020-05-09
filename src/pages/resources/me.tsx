@@ -26,6 +26,7 @@ export default function MyResources() {
           title
           slug
         }
+        firstPageSlugsPath
       }
     }
   `
