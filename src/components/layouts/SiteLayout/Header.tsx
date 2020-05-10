@@ -16,27 +16,46 @@ export default function Header() {
   const slugs = router.query.slugs as string[]
 
   const goToEditPage = async () => {
-    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(
-      `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
-      { shallow: true }
-    )
+    if (router.pathname === '/[username]/learn/[resource]/[...slugs]') {
+      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+      await router.push(
+        `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+        `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+        { shallow: true }
+      )
+    } else if (router.pathname === '/[username]/learn/[resource]') {
+      await router.push(
+        `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
+        `/${username}/learn/edit/${resourceSlug}/resource-index`,
+        { shallow: true }
+      )
+    }
   }
 
   const exitEditMode = async () => {
-    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(
-      `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/${resourceSlug}/${slugsPath}`,
-      { shallow: true }
-    )
+    if (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]') {
+      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+      await router.push(
+        `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+        `/${username}/learn/${resourceSlug}/${slugsPath}`,
+        { shallow: true }
+      )
+    } else if (
+      router.pathname === '/[username]/learn/edit/[resource]/resource-index'
+    ) {
+      await router.push(
+        `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
+        `/${username}/learn/${resourceSlug}`,
+        { shallow: true }
+      )
+    }
   }
 
   const showEditButton = () => {
     return (
       isLoggedIn &&
-      router.pathname === '/[username]/learn/[resource]/[...slugs]' &&
+      (router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
+        router.pathname === '/[username]/learn/[resource]') &&
       username === user?.username
     )
   }
@@ -44,7 +63,9 @@ export default function Header() {
   const showExitButton = () => {
     return (
       isLoggedIn &&
-      router.pathname === '/[username]/learn/edit/[resource]/[...slugs]' &&
+      (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]' ||
+        router.pathname ===
+          '/[username]/learn/edit/[resource]/resource-index') &&
       username === user?.username
     )
   }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { Breadcrumb, Col, Row, Skeleton, Typography } from 'antd'
+import { Col, Row, Skeleton, Typography } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
@@ -9,7 +9,7 @@ import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'
 import Sidebar from '../../../../../components/learn/Sidebar'
 import { useSections } from '../../../../../lib/hooks/useSections'
-import ResourceIndex from '../../../../../components/learn/ResourceIndex'
+import ResourceIndexEdit from '../../../../../components/learn/ResourceIndexEdit'
 import { useUser } from '../../../../../lib/hooks/useUser'
 import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
 import NotAuthorized from '../../../../../components/result/NotAuthorized'
@@ -131,13 +131,6 @@ export default function EditResourceIndex() {
               sectionsMap={sectionsMap}
               inEditMode={true}
               defaultSelectedKeys={['resource-index']}
-              breadCrumb={
-                <Breadcrumb className={'text-center breadcrumb'}>
-                  <Breadcrumb.Item>
-                    {titleCase(resourceSlug)} Index
-                  </Breadcrumb.Item>
-                </Breadcrumb>
-              }
             />
           </Col>
 
@@ -161,7 +154,7 @@ export default function EditResourceIndex() {
               </Typography.Paragraph>
             </Typography>
 
-            <ResourceIndex
+            <ResourceIndexEdit
               baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
             />

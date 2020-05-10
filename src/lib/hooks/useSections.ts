@@ -282,6 +282,9 @@ export function useSections({
     if (targetSectionId === currentSectionId) {
       return [currentSection.slug]
     }
+    if (!currentSection) {
+      return []
+    }
     if (currentSection.sections.length === 0) {
       return []
     }
@@ -429,6 +432,7 @@ export function useSections({
     reorderSections,
     getNeighbourSectionSlugs,
     firstPagePath,
+    getSlugsPathFromSectionId,
     resourceId,
   }
 }

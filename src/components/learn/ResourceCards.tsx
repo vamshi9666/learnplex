@@ -97,9 +97,7 @@ export default function ResourceCards({
   }
 
   const goToResource = async ({ resource }: { resource: Resource }) => {
-    await router.push(
-      `/${resource.user.username}/learn/${resource.slug}/${resource.firstPageSlugsPath}`
-    )
+    await router.push(`/${resource.user.username}/learn/${resource.slug}`)
   }
 
   const startProgress = ({ resourceId }: { resourceId: string }) => {

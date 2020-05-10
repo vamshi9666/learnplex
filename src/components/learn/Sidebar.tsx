@@ -14,7 +14,6 @@ import { useRouter } from 'next/router'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Section } from '../../graphql/types'
-import { useUser } from '../../lib/hooks/useUser'
 import useProgress from '../../lib/hooks/useProgress'
 
 interface Props {
@@ -23,7 +22,6 @@ interface Props {
   baseSectionId: string
   defaultSelectedKeys?: string[]
   defaultOpenKeys?: string[]
-  breadCrumb: any
 }
 
 export default function Sidebar({
@@ -32,10 +30,8 @@ export default function Sidebar({
   baseSectionId,
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
-  breadCrumb,
 }: Props) {
   const router = useRouter()
-  const { user, fetching: userFetching } = useUser()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
 
@@ -49,7 +45,7 @@ export default function Sidebar({
 
   const { xs } = useBreakpoint()
 
-  if (fetching || userFetching) return <Skeleton active={true} />
+  if (fetching) return <Skeleton active={true} />
 
   const sectionMenuItem = ({ sectionId }: { sectionId: string }) => {
     const section = sectionsMap.get(sectionId) as Section
@@ -128,16 +124,21 @@ export default function Sidebar({
   )
 
   const handleClick = async (e: any) => {
-    if (e.key === 'breadcrumb') {
-      router.reload()
+    if (e.key === 'resource-index') {
+      if (inEditMode) {
+        await router.push(
+          `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
+          `/${username}/learn/edit/${resourceSlug}/resource-index`,
+          { shallow: true }
+        )
+      } else {
+        await router.push(
+          `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
+          `/${username}/learn/${resourceSlug}`,
+          { shallow: true }
+        )
+      }
       return
-    }
-    if (e.key === 'edit-resource-index') {
-      return await router.push(
-        `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
-        `/${username}/learn/edit/${resourceSlug}/resource-index`,
-        { shallow: true }
-      )
     }
     let path = e.keyPath
       .map((id: string) => sectionsMap.get(id)!.slug)
@@ -170,12 +171,20 @@ export default function Sidebar({
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >
-        <Menu.Item key={'breadcrumb'}>{breadCrumb}</Menu.Item>
-        {(inEditMode || user?.username === username) && (
-          <Menu.Item className={'text-center px-2'} key={'edit-resource-index'}>
-            <Button block={true}>Edit Index</Button>
-          </Menu.Item>
-        )}
+        <Menu.Item key={'resource-index'} className={'border-bottom'}>
+          <Typography>
+            <span className={'mr-3'}>
+              <FileTextOutlined />
+            </span>
+            <Typography.Text style={{ width: '75%' }} ellipsis={true}>
+              {inEditMode ? 'Edit Index' : 'Index'}
+            </Typography.Text>
+            <span className={'float-right'}>
+              <CheckCircleOutlined />
+            </span>
+          </Typography>
+        </Menu.Item>
+
         {sortedSections.map((section) =>
           sectionMenuItem({ sectionId: section.id })
         )}

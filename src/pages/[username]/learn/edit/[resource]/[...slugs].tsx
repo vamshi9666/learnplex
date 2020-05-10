@@ -52,18 +52,6 @@ export default function EditResource() {
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}
               inEditMode={true}
-              breadCrumb={
-                <Breadcrumb
-                  key={'breadcrumb'}
-                  className={'text-center breadcrumb'}
-                >
-                  {slugs.map((slug, index) => (
-                    <Breadcrumb.Item key={`${slug}-${index}`}>
-                      {titleCase(slug)}
-                    </Breadcrumb.Item>
-                  ))}
-                </Breadcrumb>
-              }
             />
           </Col>
 

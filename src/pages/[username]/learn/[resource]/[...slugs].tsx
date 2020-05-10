@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Breadcrumb, Col, Row } from 'antd'
+import { Col, Row } from 'antd'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../components/SEO'
-import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
+import { upperCamelCase } from '../../../../utils/upperCamelCase'
 import Sidebar from '../../../../components/learn/Sidebar'
 import CustomEditor from '../../../../components/learn/Editor'
 import useSlugs from '../../../../lib/hooks/useSlugs'
@@ -40,15 +40,6 @@ export default function ViewResource() {
               sectionsMap={sectionsMap}
               baseSectionId={baseSectionId}
               inEditMode={false}
-              breadCrumb={
-                <Breadcrumb className={'text-center breadcrumb'}>
-                  {slugs.map((slug, index) => (
-                    <Breadcrumb.Item key={`${slug}-${index}`}>
-                      {titleCase(slug)}
-                    </Breadcrumb.Item>
-                  ))}
-                </Breadcrumb>
-              }
             />
           </Col>
 
