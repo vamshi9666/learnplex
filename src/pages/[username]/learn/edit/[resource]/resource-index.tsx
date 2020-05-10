@@ -107,7 +107,11 @@ export default function EditResourceIndex() {
         console.log({ result })
         const slug = result.data.updateResourceTitle.slug
         if (slug !== data.resource.slug) {
-          await router.push(`/${username}/learn/edit/${slug}/resource-index`)
+          await router.push(
+            `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${slug}`,
+            `/${username}/learn/edit/${slug}/resource-index`,
+            { shallow: true }
+          )
         }
       }
     })

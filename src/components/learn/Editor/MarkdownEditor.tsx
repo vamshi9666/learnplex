@@ -26,6 +26,7 @@ export default function MarkdownEditor({
   isSectionComplete,
   hasEnrolled,
   resourceId,
+  updateSectionTitle,
 }: {
   inEditMode: boolean
   save: ({ editorState }: { editorState: string }) => void
@@ -39,6 +40,7 @@ export default function MarkdownEditor({
   isSectionComplete: boolean
   hasEnrolled: boolean
   resourceId: string
+  updateSectionTitle: ({ title }: { title: string }) => void
 }) {
   const [editorState, setEditorState] = useState(pageContent)
   const handleEditorChange = ({ text }: { text: string }) => {
@@ -91,7 +93,18 @@ export default function MarkdownEditor({
     <>
       <div className={'clearfix'} />
       <Typography>
-        <Typography.Title level={2}>{title}</Typography.Title>
+        <Typography.Title
+          level={2}
+          editable={
+            inEditMode
+              ? {
+                  onChange: (value) => updateSectionTitle({ title: value }),
+                }
+              : false
+          }
+        >
+          {title}
+        </Typography.Title>
       </Typography>
 
       <CustomKeyboardEventHandler

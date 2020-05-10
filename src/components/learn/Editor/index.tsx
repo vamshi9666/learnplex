@@ -56,7 +56,73 @@ export default function CustomEditor({
     message.success('Your changes have been saved.', 1)
   }
 
-  const { getNeighbourSectionSlugs, body, resourceId } = useSections({
+  const UPDATE_SECTION_MUTATION = `
+    mutation($data: UpdateSectionInput!) {
+      updateSection(data: $data) {
+        id
+        title
+        slug
+        isBaseSection
+        isPage
+        hasSubSections
+        order
+        depth
+        sections {
+          id
+          order
+          slug
+        }
+        parentSection {
+          id
+        }
+        page {
+          content
+        }
+        resource {
+          id
+        }
+      }
+    }
+  `
+
+  const [, updateSectionMutation] = useMutation(UPDATE_SECTION_MUTATION)
+
+  const updateSectionTitle = async ({ title }: { title: string }) => {
+    NProgress.start()
+    updateSectionMutation({
+      data: {
+        title,
+        sectionId: currentSectionId,
+      },
+    }).then((result) => {
+      if (result.error) {
+        console.log({ updateSectionError: result.error })
+      } else {
+        console.log({ result })
+        const slug = result.data.updateSection.slug
+        const previousSlug = sectionsMap.get(currentSectionId)!.slug
+        setSectionInSectionsMap({ updatedSection: result.data.updateSection })
+        const slugs = router.query.slugs as string[]
+        slugs[slugs?.length - 1] = slug
+        const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+        if (slug !== previousSlug) {
+          router.push(
+            `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+            `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+            { shallow: true }
+          )
+        }
+      }
+    })
+    NProgress.done()
+  }
+
+  const {
+    getNeighbourSectionSlugs,
+    body,
+    resourceId,
+    setSection: setSectionInSectionsMap,
+  } = useSections({
     username,
     resourceSlug,
   })
@@ -171,6 +237,7 @@ export default function CustomEditor({
       })}
       hasEnrolled={data?.hasEnrolled ?? false}
       resourceId={resourceId}
+      updateSectionTitle={updateSectionTitle}
     />
   )
 }
