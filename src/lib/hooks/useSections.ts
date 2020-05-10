@@ -35,6 +35,9 @@ export function useSections({
         page {
           content
         }
+        resource {
+          id
+        }
       }
     }
   `
@@ -66,6 +69,7 @@ export function useSections({
       const [baseSection] = sectionsListData.sectionsList.filter(
         (section: Section) => section.isBaseSection
       )
+      setResourceId(baseSection.resource.id)
       setBaseSectionId(baseSection.id)
       setSectionsMap((prevSectionsMap) => {
         const newSectionsMap = new Map()
@@ -165,6 +169,7 @@ export function useSections({
   `
 
   const [, reorderSectionsMutation] = useMutation(REORDER_SECTIONS_MUTATION)
+  const [resourceId, setResourceId] = useState('')
 
   const reorderSections = async ({
     result,
@@ -424,5 +429,6 @@ export function useSections({
     reorderSections,
     getNeighbourSectionSlugs,
     firstPagePath,
+    resourceId,
   }
 }

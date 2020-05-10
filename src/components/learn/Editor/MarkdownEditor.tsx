@@ -24,6 +24,8 @@ export default function MarkdownEditor({
   goToNextSection,
   completeSection,
   isSectionComplete,
+  hasEnrolled,
+  resourceId,
 }: {
   inEditMode: boolean
   save: ({ editorState }: { editorState: string }) => void
@@ -35,6 +37,8 @@ export default function MarkdownEditor({
   goToNextSection: () => void
   completeSection: () => void
   isSectionComplete: boolean
+  hasEnrolled: boolean
+  resourceId: string
 }) {
   const [editorState, setEditorState] = useState(pageContent)
   const handleEditorChange = ({ text }: { text: string }) => {
@@ -140,6 +144,8 @@ export default function MarkdownEditor({
         inEditMode={inEditMode}
         save={() => save({ editorState })}
         isCompleteDisabled={editorState === ''}
+        hasEnrolled={hasEnrolled}
+        resourceId={resourceId}
       />
     </>
   )

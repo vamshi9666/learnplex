@@ -1,6 +1,6 @@
 import React from 'react'
 import NProgress from 'nprogress'
-import { useMutation } from 'urql'
+import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import { message, Skeleton } from 'antd'
 
@@ -56,7 +56,7 @@ export default function CustomEditor({
     message.success('Your changes have been saved.', 1)
   }
 
-  const { getNeighbourSectionSlugs, body } = useSections({
+  const { getNeighbourSectionSlugs, body, resourceId } = useSections({
     username,
     resourceSlug,
   })
@@ -84,7 +84,21 @@ export default function CustomEditor({
     sectionsMap,
   })
 
-  if (fetching) return <Skeleton active={true} />
+  const HAS_ENROLLED_QUERY = `
+    query($username: String!, $resourceSlug: String!) {
+      hasEnrolled(username: $username, resourceSlug: $resourceSlug)
+    }
+  `
+
+  const [{ data, fetching: hasEnrolledFetching }] = useQuery({
+    query: HAS_ENROLLED_QUERY,
+    variables: {
+      username,
+      resourceSlug,
+    },
+  })
+
+  if (fetching || hasEnrolledFetching) return <Skeleton active={true} />
 
   if (body) return body
 
@@ -155,6 +169,8 @@ export default function CustomEditor({
       isSectionComplete={isSectionComplete({
         section: sectionsMap.get(currentSectionId)!,
       })}
+      hasEnrolled={data?.hasEnrolled ?? false}
+      resourceId={resourceId}
     />
   )
 }

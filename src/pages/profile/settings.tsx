@@ -13,12 +13,12 @@ import {
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
 
-import { useUser } from '../lib/hooks/useUser'
-import InternalServerError from '../components/result/InternalServerError'
-import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
-import { SEO } from '../components/SEO'
+import { useUser } from '../../lib/hooks/useUser'
+import InternalServerError from '../../components/result/InternalServerError'
+import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
+import { SEO } from '../../components/SEO'
 
-export default function Profile() {
+export default function ProfileSettings() {
   const { user, fetching, error } = useUser()
 
   const BASIC = 'basic'

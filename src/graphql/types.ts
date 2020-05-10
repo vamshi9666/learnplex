@@ -27,6 +27,8 @@ export type Query = {
   sections: Array<Section>
   sectionsList: Array<Section>
   userProgress?: Maybe<Progress>
+  userProgressList: Array<Progress>
+  hasEnrolled: Scalars['Boolean']
 }
 
 export type QueryResourcesByUsernameArgs = {
@@ -59,6 +61,11 @@ export type QuerySectionsListArgs = {
 export type QueryUserProgressArgs = {
   ownerUsername: Scalars['String']
   resourceSlug: Scalars['String']
+}
+
+export type QueryHasEnrolledArgs = {
+  resourceSlug: Scalars['String']
+  username: Scalars['String']
 }
 
 export type LoginResponse = {
@@ -184,6 +191,7 @@ export type Mutation = {
   reorderSections: Section
   savePage: Section
   forkResource?: Maybe<Resource>
+  startProgress: Progress
   completeSection?: Maybe<Progress>
   updateResourceDescription: Resource
   updateResourceTitle: Resource
@@ -260,6 +268,10 @@ export type MutationSavePageArgs = {
 
 export type MutationForkResourceArgs = {
   data: ForkResourceInput
+}
+
+export type MutationStartProgressArgs = {
+  resourceId: Scalars['String']
 }
 
 export type MutationCompleteSectionArgs = {
