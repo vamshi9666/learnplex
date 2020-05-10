@@ -77,6 +77,21 @@ export default function NewSectionModal({
     form.resetFields()
   }
 
+  const FORM_LAYOUT_LOCAL = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+      md: { span: 4 },
+      lg: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 20 },
+      md: { span: 20 },
+      lg: { span: 20 },
+    },
+  }
+
   return (
     <>
       <Modal
@@ -87,6 +102,7 @@ export default function NewSectionModal({
         okText={'Add'}
       >
         <Form
+          {...FORM_LAYOUT_LOCAL}
           form={form}
           name={'new-section-form'}
           initialValues={{ title: '' }}
