@@ -20,7 +20,14 @@ export default function ResourcePage({
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const slugs = router.query.slugs as string[]
-  const { sectionsMap, currentSectionId, body, pageContent, keys } = useSlugs({
+  const {
+    sectionsMap,
+    currentSectionId,
+    body,
+    pageContent,
+    keys,
+    baseSectionId,
+  } = useSlugs({
     resourceSlug,
     username,
     slugs,
@@ -29,6 +36,12 @@ export default function ResourcePage({
   const { xs } = useBreakpoint()
   const parentSectionId =
     sectionsMap.get(currentSectionId)?.parentSection?.id ?? ''
+
+  let currentSections = sectionsMap.get(parentSectionId)?.sections ?? []
+
+  if (parentSectionId === baseSectionId) {
+    currentSections = [sectionsMap.get(currentSectionId)!]
+  }
 
   return (
     <>
@@ -45,7 +58,7 @@ export default function ResourcePage({
               defaultOpenKeys={keys}
               sectionsMap={sectionsMap}
               inEditMode={false}
-              currentSections={sectionsMap.get(parentSectionId)?.sections ?? []}
+              currentSections={currentSections}
               username={username}
             />
           </Col>
