@@ -97,6 +97,10 @@ export default function ResourceCards({
   }
 
   const goToResource = async ({ resource }: { resource: Resource }) => {
+    if (router.pathname === '/learn' && resource.verified) {
+      await router.push(`/learn/${resource.slug}`)
+      return
+    }
     await router.push(`/${resource.user.username}/learn/${resource.slug}`)
   }
 
