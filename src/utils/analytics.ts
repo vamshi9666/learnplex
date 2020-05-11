@@ -3,7 +3,11 @@ import ReactGA from 'react-ga'
 export const initGA = () => {
   if (process.env.NODE_ENV === 'production') {
     console.log('GA init')
-    ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID as string)
+    ReactGA.initialize(process.env.GOOGLE_ANALYTICS_ID as string, {
+      gaOptions: {
+        siteSpeedSampleRate: 100,
+      },
+    })
   }
 }
 
