@@ -127,10 +127,10 @@ export default function EditResourceIndex() {
         <Row gutter={[16, 16]} justify={'start'}>
           <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
-              baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
               inEditMode={true}
               defaultSelectedKeys={['resource-index']}
+              currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
             />
           </Col>
 

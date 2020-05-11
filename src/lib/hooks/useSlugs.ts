@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
 import PageNotFound from '../../components/result/PageNotFound'
+import { Section } from '../../graphql/types'
 
 export default function useSlugs({
   resourceSlug,
@@ -24,14 +25,18 @@ export default function useSlugs({
   const [keys, setKeys] = useState([] as string[])
 
   useEffect(() => {
-    const tempKeys = []
+    const tempKeys: string[] = []
+    let currentParentSectionId = baseSectionId
     for (let depth = 0; depth < slugs.length; depth++) {
-      const sectionIds = Array.from(sectionsMap.keys())
-      const [id] = sectionIds.filter((sectionId) => {
-        const section = sectionsMap.get(sectionId)!
+      const sections = sectionsMap.get(currentParentSectionId)?.sections ?? []
+      const [section] = sections.filter((partialSection: Section) => {
+        const section = sectionsMap.get(partialSection.id)!
         return section.depth === depth && section.slug === slugs[depth]
       })
-      tempKeys.push(id)
+      currentParentSectionId = section?.id ?? ''
+      if (currentParentSectionId) {
+        tempKeys.push(currentParentSectionId)
+      }
     }
     setCurrentSectionId(tempKeys[tempKeys.length - 1])
     setKeys(tempKeys)

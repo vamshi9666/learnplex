@@ -15,27 +15,29 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Section } from '../../graphql/types'
 import useProgress from '../../lib/hooks/useProgress'
+import { useSections } from '../../lib/hooks/useSections'
 
 interface Props {
   inEditMode: boolean
   sectionsMap: Map<string, Section>
-  baseSectionId: string
   defaultSelectedKeys?: string[]
   defaultOpenKeys?: string[]
+  currentSections: Section[]
 }
 
 export default function Sidebar({
   inEditMode,
   sectionsMap,
-  baseSectionId,
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
+  currentSections = [],
 }: Props) {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
 
   const [openKeys, setOpenKeys] = useState(defaultOpenKeys)
+  const { getSlugsPathFromSectionId } = useSections({ username, resourceSlug })
 
   const { fetching, isSectionComplete } = useProgress({
     resourceSlug,
@@ -112,16 +114,13 @@ export default function Sidebar({
     )
   }
 
-  const baseSection = sectionsMap.get(baseSectionId) as Section
-  const sortedSections = baseSection.sections.sort(
-    (section, anotherSection) => {
-      return section.order > anotherSection.order
-        ? 1
-        : section.order < anotherSection.order
-        ? -1
-        : 0
-    }
-  )
+  const sortedSections = currentSections.sort((section, anotherSection) => {
+    return section.order > anotherSection.order
+      ? 1
+      : section.order < anotherSection.order
+      ? -1
+      : 0
+  })
 
   const handleClick = async (e: any) => {
     if (e.key === 'resource-index') {
@@ -140,20 +139,21 @@ export default function Sidebar({
       }
       return
     }
-    let path = e.keyPath
-      .map((id: string) => sectionsMap.get(id)!.slug)
-      .reduce((a: string, b: string) => `${b}/${a}`)
-    const slugs = path.split('/')
+    const slugs = getSlugsPathFromSectionId({ sectionId: e.key })
+    let slugsPath = ''
+    if (slugs.length > 0) {
+      slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+    }
     if (inEditMode) {
       return await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}/${path}`,
+        `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
         { shallow: true }
       )
     }
     await router.push(
       `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/${resourceSlug}/${path}`,
+      `/${username}/learn/${resourceSlug}/${slugsPath}`,
       { shallow: true }
     )
   }

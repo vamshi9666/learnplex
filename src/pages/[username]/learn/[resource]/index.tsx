@@ -33,7 +33,7 @@ export default function ViewResourceIndex() {
     }
   `
 
-  const [{ data, fetching }, reExecuteQuery] = useQuery({
+  const [{ data, fetching }] = useQuery({
     query: RESOURCE_QUERY,
     variables: {
       username,
@@ -57,8 +57,8 @@ export default function ViewResourceIndex() {
               defaultSelectedKeys={['resource-index'] as string[]}
               defaultOpenKeys={[]}
               sectionsMap={sectionsMap}
-              baseSectionId={baseSectionId}
               inEditMode={false}
+              currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
             />
           </Col>
 
