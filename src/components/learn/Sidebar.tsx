@@ -23,6 +23,7 @@ interface Props {
   defaultSelectedKeys?: string[]
   defaultOpenKeys?: string[]
   currentSections: Section[]
+  username: string
 }
 
 export default function Sidebar({
@@ -31,10 +32,10 @@ export default function Sidebar({
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
   currentSections = [],
+  username = '',
 }: Props) {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
-  const username = router.query.username as string
 
   const [openKeys, setOpenKeys] = useState(defaultOpenKeys)
   const { getSlugsPathFromSectionId } = useSections({ username, resourceSlug })
@@ -122,7 +123,34 @@ export default function Sidebar({
       : 0
   })
 
+  const handleClickPrimary = async (e: any) => {
+    console.log(e)
+    if (e.key === 'resource-index') {
+      await router.push(
+        `/learn/[resource]?resource=${resourceSlug}`,
+        `/learn/${resourceSlug}`,
+        { shallow: true }
+      )
+      return
+    }
+
+    const slugs = getSlugsPathFromSectionId({ sectionId: e.key })
+    let slugsPath = ''
+    if (slugs.length > 0) {
+      slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+    }
+    await router.push(
+      `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
+      `/learn/${resourceSlug}/${slugsPath}`,
+      { shallow: true }
+    )
+  }
+
   const handleClick = async (e: any) => {
+    if (!router.pathname.startsWith('[username]') && !inEditMode) {
+      await handleClickPrimary(e)
+      return
+    }
     if (e.key === 'resource-index') {
       if (inEditMode) {
         await router.push(

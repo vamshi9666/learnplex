@@ -1,49 +1,57 @@
-import React from 'react'
 import { useRouter } from 'next/router'
-import { Col, Row, Skeleton, Typography } from 'antd'
 import { useQuery } from 'urql'
+import React from 'react'
+import { Col, Grid, Row, Skeleton, Typography } from 'antd'
 
-import { useSections } from '../../../../lib/hooks/useSections'
-import { SEO } from '../../../../components/SEO'
-import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
-import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../../constants'
-import Sidebar from '../../../../components/learn/Sidebar'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
-import ResourceIndex from '../../../../components/learn/ResourceIndex'
+import InternalServerError from '../../../components/result/InternalServerError'
+import { SEO } from '../../../components/SEO'
+import { titleCase, upperCamelCase } from '../../../utils/upperCamelCase'
+import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../constants'
+import Sidebar from '../../../components/learn/Sidebar'
+import ResourceIndex from '../../../components/learn/ResourceIndex'
+import { useSections } from '../../../lib/hooks/useSections'
 
-export default function ViewResourceIndex() {
+export default function ViewPrimaryResourceIndex() {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
-  const username = router.query.username as string
-  const { body, sectionsMap, baseSectionId } = useSections({
-    username,
-    resourceSlug,
-  })
 
-  const { xs } = useBreakpoint()
-
-  const RESOURCE_QUERY = `
-    query($username: String!, $resourceSlug: String!) {
-      resource(username: $username, resourceSlug: $resourceSlug) {
+  const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
+    query($resourceSlug: String!) {
+      primaryResourceBySlug(resourceSlug: $resourceSlug) {
         id
         title
         slug
         description
+        user {
+          username
+        }
       }
     }
   `
 
-  const [{ data, fetching }] = useQuery({
-    query: RESOURCE_QUERY,
+  const [{ data, fetching, error }] = useQuery({
+    query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
     variables: {
-      username,
       resourceSlug,
     },
   })
 
+  const { body, sectionsMap, baseSectionId } = useSections({
+    username: data?.primaryResourceBySlug?.user?.username,
+    resourceSlug,
+  })
+
+  const { xs } = Grid.useBreakpoint()
+
   if (fetching) {
     return <Skeleton active={true} />
   }
+
+  if (error) {
+    return <InternalServerError message={error.message} />
+  }
+
+  const resource = data.primaryResourceBySlug
 
   return (
     <>
@@ -59,7 +67,7 @@ export default function ViewResourceIndex() {
               sectionsMap={sectionsMap}
               inEditMode={false}
               currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
-              username={username}
+              username={resource.user.username}
             />
           </Col>
 
@@ -69,7 +77,7 @@ export default function ViewResourceIndex() {
                 {titleCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
-                {data.resource.description}
+                {resource.description}
               </Typography.Paragraph>
             </Typography>
 

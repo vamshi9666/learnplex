@@ -10,10 +10,10 @@ import ResourcePage from '../../../../../components/learn/ResourcePage'
 export default function EditResource() {
   const { user, fetching } = useUser()
   const router = useRouter()
-  const username = router.query.username
+  const username = router.query.username as string
   if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
   if (username !== user.username) return <NotAuthorized />
 
-  return <ResourcePage inEditMode={true} />
+  return <ResourcePage inEditMode={true} username={username} />
 }

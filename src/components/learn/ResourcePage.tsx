@@ -10,10 +10,15 @@ import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
 import Sidebar from './Sidebar'
 import CustomEditor from './Editor'
 
-export default function ResourcePage({ inEditMode }: { inEditMode: boolean }) {
+export default function ResourcePage({
+  inEditMode,
+  username = '',
+}: {
+  inEditMode: boolean
+  username: string
+}) {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
-  const username = router.query.username as string
   const slugs = router.query.slugs as string[]
   const { sectionsMap, currentSectionId, body, pageContent, keys } = useSlugs({
     resourceSlug,
@@ -41,6 +46,7 @@ export default function ResourcePage({ inEditMode }: { inEditMode: boolean }) {
               sectionsMap={sectionsMap}
               inEditMode={false}
               currentSections={sectionsMap.get(parentSectionId)?.sections ?? []}
+              username={username}
             />
           </Col>
 

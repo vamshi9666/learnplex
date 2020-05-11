@@ -131,6 +131,7 @@ export default function EditResourceIndex() {
               inEditMode={true}
               defaultSelectedKeys={['resource-index']}
               currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
+              username={username}
             />
           </Col>
 
