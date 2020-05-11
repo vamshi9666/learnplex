@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { message, Skeleton, Typography } from 'antd'
 import NProgress from 'nprogress'
-import IdleTimer from 'react-idle-timer'
+// import IdleTimer from 'react-idle-timer'
 
 import usePreventRouteChangeIf from '../../../lib/hooks/usePreventRouteChangeIf'
 import BottomActionControls from './BottomActionControls'
@@ -111,16 +111,16 @@ export default function MarkdownEditor({
         save={() => save({ editorState })}
         setEditorState={setEditorState}
       >
-        {inEditMode && (
-          <IdleTimer
-            element={document}
-            onIdle={() => save({ editorState })}
-            debounce={250}
-            timeout={1000}
-            startOnMount={false}
-            events={['keydown', 'mousedown']}
-          />
-        )}
+        {/*{inEditMode && (*/}
+        {/*  <IdleTimer*/}
+        {/*    element={document}*/}
+        {/*    onIdle={() => save({ editorState })}*/}
+        {/*    debounce={250}*/}
+        {/*    timeout={1000}*/}
+        {/*    startOnMount={false}*/}
+        {/*    events={['keydown', 'mousedown']}*/}
+        {/*  />*/}
+        {/*)}*/}
         {inEditMode ? (
           <MdEditor
             value={editorState}
