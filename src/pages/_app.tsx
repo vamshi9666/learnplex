@@ -3,6 +3,7 @@ import { AppProps } from 'next/app'
 import 'isomorphic-unfetch'
 import Router from 'next/router'
 import NProgress from 'nprogress'
+import ReactGA from 'react-ga'
 
 import 'react-markdown-editor-lite/lib/index.css'
 import 'highlight.js/styles/a11y-light.css'
@@ -20,6 +21,16 @@ Router.events.on('routeChangeStart', (url) => {
 })
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
+
+export function reportWebVitals({ id, name, label, value }: any) {
+  ReactGA.event({
+    category: `Next.js ${label} metric`,
+    action: name,
+    value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers;
+    label: id, // id unique to current page load
+    nonInteraction: true, // avoids affecting bounce rate.
+  })
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
