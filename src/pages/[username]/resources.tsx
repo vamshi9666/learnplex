@@ -25,6 +25,7 @@ export default function UserResources() {
           slug
         }
         firstPageSlugsPath
+        verified
       }
     }
   `
@@ -43,10 +44,7 @@ export default function UserResources() {
   return (
     <>
       <SEO title={`Resources | ${router.query.username}`} />
-      <ResourceCards
-        resources={resources}
-        description={`${router.query.username} doesn't have any resources yet.`}
-      />
+      <ResourceCards resources={resources} />
     </>
   )
 }

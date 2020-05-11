@@ -26,6 +26,7 @@ export default function TopicResources() {
           slug
         }
         firstPageSlugsPath
+        verified
       }
     }
   `
@@ -44,10 +45,7 @@ export default function TopicResources() {
   return (
     <>
       <SEO title={`Resources | ${titleCase(router.query.slug as string)}`} />
-      <ResourceCards
-        resources={resources}
-        description={`${router.query.slug} doesn't have any resources yet.`}
-      />
+      <ResourceCards resources={resources} />
     </>
   )
 }

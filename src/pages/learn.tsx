@@ -41,18 +41,7 @@ export default function AllResources() {
   return (
     <>
       <SEO title={'All Resources'} />
-      <ResourceCards
-        resources={resources}
-        description={"You don't have any resources yet."}
-        actionsIfEmpty={
-          <Button
-            type={'primary'}
-            onClick={() => router.push('/resources/new')}
-          >
-            Create New Resource
-          </Button>
-        }
-      />
+      <ResourceCards resources={resources} />
     </>
   )
 }

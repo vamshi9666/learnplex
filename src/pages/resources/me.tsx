@@ -27,6 +27,7 @@ export default function MyResources() {
           slug
         }
         firstPageSlugsPath
+        verified
       }
     }
   `
@@ -49,18 +50,7 @@ export default function MyResources() {
   return (
     <>
       <SEO title={'My Resources'} />
-      <ResourceCards
-        resources={resources}
-        description={"You don't have any resources yet."}
-        actionsIfEmpty={
-          <Button
-            type={'primary'}
-            onClick={() => router.push('/resources/new')}
-          >
-            Create New Resource
-          </Button>
-        }
-      />
+      <ResourceCards resources={resources} />
     </>
   )
 }

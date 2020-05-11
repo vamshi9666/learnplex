@@ -21,6 +21,7 @@ export default function VerifiedResources() {
           title
           slug
         }
+        verified
       }
     }
   `
@@ -33,10 +34,5 @@ export default function VerifiedResources() {
 
   const resources = data.allVerifiedResources as Resource[]
 
-  return (
-    <ResourceCards
-      resources={resources}
-      description={"There aren't any verified resources yet."}
-    />
-  )
+  return <ResourceCards resources={resources} />
 }

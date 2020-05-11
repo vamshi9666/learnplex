@@ -1,7 +1,6 @@
 import {
   Card,
   Col,
-  Empty,
   Row,
   Space,
   Tag,
@@ -9,26 +8,23 @@ import {
   Button,
   Tooltip,
   Skeleton,
+  Divider,
+  Empty,
 } from 'antd'
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { TagOutlined, UserOutlined } from '@ant-design/icons'
+import { TagOutlined, UserOutlined, StarOutlined } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
+import { StarTwoTone } from '@ant-design/icons/lib'
 
 export default function ResourceCards({
   resources,
-  showEmpty = true,
-  description = 'No resources matched with your query',
-  actionsIfEmpty,
 }: {
   resources: Resource[]
-  showEmpty?: boolean
-  description?: string
-  actionsIfEmpty?: any
 }) {
   const router = useRouter()
 
@@ -182,8 +178,14 @@ export default function ResourceCards({
     return actions
   }
 
-  return (
-    <>
+  const primaryResources = () =>
+    resources.filter((resource) => resource.verified)
+
+  const otherResources = () =>
+    resources.filter((resource) => !resource.verified)
+
+  const ResourceGrid = ({ resources }: { resources: Resource[] }) => {
+    return (
       <Row gutter={[16, 16]}>
         {resources.map((resource) => (
           <Col key={resource.id} xs={24} sm={8} md={6}>
@@ -193,6 +195,15 @@ export default function ResourceCards({
               hoverable
               actions={getActions({ resource })}
             >
+              {resource.verified && (
+                <StarTwoTone
+                  style={{
+                    color: '#1890ff',
+                    borderColor: '#91d5ff',
+                  }}
+                  className={'float-right font-x-large'}
+                />
+              )}
               <Card.Meta
                 title={`${resource.title}`}
                 description={
@@ -237,14 +248,34 @@ export default function ResourceCards({
             </Card>
           </Col>
         ))}
-        {showEmpty && resources.length === 0 && (
+        {resources.length === 0 && (
           <Col offset={8} md={8} className={'text-center'}>
-            <Empty description={description} />
-            <br />
-            {actionsIfEmpty}
+            <Empty description={'There are no resources here.'} />
           </Col>
         )}
       </Row>
+    )
+  }
+
+  return (
+    <>
+      <Typography className={'p-2'}>
+        <Typography.Title level={3}>Primary Resources</Typography.Title>
+      </Typography>
+      <br />
+      <ResourceGrid resources={primaryResources()} />
+
+      {router.pathname !== '/resources' && (
+        <>
+          <Divider />
+
+          <Typography className={'p-2'}>
+            <Typography.Title level={3}>Other Resources</Typography.Title>
+          </Typography>
+          <br />
+          <ResourceGrid resources={otherResources()} />
+        </>
+      )}
     </>
   )
 }
