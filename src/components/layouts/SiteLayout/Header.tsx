@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Menu, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import { EditOutlined, ImportOutlined } from '@ant-design/icons'
+import { useQuery } from 'urql'
 
 import { useUser } from '../../../lib/hooks/useUser'
 import { UserRole } from '../../../graphql/types'
@@ -9,21 +10,47 @@ import { UserRole } from '../../../graphql/types'
 export default function Header() {
   const router = useRouter()
   const { user, fetching, error } = useUser()
-  if (fetching) return <Skeleton active={true} />
+
+  const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
+    query($resourceSlug: String!) {
+      primaryResourceBySlug(resourceSlug: $resourceSlug) {
+        user {
+          username
+        }
+        verified
+      }
+    }
+  `
+
+  const [{ data, fetching: resourceFetching }] = useQuery({
+    query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
+    variables: {
+      resourceSlug: router.query.resource,
+    },
+  })
+
+  if (fetching || resourceFetching) return <Skeleton active={true} />
   const isLoggedIn = !!user && !fetching && !error
-  const username = router.query.username
+  let username =
+    router.query.username ?? data?.primaryResourceBySlug?.user?.username ?? ''
   const resourceSlug = router.query.resource
   const slugs = router.query.slugs as string[]
 
   const goToEditPage = async () => {
-    if (router.pathname === '/[username]/learn/[resource]/[...slugs]') {
+    if (
+      router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
+      router.pathname === '/learn/[resource]/[...slugs]'
+    ) {
       const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
       await router.push(
         `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
         `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
         { shallow: true }
       )
-    } else if (router.pathname === '/[username]/learn/[resource]') {
+    } else if (
+      router.pathname === '/[username]/learn/[resource]' ||
+      router.pathname === '/learn/[resource]'
+    ) {
       await router.push(
         `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
         `/${username}/learn/edit/${resourceSlug}/resource-index`,
@@ -35,6 +62,14 @@ export default function Header() {
   const exitEditMode = async () => {
     if (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]') {
       const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+      if (data?.primaryResourceBySlug?.verified) {
+        await router.push(
+          `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
+          `/learn/${resourceSlug}/${slugsPath}`,
+          { shallow: true }
+        )
+        return
+      }
       await router.push(
         `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
         `/${username}/learn/${resourceSlug}/${slugsPath}`,
@@ -43,6 +78,14 @@ export default function Header() {
     } else if (
       router.pathname === '/[username]/learn/edit/[resource]/resource-index'
     ) {
+      if (data?.primaryResourceBySlug?.verified) {
+        await router.push(
+          `/learn/[resource]?resource=${resourceSlug}`,
+          `/learn/${resourceSlug}`,
+          { shallow: true }
+        )
+        return
+      }
       await router.push(
         `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
         `/${username}/learn/${resourceSlug}`,
@@ -55,7 +98,9 @@ export default function Header() {
     return (
       isLoggedIn &&
       (router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
-        router.pathname === '/[username]/learn/[resource]') &&
+        router.pathname === '/[username]/learn/[resource]' ||
+        router.pathname === '/learn/[resource]' ||
+        router.pathname === '/learn/[resource]/[...slugs]') &&
       username === user?.username
     )
   }
@@ -121,7 +166,6 @@ export default function Header() {
             </Button>
           </Menu.Item>
         )}
-        <Menu.Item key={'/learn'}>All Resources</Menu.Item>
         {isLoggedIn
           ? [
               <Menu.SubMenu key={'user'} title={user?.username}>

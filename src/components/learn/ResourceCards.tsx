@@ -15,7 +15,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { TagOutlined, UserOutlined, StarOutlined } from '@ant-design/icons'
+import { TagOutlined, UserOutlined } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
@@ -93,7 +93,7 @@ export default function ResourceCards({
   }
 
   const goToResource = async ({ resource }: { resource: Resource }) => {
-    if (router.pathname === '/learn' && resource.verified) {
+    if (resource.verified) {
       await router.push(`/learn/${resource.slug}`)
       return
     }
@@ -137,19 +137,13 @@ export default function ResourceCards({
 
   const getActions = ({ resource }: { resource: Resource }) => {
     const actions = []
-    if (!hasStartedLearning({ resourceId: resource.id })) {
-      actions.push(
-        <Button onClick={() => goToResource({ resource })}>
-          View Resource
-        </Button>
-      )
-    }
     if (isLoggedIn) {
       actions.push(
         <Tooltip title={'You can track your progress in your profile'}>
           {hasStartedLearning({ resourceId: resource.id }) ? (
             <Button
               type={'primary'}
+              block={true}
               disabled={!isLoggedIn}
               onClick={() => goToResource({ resource })}
             >
@@ -158,6 +152,7 @@ export default function ResourceCards({
           ) : (
             <Button
               type={'primary'}
+              block={true}
               disabled={!isLoggedIn}
               onClick={() => startProgress({ resourceId: resource.id })}
             >
@@ -169,7 +164,7 @@ export default function ResourceCards({
     } else {
       actions.push(
         <Tooltip title={'Login to start learning and track your progress'}>
-          <Button type={'primary'} disabled={!isLoggedIn}>
+          <Button type={'primary'} disabled={!isLoggedIn} block={true}>
             Start Learning
           </Button>
         </Tooltip>
@@ -190,10 +185,10 @@ export default function ResourceCards({
         {resources.map((resource) => (
           <Col key={resource.id} xs={24} sm={8} md={6}>
             <Card
-              className={'cursor-initial'}
               key={resource.id}
               hoverable
               actions={getActions({ resource })}
+              onClick={() => goToResource({ resource })}
             >
               {resource.verified && (
                 <StarTwoTone

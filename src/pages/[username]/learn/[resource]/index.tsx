@@ -76,6 +76,7 @@ export default function ViewResourceIndex() {
             <ResourceIndex
               baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
+              username={username}
             />
           </Col>
         </Row>

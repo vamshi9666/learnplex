@@ -8,10 +8,12 @@ export default function SectionsItems({
   sections,
   sectionsMap,
   topLevel = false,
+  username,
 }: {
   sections: Section[]
   sectionsMap: Map<string, Section>
   topLevel?: boolean
+  username: string
 }) {
   const sortedSections = sections.sort(
     (section: Section, anotherSection: Section) => {
@@ -29,6 +31,7 @@ export default function SectionsItems({
           key={section.id}
           sectionId={section.id}
           sectionsMap={sectionsMap}
+          username={username}
         />
       ))}
     </Timeline>

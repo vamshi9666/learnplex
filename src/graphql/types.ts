@@ -18,6 +18,7 @@ export type Query = {
   users: Array<User>
   topics: Array<Topic>
   resources: Array<Resource>
+  primaryResourceBySlug: Resource
   resourcesByUsername: Array<Resource>
   resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
@@ -29,6 +30,10 @@ export type Query = {
   userProgress?: Maybe<Progress>
   userProgressList: Array<Progress>
   hasEnrolled: Scalars['Boolean']
+}
+
+export type QueryPrimaryResourceBySlugArgs = {
+  resourceSlug: Scalars['String']
 }
 
 export type QueryResourcesByUsernameArgs = {
@@ -186,6 +191,7 @@ export type Mutation = {
   createTopic: Topic
   createResource: Resource
   addSection: Section
+  makePrimary: Resource
   updateSection: Section
   deleteSection: Scalars['Boolean']
   reorderSections: Section
@@ -248,6 +254,10 @@ export type MutationCreateResourceArgs = {
 
 export type MutationAddSectionArgs = {
   data: AddSectionInput
+}
+
+export type MutationMakePrimaryArgs = {
+  resourceId: Scalars['String']
 }
 
 export type MutationUpdateSectionArgs = {

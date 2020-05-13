@@ -1,7 +1,6 @@
 import React from 'react'
-import { Button, Skeleton } from 'antd'
+import { Skeleton } from 'antd'
 import { useQuery } from 'urql'
-import { useRouter } from 'next/router'
 
 import { useUser } from '../../lib/hooks/useUser'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
@@ -11,7 +10,6 @@ import ResourceCards from '../../components/learn/ResourceCards'
 import { SEO } from '../../components/SEO'
 
 export default function MyResources() {
-  const router = useRouter()
   const RESOURCES_QUERY = `
     query {
       resources {

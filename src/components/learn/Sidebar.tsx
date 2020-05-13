@@ -1,4 +1,4 @@
-import { Menu, Button, Skeleton, Typography } from 'antd'
+import { Menu, Skeleton, Typography } from 'antd'
 import React, { useState } from 'react'
 import {
   FileTextOutlined,
@@ -147,7 +147,7 @@ export default function Sidebar({
   }
 
   const handleClick = async (e: any) => {
-    if (!router.pathname.startsWith('[username]') && !inEditMode) {
+    if (!router.pathname.startsWith('/[username]') && !inEditMode) {
       await handleClickPrimary(e)
       return
     }

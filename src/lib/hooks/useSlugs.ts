@@ -40,7 +40,7 @@ export default function useSlugs({
     }
     setCurrentSectionId(tempKeys[tempKeys.length - 1])
     setKeys(tempKeys)
-  }, [sectionsMap, slugs])
+  }, [baseSectionId, sectionsMap, slugs])
 
   let modifiedBody = body
 

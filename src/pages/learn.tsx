@@ -1,7 +1,6 @@
 import React from 'react'
-import { Button, Skeleton } from 'antd'
+import { Skeleton } from 'antd'
 import { useQuery } from 'urql'
-import { useRouter } from 'next/router'
 
 import InternalServerError from '../components/result/InternalServerError'
 import { Resource } from '../graphql/types'
@@ -9,7 +8,6 @@ import ResourceCards from '../components/learn/ResourceCards'
 import { SEO } from '../components/SEO'
 
 export default function AllResources() {
-  const router = useRouter()
   const ALL_RESOURCES_QUERY = `
     query {
       allResources {

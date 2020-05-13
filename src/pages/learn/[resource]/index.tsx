@@ -52,6 +52,7 @@ export default function ViewPrimaryResourceIndex() {
   }
 
   const resource = data.primaryResourceBySlug
+  const username = resource.user.username
 
   return (
     <>
@@ -84,6 +85,7 @@ export default function ViewPrimaryResourceIndex() {
             <ResourceIndex
               baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
+              username={username}
             />
           </Col>
         </Row>
