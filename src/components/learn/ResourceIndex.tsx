@@ -1,12 +1,13 @@
 import SectionItems from './SectionItems'
 import React from 'react'
-import { Button, Skeleton } from 'antd'
+import { Button, Skeleton, Tooltip } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 
 import { Section } from '../../graphql/types'
 import { useSections } from '../../lib/hooks/useSections'
+import { useUser } from '../../lib/hooks/useUser'
 
 export default function ViewResourceIndex({
   baseSectionId,
@@ -52,9 +53,13 @@ export default function ViewResourceIndex({
     },
   })
 
-  if (fetching) {
+  const { user, fetching: userFetching } = useUser()
+
+  if (fetching || userFetching) {
     return <Skeleton active={true} />
   }
+
+  const isLoggedIn = !!user
 
   const startProgress = () => {
     NProgress.start()
@@ -78,12 +83,22 @@ export default function ViewResourceIndex({
         username={username}
       />
       <div className={'p-5'}>
-        {!data?.hasEnrolled ? (
-          <Button type={'primary'} onClick={() => startProgress()}>
-            Start Learning
-          </Button>
+        {!isLoggedIn ? (
+          <Tooltip title={'Login to start learning and track your progress'}>
+            <Button type={'primary'} disabled={true}>
+              Start Learning
+            </Button>
+          </Tooltip>
+        ) : !data?.hasEnrolled ? (
+          <Tooltip title={'You can track your progress in your profile'}>
+            <Button type={'primary'} onClick={() => startProgress()}>
+              Start Learning
+            </Button>
+          </Tooltip>
         ) : (
-          <Button type={'primary'}>Already Enrolled</Button>
+          <Tooltip title={'You can track your progress in your profile'}>
+            <Button type={'primary'}>Already Enrolled</Button>
+          </Tooltip>
         )}
       </div>
     </>
