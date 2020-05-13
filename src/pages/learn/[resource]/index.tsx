@@ -1,15 +1,14 @@
 import { useRouter } from 'next/router'
 import { useQuery } from 'urql'
 import React from 'react'
-import { Col, Grid, Row, Skeleton, Typography } from 'antd'
+import { Col, Row, Skeleton, Typography } from 'antd'
 
 import InternalServerError from '../../../components/result/InternalServerError'
 import { SEO } from '../../../components/SEO'
 import { titleCase, upperCamelCase } from '../../../utils/upperCamelCase'
-import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../constants'
-import Sidebar from '../../../components/learn/Sidebar'
 import ResourceIndex from '../../../components/learn/ResourceIndex'
 import { useSections } from '../../../lib/hooks/useSections'
+import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../../constants'
 
 export default function ViewPrimaryResourceIndex() {
   const router = useRouter()
@@ -41,8 +40,6 @@ export default function ViewPrimaryResourceIndex() {
     resourceSlug,
   })
 
-  const { xs } = Grid.useBreakpoint()
-
   if (fetching) {
     return <Skeleton active={true} />
   }
@@ -61,19 +58,8 @@ export default function ViewPrimaryResourceIndex() {
         body
       ) : (
         <Row>
-          <Col {...SIDEBAR_COL_LAYOUT}>
-            <Sidebar
-              defaultSelectedKeys={['resource-index'] as string[]}
-              defaultOpenKeys={[]}
-              sectionsMap={sectionsMap}
-              inEditMode={false}
-              currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
-              username={resource.user.username}
-            />
-          </Col>
-
-          <Col className={`${xs ? '' : 'px-5'}`} {...CONTENT_COL_LAYOUT}>
-            <Typography className={'text-center pb-1 pt-2'}>
+          <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
+            <Typography className={'pb-1 pt-2 pl-5'}>
               <Typography.Title level={2}>
                 {titleCase(resourceSlug)}
               </Typography.Title>
