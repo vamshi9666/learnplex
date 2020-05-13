@@ -67,9 +67,11 @@ export const KeyboardShortcuts = {
     },
     YOUTUBE: {
       isTrue: (keyEvent: KeyboardEvent) =>
-        keyEvent.code === 'KeyY' && keyEvent.shiftKey,
+        keyEvent.code === 'KeyY' &&
+        keyEvent.shiftKey &&
+        (keyEvent.ctrlKey || keyEvent.metaKey),
       left: ':::yt [',
-      right: ']\nVideo caption\n:::',
+      right: ']\n:::',
     },
   },
   getType: function (keyEvent: KeyboardEvent) {
@@ -119,19 +121,11 @@ export const KeyboardShortcuts = {
     textBox.value = preText + left + selectedText + right + postText
     setEditorState(textBox.value)
 
-    if (currentType === 'YOUTUBE') {
-      this.setSelected(
-        textBox,
-        left.length + selectionEnd + 2,
-        left.length + selectionEnd + 15
-      )
-    } else {
-      this.setSelected(
-        textBox,
-        selectionStart + left.length,
-        selectionEnd + left.length
-      )
-    }
+    this.setSelected(
+      textBox,
+      selectionStart + left.length,
+      selectionEnd + left.length
+    )
   },
   setSelected: function (
     item: HTMLTextAreaElement,
