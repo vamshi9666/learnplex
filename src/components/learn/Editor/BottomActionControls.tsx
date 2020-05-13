@@ -4,8 +4,8 @@ import {
   ArrowLeftOutlined,
   CheckOutlined,
   ArrowRightOutlined,
+  SaveOutlined,
 } from '@ant-design/icons'
-import { SaveOutlined } from '@ant-design/icons/lib'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'

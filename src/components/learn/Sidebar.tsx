@@ -1,4 +1,4 @@
-import { Menu, Skeleton, Typography } from 'antd'
+import { Menu, Skeleton, Typography, Grid } from 'antd'
 import React, { useState } from 'react'
 import {
   FileTextOutlined,
@@ -11,7 +11,6 @@ import {
   FileOutlined,
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { Section } from '../../graphql/types'
 import useProgress from '../../lib/hooks/useProgress'
@@ -46,7 +45,7 @@ export default function Sidebar({
     sectionsMap,
   })
 
-  const { xs } = useBreakpoint()
+  const { xs } = Grid.useBreakpoint()
 
   if (fetching) return <Skeleton active={true} />
 

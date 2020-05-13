@@ -1,9 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { Col, Row, Skeleton, Typography } from 'antd'
+import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useMutation, useQuery } from 'urql'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'
@@ -20,7 +19,7 @@ import {
 
 export default function EditResourceIndex() {
   const router = useRouter()
-  const { xs } = useBreakpoint()
+  const { xs } = Grid.useBreakpoint()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
   const RESOURCE_QUERY = `

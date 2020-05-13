@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Skeleton, Timeline, Typography } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
-import { RightOutlined } from '@ant-design/icons/lib'
+import { DownOutlined, RightOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 
 import { Section } from '../../graphql/types'

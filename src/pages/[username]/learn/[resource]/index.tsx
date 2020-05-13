@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { Col, Row, Skeleton, Typography } from 'antd'
+import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useQuery } from 'urql'
 
 import { useSections } from '../../../../lib/hooks/useSections'
@@ -8,7 +8,6 @@ import { SEO } from '../../../../components/SEO'
 import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../../constants'
 import Sidebar from '../../../../components/learn/Sidebar'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 import ResourceIndex from '../../../../components/learn/ResourceIndex'
 
 export default function ViewResourceIndex() {
@@ -20,7 +19,7 @@ export default function ViewResourceIndex() {
     resourceSlug,
   })
 
-  const { xs } = useBreakpoint()
+  const { xs } = Grid.useBreakpoint()
 
   const RESOURCE_QUERY = `
     query($username: String!, $resourceSlug: String!) {

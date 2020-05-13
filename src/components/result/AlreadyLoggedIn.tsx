@@ -1,7 +1,7 @@
 import { Button, Result, Space } from 'antd'
 import React from 'react'
 import { useRouter } from 'next/router'
-import { SmileTwoTone } from '@ant-design/icons/lib'
+import { SmileTwoTone } from '@ant-design/icons'
 
 export default function AlreadyLoggedIn() {
   const router = useRouter()

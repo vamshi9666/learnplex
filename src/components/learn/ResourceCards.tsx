@@ -15,11 +15,10 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { TagOutlined, UserOutlined } from '@ant-design/icons'
+import { TagOutlined, UserOutlined, StarTwoTone } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
 import { useUser } from '../../lib/hooks/useUser'
-import { StarTwoTone } from '@ant-design/icons/lib'
 
 export default function ResourceCards({
   resources,
