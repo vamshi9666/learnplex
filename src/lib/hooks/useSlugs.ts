@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { useSections } from './useSections'
-import { setCurrentSectionIdFromSlugs } from '../../utils/setSectionIdFromSlugs'
-import PageNotFound from '../../components/error/PageNotFound'
+import PageNotFound from '../../components/result/PageNotFound'
+import { Section } from '../../graphql/types'
 
 export default function useSlugs({
   resourceSlug,
@@ -22,39 +22,38 @@ export default function useSlugs({
     sectionsListData,
     body,
   } = useSections({ resourceSlug, username })
+  const [keys, setKeys] = useState([] as string[])
 
   useEffect(() => {
-    if (
-      slugs.length &&
-      !sectionsListFetching &&
-      !sectionsListError &&
-      !!baseSectionId
-    ) {
-      setCurrentSectionIdFromSlugs({
-        baseSectionId,
-        slugs,
-        sectionsMap,
-        setCurrentSectionId,
+    const tempKeys: string[] = []
+    let currentParentSectionId = baseSectionId
+    for (let depth = 0; depth < slugs.length; depth++) {
+      const sections = sectionsMap.get(currentParentSectionId)?.sections ?? []
+      const [section] = sections.filter((partialSection: Section) => {
+        const section = sectionsMap.get(partialSection.id)!
+        return section.depth === depth && section.slug === slugs[depth]
       })
+      currentParentSectionId = section?.id ?? ''
+      if (currentParentSectionId) {
+        tempKeys.push(currentParentSectionId)
+      }
     }
-  }, [
-    slugs,
-    baseSectionId,
-    sectionsListError,
-    sectionsListFetching,
-    sectionsMap,
-  ])
-
-  let isValidPage = true
-
-  if (!sectionsListFetching && !!currentSectionId) {
-    isValidPage = !!sectionsMap.get(currentSectionId)
-  }
+    setCurrentSectionId(tempKeys[tempKeys.length - 1])
+    setKeys(tempKeys)
+  }, [baseSectionId, sectionsMap, slugs])
 
   let modifiedBody = body
 
-  if (!isValidPage) {
-    modifiedBody = React.createElement(PageNotFound)
+  if (!body) {
+    let isValidPage = true
+
+    if (!!currentSectionId) {
+      isValidPage = !!sectionsMap.get(currentSectionId)
+    }
+
+    if (!isValidPage) {
+      modifiedBody = React.createElement(PageNotFound)
+    }
   }
 
   const pageContent = sectionsMap.get(currentSectionId)?.page?.content
@@ -68,5 +67,6 @@ export default function useSlugs({
     sectionsListError,
     sectionsMap,
     sectionsListData,
+    keys,
   }
 }

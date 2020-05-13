@@ -8,8 +8,8 @@ import { SEO } from '../../components/SEO'
 import { Resource, Topic } from '../../graphql/types'
 import { slug } from '../../utils/slug'
 import { useUser } from '../../lib/hooks/useUser'
-import NotAuthenticated from '../../components/error/NotAuthenticated'
-import InternalServerError from '../../components/error/InternalServerError'
+import NotAuthenticated from '../../components/result/NotAuthenticated'
+import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 
 export default function CreateResource() {
@@ -51,7 +51,6 @@ export default function CreateResource() {
 
   const [
     { data: resourcesData, fetching: resourcesFetching, error: resourcesError },
-    reExecuteResourcesQuery,
   ] = useQuery({
     query: RESOURCES_QUERY,
   })
@@ -134,7 +133,7 @@ export default function CreateResource() {
           name={'description'}
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input.TextArea autoSize={{ minRows: 3, maxRows: 8 }} />
         </Form.Item>
 
         <Form.Item {...FORM_TAIL_LAYOUT}>

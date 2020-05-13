@@ -4,14 +4,14 @@ import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { useMutation, useQuery } from 'urql'
+import { useMutation } from 'urql'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
-import { User } from '../graphql/types'
-import InternalServerError from '../components/error/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
+import { useUser } from '../lib/hooks/useUser'
+import AlreadyRegistered from '../components/result/AlreadyRegistered'
 
 const validateMessages = {
   types: {
@@ -21,17 +21,16 @@ const validateMessages = {
 
 export default function Register() {
   const router = useRouter()
-  const USERNAMES_QUERY = `
-    query {
-      users {
-        email
-        username
-      }
+  const VALIDATE_USERNAME_MUTATION = `
+    mutation($username: String!) {
+      validateUsername(username: $username)
     }
   `
-  const [{ data, fetching, error }] = useQuery({
-    query: USERNAMES_QUERY,
-  })
+  const VALIDATE_EMAIL_MUTATION = `
+    mutation($email: String!) {
+      validateEmail(email: $email)
+    }
+  `
 
   const REGISTER_MUTATION = `
     mutation($data: RegisterInput!) {
@@ -39,6 +38,8 @@ export default function Register() {
     }
   `
   const [, register] = useMutation(REGISTER_MUTATION)
+  const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
+  const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
 
   const onFinish = async ({ name, email, username, password }: any) => {
     logEvent('guest', 'TRIES_TO_REGISTER')
@@ -62,8 +63,18 @@ export default function Register() {
     NProgress.done()
   }
 
-  if (fetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
+  const { user, fetching } = useUser()
+  const [form] = Form.useForm()
+
+  console.log({ user, fetching })
+
+  if (fetching) {
+    return <Skeleton active={true} />
+  }
+
+  if (user) {
+    return <AlreadyRegistered />
+  }
 
   return (
     <>
@@ -84,6 +95,7 @@ export default function Register() {
       </Form.Item>
 
       <Form
+        form={form}
         {...FORM_LAYOUT}
         name={'register'}
         onFinish={onFinish}
@@ -114,13 +126,20 @@ export default function Register() {
                 if (!value) {
                   return Promise.resolve()
                 }
-                const emails = data.users.map((user: User) => user.email)
-                if (emails.includes(value)) {
-                  return Promise.reject(
-                    'There is already an account with this email id!'
-                  )
-                }
-                return Promise.resolve()
+                return validateEmail({ email: value }).then((result) => {
+                  if (result.error) {
+                    console.log({ validateEmailError: result.error })
+                    return Promise.reject('Something went wrong!')
+                  } else {
+                    const valid = result.data.validateEmail
+                    if (!valid) {
+                      return Promise.reject(
+                        'There is already an account with this email id!'
+                      )
+                    }
+                    return Promise.resolve()
+                  }
+                })
               },
             }),
           ]}
@@ -142,6 +161,30 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
+          name={'confirm_password'}
+          rules={[
+            {
+              required: true,
+              min: 5,
+            },
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.resolve()
+                }
+                if (value !== form.getFieldValue('password')) {
+                  return Promise.reject('Passwords do not match')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+          label={'Confirm Password'}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
           name={'username'}
           rules={[
             {
@@ -152,11 +195,20 @@ export default function Register() {
                 if (!value) {
                   return Promise.resolve()
                 }
-                const usernames = data.users.map((user: User) => user.username)
-                if (usernames?.includes(value)) {
-                  return Promise.reject('This username is already taken!')
-                }
-                return Promise.resolve()
+                return validateUsername({ username: value }).then((result) => {
+                  if (result.error) {
+                    console.log({ validateUsernameError: result.error })
+                    return Promise.reject('Something went wrong!')
+                  } else {
+                    const valid = result.data.validateUsername
+                    if (!valid) {
+                      return Promise.reject(
+                        'There is already an account with this username!'
+                      )
+                    }
+                    return Promise.resolve()
+                  }
+                })
               },
             }),
           ]}

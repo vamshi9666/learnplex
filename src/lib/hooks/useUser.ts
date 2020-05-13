@@ -9,6 +9,8 @@ export function useUser() {
     query {
         me {
           user {
+             name
+             email
              username
              roles
           }

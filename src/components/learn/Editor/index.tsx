@@ -1,14 +1,12 @@
 import React from 'react'
-import { convertToRaw } from 'draft-js'
 import NProgress from 'nprogress'
-import { useMutation } from 'urql'
+import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
 import { message, Skeleton } from 'antd'
 
-import { useUser } from '../../lib/hooks/useUser'
-import CustomDraftEditor from './CustomDraftEditor'
-import { useSections } from '../../lib/hooks/useSections'
-import useProgress from '../../lib/hooks/useProgress'
+import { useSections } from '../../../lib/hooks/useSections'
+import useProgress from '../../../lib/hooks/useProgress'
+import MarkdownEditor from './MarkdownEditor'
 
 export default function CustomEditor({
   pageContent,
@@ -24,17 +22,6 @@ export default function CustomEditor({
   inEditMode?: boolean
 }) {
   const router = useRouter()
-  const EMPTY_PAGE_CONTENT = JSON.stringify({
-    entityMap: {},
-    blocks: [
-      {
-        text: '',
-        key: 'empty',
-        type: 'unstyled',
-        entityRanges: [],
-      },
-    ],
-  })
   const SAVE_PAGE_MUTATION = `
     mutation($data: SavePageInput!) {
       savePage(data: $data) {
@@ -46,34 +33,16 @@ export default function CustomEditor({
       }
     }
   `
-  const FORK_RESOURCE_MUTATION = `
-    mutation($data: ForkResourceInput!) {
-      forkResource(data: $data) {
-        id
-      }
-    }
-  `
-
   if (pageContent === undefined) {
-    pageContent = EMPTY_PAGE_CONTENT
+    pageContent = ''
   }
-
   const [, savePage] = useMutation(SAVE_PAGE_MUTATION)
-  const [, forkResource] = useMutation(FORK_RESOURCE_MUTATION)
 
-  const save = async ({
-    content,
-    setSavedPageContent,
-  }: {
-    content: any
-    setSavedPageContent: React.Dispatch<React.SetStateAction<string>>
-  }) => {
-    const pageContentJson = convertToRaw(content)
-    const pageContent = JSON.stringify(pageContentJson)
+  const save = async ({ editorState }: { editorState: string }) => {
     NProgress.start()
     savePage({
       data: {
-        pageContent,
+        pageContent: editorState,
         sectionId: currentSectionId,
       },
     }).then((result) => {
@@ -81,38 +50,79 @@ export default function CustomEditor({
         console.log({ savePageError: result.error })
       } else {
         console.log({ result, content: result.data.savePage.page.content })
-        setSavedPageContent(result.data.savePage.page.content)
       }
     })
     NProgress.done()
     message.success('Your changes have been saved.', 1)
   }
 
-  const { user } = useUser()
+  const UPDATE_SECTION_MUTATION = `
+    mutation($data: UpdateSectionInput!) {
+      updateSection(data: $data) {
+        id
+        title
+        slug
+        isBaseSection
+        isPage
+        hasSubSections
+        order
+        depth
+        sections {
+          id
+          order
+          slug
+        }
+        parentSection {
+          id
+        }
+        page {
+          content
+        }
+        resource {
+          id
+        }
+      }
+    }
+  `
 
-  const fork = () => {
+  const [, updateSectionMutation] = useMutation(UPDATE_SECTION_MUTATION)
+
+  const updateSectionTitle = async ({ title }: { title: string }) => {
     NProgress.start()
-    forkResource({
+    updateSectionMutation({
       data: {
-        username,
-        resourceSlug,
+        title,
+        sectionId: currentSectionId,
       },
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.error) {
-        console.log({ forkResourceError: result.error })
+        console.log({ updateSectionError: result.error })
       } else {
         console.log({ result })
+        const slug = result.data.updateSection.slug
+        const previousSlug = sectionsMap.get(currentSectionId)!.slug
+        setSectionInSectionsMap({ updatedSection: result.data.updateSection })
         const slugs = router.query.slugs as string[]
+        slugs[slugs?.length - 1] = slug
         const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-        await router.push(
-          `/${user?.username}/learn/edit/${resourceSlug}/${slugsPath}`
-        )
+        if (slug !== previousSlug) {
+          router.push(
+            `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+            `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+            { shallow: true }
+          )
+        }
       }
     })
     NProgress.done()
   }
 
-  const { getNeighbourSectionSlugs, body } = useSections({
+  const {
+    getNeighbourSectionSlugs,
+    body,
+    resourceId,
+    setSection: setSectionInSectionsMap,
+  } = useSections({
     username,
     resourceSlug,
   })
@@ -140,15 +150,38 @@ export default function CustomEditor({
     sectionsMap,
   })
 
-  if (fetching) return <Skeleton active={true} />
+  const HAS_ENROLLED_QUERY = `
+    query($username: String!, $resourceSlug: String!) {
+      hasEnrolled(username: $username, resourceSlug: $resourceSlug)
+    }
+  `
+
+  const [{ data, fetching: hasEnrolledFetching }] = useQuery({
+    query: HAS_ENROLLED_QUERY,
+    variables: {
+      username,
+      resourceSlug,
+    },
+  })
+
+  if (fetching || hasEnrolledFetching) return <Skeleton active={true} />
 
   if (body) return body
 
   const goTo = async ({ path }: { path: string }) => {
+    const slugs = path.split('/')
     if (inEditMode) {
-      await router.push(`/${username}/learn/edit/${resourceSlug}/${path}`)
+      await router.push(
+        `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+        `/${username}/learn/edit/${resourceSlug}/${path}`,
+        { shallow: true }
+      )
     } else {
-      await router.push(`/${username}/learn/${resourceSlug}/${path}`)
+      await router.push(
+        `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
+        `/${username}/learn/${resourceSlug}/${path}`,
+        { shallow: true }
+      )
     }
   }
 
@@ -157,6 +190,7 @@ export default function CustomEditor({
   })
 
   const goToPreviousSection = async () => {
+    console.log('prev')
     if (!prevSectionPath) {
       return
     }
@@ -164,6 +198,7 @@ export default function CustomEditor({
   }
 
   const goToNextSection = async () => {
+    console.log('next')
     if (!nextSectionPath) {
       return
     }
@@ -186,30 +221,23 @@ export default function CustomEditor({
     NProgress.done()
   }
 
-  const exitEditMode = async () => {
-    const slugs = router.query.slugs as string[]
-    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    await router.push(`/${username}/learn/${resourceSlug}/${slugsPath}`)
-  }
-
   return (
-    <CustomDraftEditor
-      fork={fork}
-      save={save}
+    <MarkdownEditor
       inEditMode={inEditMode}
-      editorKey={`editor-${currentSectionId}`}
+      save={save}
       pageContent={pageContent}
-      showPrevButton={!!prevSectionPath}
-      showNextButton={!!nextSectionPath}
-      goToNextSection={goToNextSection}
+      title={sectionsMap.get(currentSectionId)?.title || ''}
+      showPreviousSection={!!prevSectionPath}
       goToPreviousSection={goToPreviousSection}
-      pageEmpty={pageContent === EMPTY_PAGE_CONTENT}
+      showNextSection={!!nextSectionPath}
+      goToNextSection={goToNextSection}
       completeSection={completeSection}
       isSectionComplete={isSectionComplete({
         section: sectionsMap.get(currentSectionId)!,
       })}
-      isLoggedIn={!!user}
-      exitEditMode={exitEditMode}
+      hasEnrolled={data?.hasEnrolled ?? false}
+      resourceId={resourceId}
+      updateSectionTitle={updateSectionTitle}
     />
   )
 }

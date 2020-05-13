@@ -37,3 +37,21 @@ export const CONTENT_COL_LAYOUT = {
   md: 16,
   lg: 18,
 }
+
+export const CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT = {
+  xs: {
+    span: 24,
+  },
+  sm: {
+    span: 16,
+    offset: 8,
+  },
+  md: {
+    span: 16,
+    offset: 8,
+  },
+  lg: {
+    span: 18,
+    offset: 6,
+  },
+}

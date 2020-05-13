@@ -1,18 +1,17 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { Breadcrumb, Col, Row, Skeleton, Typography } from 'antd'
+import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useMutation, useQuery } from 'urql'
-import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint'
 
 import { SEO } from '../../../../../components/SEO'
 import { titleCase } from '../../../../../utils/upperCamelCase'
 import Sidebar from '../../../../../components/learn/Sidebar'
 import { useSections } from '../../../../../lib/hooks/useSections'
-import ResourceIndex from '../../../../../components/learn/ResourceIndex'
+import ResourceIndexEdit from '../../../../../components/learn/ResourceIndexEdit'
 import { useUser } from '../../../../../lib/hooks/useUser'
-import NotAuthenticated from '../../../../../components/error/NotAuthenticated'
-import NotAuthorized from '../../../../../components/error/NotAuthorized'
+import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
+import NotAuthorized from '../../../../../components/result/NotAuthorized'
 import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,
@@ -20,7 +19,7 @@ import {
 
 export default function EditResourceIndex() {
   const router = useRouter()
-  const { xs } = useBreakpoint()
+  const { xs } = Grid.useBreakpoint()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
   const RESOURCE_QUERY = `
@@ -107,7 +106,11 @@ export default function EditResourceIndex() {
         console.log({ result })
         const slug = result.data.updateResourceTitle.slug
         if (slug !== data.resource.slug) {
-          await router.push(`/${username}/learn/edit/${slug}/resource-index`)
+          await router.push(
+            `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${slug}`,
+            `/${username}/learn/edit/${slug}/resource-index`,
+            { shallow: true }
+          )
         }
       }
     })
@@ -123,17 +126,11 @@ export default function EditResourceIndex() {
         <Row gutter={[16, 16]} justify={'start'}>
           <Col {...SIDEBAR_COL_LAYOUT}>
             <Sidebar
-              baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
               inEditMode={true}
               defaultSelectedKeys={['resource-index']}
-              breadCrumb={
-                <Breadcrumb className={'text-center breadcrumb'}>
-                  <Breadcrumb.Item>
-                    {titleCase(resourceSlug)} Index
-                  </Breadcrumb.Item>
-                </Breadcrumb>
-              }
+              currentSections={sectionsMap.get(baseSectionId)!.sections ?? []}
+              username={username}
             />
           </Col>
 
@@ -148,6 +145,7 @@ export default function EditResourceIndex() {
                 {titleCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph
+                ellipsis={{ rows: 3, expandable: true }}
                 editable={{
                   onChange: (value) => updateDescription(value),
                 }}
@@ -156,7 +154,7 @@ export default function EditResourceIndex() {
               </Typography.Paragraph>
             </Typography>
 
-            <ResourceIndex
+            <ResourceIndexEdit
               baseSectionId={baseSectionId}
               sectionsMap={sectionsMap}
             />

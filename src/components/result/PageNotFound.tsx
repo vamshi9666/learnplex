@@ -16,7 +16,7 @@ export default function PageNotFound({
   return (
     <Result
       status={'404'}
-      title={'404'}
+      title={'404 Not Found'}
       subTitle={message}
       extra={
         <Button type={'primary'} onClick={() => router.push('/')}>

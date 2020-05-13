@@ -4,7 +4,7 @@ import { Skeleton } from 'antd'
 import { DropResult } from 'react-beautiful-dnd'
 
 import { Section } from '../../graphql/types'
-import PageNotFound from '../../components/error/PageNotFound'
+import PageNotFound from '../../components/result/PageNotFound'
 
 export function useSections({
   resourceSlug,
@@ -23,6 +23,7 @@ export function useSections({
         isPage
         hasSubSections
         order
+        depth
         sections {
           id
           order
@@ -33,6 +34,9 @@ export function useSections({
         }
         page {
           content
+        }
+        resource {
+          id
         }
       }
     }
@@ -65,6 +69,7 @@ export function useSections({
       const [baseSection] = sectionsListData.sectionsList.filter(
         (section: Section) => section.isBaseSection
       )
+      setResourceId(baseSection.resource.id)
       setBaseSectionId(baseSection.id)
       setSectionsMap((prevSectionsMap) => {
         const newSectionsMap = new Map()
@@ -77,13 +82,13 @@ export function useSections({
   }, [sectionsListData, sectionsListError, sectionsListFetching])
 
   let body
-  if ((sectionsListFetching && !sectionsListError) || sectionsMap.size === 0) {
+  if (sectionsListError) {
+    body = React.createElement(PageNotFound)
+  } else if (sectionsListFetching || sectionsMap.size === 0) {
     body = React.createElement(Skeleton, {
       active: true,
       paragraph: { rows: 10 },
     })
-  } else if (sectionsListError) {
-    body = React.createElement(PageNotFound)
   } else {
     body = undefined
   }
@@ -164,6 +169,7 @@ export function useSections({
   `
 
   const [, reorderSectionsMutation] = useMutation(REORDER_SECTIONS_MUTATION)
+  const [resourceId, setResourceId] = useState('')
 
   const reorderSections = async ({
     result,
@@ -276,6 +282,9 @@ export function useSections({
     if (targetSectionId === currentSectionId) {
       return [currentSection.slug]
     }
+    if (!currentSection) {
+      return []
+    }
     if (currentSection.sections.length === 0) {
       return []
     }
@@ -373,7 +382,11 @@ export function useSections({
     }
   }
 
-  function getLeastOrderSection({ sectionId }: { sectionId: string }): string {
+  function getLeastOrderSectionId({
+    sectionId,
+  }: {
+    sectionId: string
+  }): string {
     const currentSection = sectionsMap.get(sectionId)!
     if (!currentSection) {
       return ''
@@ -392,15 +405,17 @@ export function useSections({
         leastOrder = section.order
       }
     })
-    return getLeastOrderSection({ sectionId: sectionIdWithLeastOrder })
+    return getLeastOrderSectionId({ sectionId: sectionIdWithLeastOrder })
   }
 
   const firstPagePath = () => {
-    const leastOrderSection = getLeastOrderSection({ sectionId: baseSectionId })
-    if (!leastOrderSection) {
+    const leastOrderSectionId = getLeastOrderSectionId({
+      sectionId: baseSectionId,
+    })
+    if (leastOrderSectionId === baseSectionId) {
       return ''
     }
-    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSection })
+    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSectionId })
     return slugs.reduce((a, b) => `${a}/${b}`)
   }
 
@@ -417,5 +432,7 @@ export function useSections({
     reorderSections,
     getNeighbourSectionSlugs,
     firstPagePath,
+    getSlugsPathFromSectionId,
+    resourceId,
   }
 }

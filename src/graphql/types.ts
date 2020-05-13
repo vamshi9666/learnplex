@@ -18,12 +18,30 @@ export type Query = {
   users: Array<User>
   topics: Array<Topic>
   resources: Array<Resource>
+  primaryResourceBySlug: Resource
+  resourcesByUsername: Array<Resource>
+  resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
   allResources: Array<Resource>
+  allVerifiedResources: Array<Resource>
   baseSection: Section
   sections: Array<Section>
   sectionsList: Array<Section>
   userProgress?: Maybe<Progress>
+  userProgressList: Array<Progress>
+  hasEnrolled: Scalars['Boolean']
+}
+
+export type QueryPrimaryResourceBySlugArgs = {
+  resourceSlug: Scalars['String']
+}
+
+export type QueryResourcesByUsernameArgs = {
+  username: Scalars['String']
+}
+
+export type QueryResourcesByTopicArgs = {
+  slug: Scalars['String']
 }
 
 export type QueryResourceArgs = {
@@ -50,6 +68,11 @@ export type QueryUserProgressArgs = {
   resourceSlug: Scalars['String']
 }
 
+export type QueryHasEnrolledArgs = {
+  resourceSlug: Scalars['String']
+  username: Scalars['String']
+}
+
 export type LoginResponse = {
   __typename?: 'LoginResponse'
   accessToken: Scalars['String']
@@ -60,7 +83,7 @@ export type User = {
   __typename?: 'User'
   id: Scalars['ID']
   name?: Maybe<Scalars['String']>
-  email: Scalars['String']
+  email?: Maybe<Scalars['String']>
   username: Scalars['String']
   confirmed: Scalars['Boolean']
   roles: Array<UserRole>
@@ -92,6 +115,7 @@ export type Resource = {
   createdDate: Scalars['DateTime']
   updatedDate: Scalars['DateTime']
   version: Scalars['Int']
+  firstPageSlugsPath: Scalars['String']
 }
 
 export type Section = {
@@ -161,19 +185,26 @@ export type Mutation = {
   logout: Scalars['Boolean']
   register: Scalars['Boolean']
   revokeTokensForUser: Scalars['Boolean']
+  validateEmail: Scalars['Boolean']
+  validateUsername: Scalars['Boolean']
   sendConfirmationMail: Scalars['Boolean']
   createTopic: Topic
   createResource: Resource
   addSection: Section
+  makePrimary: Resource
   updateSection: Section
   deleteSection: Scalars['Boolean']
   reorderSections: Section
   savePage: Section
   forkResource?: Maybe<Resource>
+  startProgress: Progress
   completeSection?: Maybe<Progress>
   updateResourceDescription: Resource
   updateResourceTitle: Resource
   searchResources: Array<Resource>
+  updateUser: Scalars['Boolean']
+  updatePassword: Scalars['Boolean']
+  updateUserDetailsAsAdmin: Scalars['Boolean']
 }
 
 export type MutationChangePasswordArgs = {
@@ -201,6 +232,14 @@ export type MutationRevokeTokensForUserArgs = {
   userId: Scalars['Float']
 }
 
+export type MutationValidateEmailArgs = {
+  email: Scalars['String']
+}
+
+export type MutationValidateUsernameArgs = {
+  username: Scalars['String']
+}
+
 export type MutationSendConfirmationMailArgs = {
   email: Scalars['String']
 }
@@ -215,6 +254,10 @@ export type MutationCreateResourceArgs = {
 
 export type MutationAddSectionArgs = {
   data: AddSectionInput
+}
+
+export type MutationMakePrimaryArgs = {
+  resourceId: Scalars['String']
 }
 
 export type MutationUpdateSectionArgs = {
@@ -237,6 +280,10 @@ export type MutationForkResourceArgs = {
   data: ForkResourceInput
 }
 
+export type MutationStartProgressArgs = {
+  resourceId: Scalars['String']
+}
+
 export type MutationCompleteSectionArgs = {
   data: CompleteSectionInput
 }
@@ -253,6 +300,18 @@ export type MutationUpdateResourceTitleArgs = {
 
 export type MutationSearchResourcesArgs = {
   value: Scalars['String']
+}
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput
+}
+
+export type MutationUpdatePasswordArgs = {
+  data: UpdatePasswordInput
+}
+
+export type MutationUpdateUserDetailsAsAdminArgs = {
+  data: UpdateUserOptionalInput
 }
 
 export type ChangePasswordInput = {
@@ -280,6 +339,7 @@ export type CreateResourceInput = {
 export type AddSectionInput = {
   parentSectionId: Scalars['String']
   title: Scalars['String']
+  content?: Maybe<Scalars['String']>
 }
 
 export type UpdateSectionInput = {
@@ -305,4 +365,22 @@ export type ForkResourceInput = {
 
 export type CompleteSectionInput = {
   sectionId: Scalars['String']
+}
+
+export type UpdateUserInput = {
+  name: Scalars['String']
+  email: Scalars['String']
+  username: Scalars['String']
+}
+
+export type UpdatePasswordInput = {
+  password: Scalars['String']
+  currentPassword: Scalars['String']
+}
+
+export type UpdateUserOptionalInput = {
+  name?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  username?: Maybe<Scalars['String']>
+  currentUsername: Scalars['String']
 }

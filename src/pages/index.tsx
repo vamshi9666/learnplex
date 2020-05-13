@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import { Row, Col, Input, Divider, Typography, Button } from 'antd'
-import { useMutation } from 'urql'
+import { useQuery } from 'urql'
 
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '../constants'
 import { Resource } from '../graphql/types'
@@ -15,9 +15,9 @@ export default function Home() {
   const accessToken: string = router.query.accessToken as string
   const refreshToken: string = router.query.refreshToken as string
   const oauth: boolean = Boolean(router.query.oauth) as boolean
-  const SEARCH_RESOURCES_MUTATION = `
-    mutation($value: String!) {
-      searchResources(value: $value) {
+  const ALL_RESOURCES_QUERY = `
+    query {
+      allResources {
         id
         title
         description
@@ -25,13 +25,27 @@ export default function Home() {
         user {
           username
         }
+        topic {
+          title
+          slug
+        }
+        firstPageSlugsPath
+        verified
       }
     }
   `
 
-  const [value, setValue] = useState(undefined as string | undefined)
+  const [{ data, fetching, error }] = useQuery({
+    query: ALL_RESOURCES_QUERY,
+  })
+  const [value, setValue] = useState('')
   const [resources, setResources] = useState([] as Resource[])
-  const [, searchMutation] = useMutation(SEARCH_RESOURCES_MUTATION)
+
+  useEffect(() => {
+    if (!fetching && !error && data && data.allResources) {
+      setResources(data.allResources)
+    }
+  }, [data, error, fetching])
 
   useEffect(() => {
     console.log({ accessToken, refreshToken })
@@ -42,23 +56,18 @@ export default function Home() {
     }
   }, [accessToken, refreshToken, oauth, router])
 
+  const filteredResources = () => {
+    return resources.filter(
+      (resource) =>
+        resource.slug.includes(value) ||
+        resource.topic.slug.includes(value) ||
+        resource.user.username.includes(value)
+    )
+  }
+
   const handleChange = (value: string) => {
-    setValue(value)
+    setValue(value.toLowerCase())
     logEvent('resource', 'TRIES_TO_SEARCH')
-    if (!value) {
-      setResources([])
-      return
-    }
-    searchMutation({
-      value,
-    }).then((result) => {
-      if (result.error) {
-        console.log({ searchError: result.error })
-      } else {
-        console.log({ result })
-        setResources(result.data.searchResources)
-      }
-    })
   }
 
   return (
@@ -94,7 +103,7 @@ export default function Home() {
           <Button
             className={'float-right'}
             type={'primary'}
-            onClick={() => router.push(`/resources`)}
+            onClick={() => router.push(`/resources/me`)}
             block={true}
           >
             My Resources
@@ -104,7 +113,7 @@ export default function Home() {
 
       <Divider />
 
-      <ResourceCards resources={resources} showEmpty={value !== undefined} />
+      <ResourceCards resources={filteredResources()} />
     </>
   )
 }
