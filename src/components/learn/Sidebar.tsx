@@ -217,17 +217,14 @@ export default function Sidebar({
             )}
           </Breadcrumb>
         </Menu.Item>
-        <Menu.Item key={'resource-index'} className={'border-bottom'}>
-          <Typography>
-            <span className={'mr-3'}>
-              <FileTextOutlined />
-            </span>
+        <Menu.Item
+          key={'resource-index'}
+          className={'border-bottom-2 font-weight-bold font-large'}
+        >
+          <Typography className={'text-center'}>
             <Typography.Text style={{ width: '75%' }} ellipsis={true}>
               {inEditMode ? 'Edit Index' : 'Index'}
             </Typography.Text>
-            <span className={'float-right'}>
-              <CheckCircleOutlined />
-            </span>
           </Typography>
         </Menu.Item>
 
