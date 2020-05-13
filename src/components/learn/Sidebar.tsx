@@ -1,4 +1,4 @@
-import { Menu, Skeleton, Typography, Grid } from 'antd'
+import { Menu, Skeleton, Typography, Grid, Breadcrumb } from 'antd'
 import React, { useState } from 'react'
 import {
   FileTextOutlined,
@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { Section } from '../../graphql/types'
 import useProgress from '../../lib/hooks/useProgress'
 import { useSections } from '../../lib/hooks/useSections'
+import { titleCase } from '../../utils/upperCamelCase'
 
 interface Props {
   inEditMode: boolean
@@ -188,6 +189,8 @@ export default function Sidebar({
   }
   const sidebar = document.getElementById('sidebar')
 
+  const slugs = router.query.slugs ?? []
+
   return (
     <>
       <Menu
@@ -200,6 +203,20 @@ export default function Sidebar({
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >
+        <Menu.Item className={'cursor-initial'} disabled={true}>
+          <Breadcrumb>
+            {slugs.length >= 2 && (
+              <Breadcrumb.Item>
+                {titleCase(slugs[slugs.length - 2])}
+              </Breadcrumb.Item>
+            )}
+            {slugs.length >= 1 && (
+              <Breadcrumb.Item>
+                {titleCase(slugs[slugs.length - 1])}
+              </Breadcrumb.Item>
+            )}
+          </Breadcrumb>
+        </Menu.Item>
         <Menu.Item key={'resource-index'} className={'border-bottom'}>
           <Typography>
             <span className={'mr-3'}>
