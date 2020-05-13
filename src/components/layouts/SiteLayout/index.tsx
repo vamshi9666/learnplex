@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import React from 'react'
 import { Layout, Grid } from 'antd'
 import { createClient } from '@urql/core'
@@ -21,9 +20,6 @@ export default function SiteLayout({ children }: { children: any }) {
   const { xs } = Grid.useBreakpoint()
   return (
     <>
-      <Head>
-        <meta charSet="utf-8" />
-      </Head>
       <Layout className={'mh-100vh'}>
         <Layout.Header className={'mb-3'}>
           {/* TODO: Without Provider, useEffect is not running in useUser hook, figure out why */}
