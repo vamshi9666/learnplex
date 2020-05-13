@@ -56,7 +56,7 @@ export default function ResourcePage({
               defaultSelectedKeys={[keys[keys.length - 1] as string]}
               defaultOpenKeys={keys}
               sectionsMap={sectionsMap}
-              inEditMode={false}
+              inEditMode={inEditMode}
               currentSections={currentSections}
               username={username}
             />

@@ -157,13 +157,14 @@ export default function Sidebar({
           `/${username}/learn/edit/${resourceSlug}/resource-index`,
           { shallow: true }
         )
-      } else {
-        await router.push(
-          `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
-          `/${username}/learn/${resourceSlug}`,
-          { shallow: true }
-        )
+        return
       }
+      await router.push(
+        `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
+        `/${username}/learn/${resourceSlug}`,
+        { shallow: true }
+      )
+
       return
     }
     const slugs = getSlugsPathFromSectionId({ sectionId: e.key })
@@ -172,11 +173,12 @@ export default function Sidebar({
       slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
     }
     if (inEditMode) {
-      return await router.push(
+      await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
         `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
         { shallow: true }
       )
+      return
     }
     await router.push(
       `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
