@@ -8,7 +8,7 @@ import InternalServerError from '../../components/result/InternalServerError'
 import { Progress } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 
-export default function Profile() {
+export default function Enrollments() {
   const USER_PROGRESS_LIST_QUERY = `
     query {
       userProgressList {
