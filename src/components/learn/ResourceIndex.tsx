@@ -1,5 +1,5 @@
 import SectionItems from './SectionItems'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Skeleton, Tooltip } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
@@ -7,7 +7,7 @@ import NProgress from 'nprogress'
 
 import { Section } from '../../graphql/types'
 import { useSections } from '../../lib/hooks/useSections'
-import { useUser } from '../../lib/hooks/useUser'
+import { UserContext } from '../../lib/contexts/UserContext'
 
 export default function ViewResourceIndex({
   baseSectionId,
@@ -53,9 +53,9 @@ export default function ViewResourceIndex({
     },
   })
 
-  const { user, fetching: userFetching } = useUser()
+  const { user } = useContext(UserContext)
 
-  if (fetching || userFetching) {
+  if (fetching) {
     return <Skeleton active={true} />
   }
 

@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Alert, Button, Space } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
-
-import { useUser } from '../../../lib/hooks/useUser'
+import { UserContext } from '../../../lib/contexts/UserContext'
 
 export default function TopActionControls({
   inEditMode,
@@ -17,7 +16,7 @@ export default function TopActionControls({
   goToEditPage: () => void
   exitEditMode: () => void
 }) {
-  const { user } = useUser()
+  const { user } = useContext(UserContext)
   return inEditMode ? (
     <>
       <Space className={'float-left'}>

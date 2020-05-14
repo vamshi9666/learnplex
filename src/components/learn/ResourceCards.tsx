@@ -11,14 +11,14 @@ import {
   Divider,
   Empty,
 } from 'antd'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
 import { TagOutlined, UserOutlined, StarTwoTone } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
-import { useUser } from '../../lib/hooks/useUser'
+import { UserContext } from '../../lib/contexts/UserContext'
 
 export default function ResourceCards({
   resources,
@@ -45,7 +45,7 @@ export default function ResourceCards({
     await router.push(`/${username}/resources`)
   }
 
-  const { user } = useUser()
+  const { user } = useContext(UserContext)
   const isLoggedIn = !!user
 
   const USER_PROGRESS_LIST_QUERY = `

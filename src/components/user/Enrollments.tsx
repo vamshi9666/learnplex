@@ -1,12 +1,12 @@
 import { useQuery } from 'urql'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Skeleton } from 'antd'
 
-import { useUser } from '../../lib/hooks/useUser'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { Progress } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
+import { UserContext } from '../../lib/contexts/UserContext'
 
 export default function Enrollments() {
   const USER_PROGRESS_LIST_QUERY = `
@@ -25,6 +25,7 @@ export default function Enrollments() {
             slug
           }
           firstPageSlugsPath
+          verified
         }
       }
     }
@@ -34,13 +35,13 @@ export default function Enrollments() {
   ] = useQuery({
     query: USER_PROGRESS_LIST_QUERY,
   })
-  const { fetching, error } = useUser()
+  const { user } = useContext(UserContext)
 
-  if (fetching || progressFetching) {
+  if (progressFetching) {
     return <Skeleton active={true} />
   }
 
-  if (error) {
+  if (!user) {
     return <NotAuthenticated />
   }
 

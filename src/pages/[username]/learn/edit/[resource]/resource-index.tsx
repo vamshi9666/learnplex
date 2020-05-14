@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Col, Row, Skeleton, Typography, Grid } from 'antd'
@@ -9,13 +9,13 @@ import { SEO } from '../../../../../components/SEO'
 import Sidebar from '../../../../../components/learn/Sidebar'
 import { useSections } from '../../../../../lib/hooks/useSections'
 import ResourceIndexEdit from '../../../../../components/learn/ResourceIndexEdit'
-import { useUser } from '../../../../../lib/hooks/useUser'
 import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
 import NotAuthorized from '../../../../../components/result/NotAuthorized'
 import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,
 } from '../../../../../constants'
+import { UserContext } from '../../../../../lib/contexts/UserContext'
 
 export default function EditResourceIndex() {
   const router = useRouter()
@@ -71,9 +71,9 @@ export default function EditResourceIndex() {
     username,
   })
 
-  const { user, fetching: userFetching } = useUser()
+  const { user } = useContext(UserContext)
 
-  if (fetching || userFetching) return <Skeleton active={true} />
+  if (fetching) return <Skeleton active={true} />
 
   if (!user) return <NotAuthenticated />
   if (router.query.username !== user.username) return <NotAuthorized />

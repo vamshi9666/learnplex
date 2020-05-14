@@ -1,5 +1,5 @@
 import { Button, message } from 'antd'
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   ArrowLeftOutlined,
   CheckOutlined,
@@ -9,8 +9,7 @@ import {
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
-
-import { useUser } from '../../../lib/hooks/useUser'
+import { UserContext } from '../../../lib/contexts/UserContext'
 
 export default function BottomActionControls({
   showPreviousSection,
@@ -37,7 +36,7 @@ export default function BottomActionControls({
   hasEnrolled: boolean
   resourceId: string
 }) {
-  const { user } = useUser()
+  const { user } = useContext(UserContext)
   const START_PROGRESS_MUTATION = `
     mutation($resourceId: String!) {
       startProgress(resourceId: $resourceId) {

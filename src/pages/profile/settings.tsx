@@ -1,26 +1,16 @@
-import React, { useState } from 'react'
-import {
-  Button,
-  Col,
-  Form,
-  Grid,
-  Input,
-  Menu,
-  message,
-  Row,
-  Skeleton,
-} from 'antd'
+import React, { useContext, useState } from 'react'
+import { Button, Col, Form, Grid, Input, Menu, message, Row } from 'antd'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
 
-import { useUser } from '../../lib/hooks/useUser'
-import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 import { SEO } from '../../components/SEO'
 import Enrollments from '../../components/user/Enrollments'
+import { UserContext } from '../../lib/contexts/UserContext'
+import NotAuthenticated from '../../components/result/NotAuthenticated'
 
 export default function ProfileSettings() {
-  const { user, fetching, error } = useUser()
+  const { user } = useContext(UserContext)
 
   const BASIC = 'basic'
   const SECURITY = 'security'
@@ -59,8 +49,9 @@ export default function ProfileSettings() {
   const [updateUserForm] = Form.useForm()
   const { xs } = Grid.useBreakpoint()
 
-  if (fetching) return <Skeleton active={true} />
-  if (error) return <InternalServerError message={error.message} />
+  if (!user) {
+    return <NotAuthenticated />
+  }
 
   const onFinish = ({ name, email, username }: any) => {
     updateUser({

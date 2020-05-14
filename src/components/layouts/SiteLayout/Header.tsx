@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Menu, Skeleton } from 'antd'
 import { useRouter } from 'next/router'
 import { EditOutlined, ImportOutlined } from '@ant-design/icons'
 import { useQuery } from 'urql'
 
-import { useUser } from '../../../lib/hooks/useUser'
 import { UserRole } from '../../../graphql/types'
+import { UserContext } from '../../../lib/contexts/UserContext'
 
 export default function Header() {
   const router = useRouter()
-  const { user, fetching, error } = useUser()
+  const { user } = useContext(UserContext)
+  const resourceSlug = router.query.slug as string
 
   const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
     query($resourceSlug: String!) {
@@ -25,15 +26,16 @@ export default function Header() {
   const [{ data, fetching: resourceFetching }] = useQuery({
     query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
     variables: {
-      resourceSlug: router.query.resource,
+      resourceSlug,
     },
+    pause: !resourceSlug,
+    requestPolicy: 'network-only',
   })
 
-  if (fetching || resourceFetching) return <Skeleton active={true} />
-  const isLoggedIn = !!user && !fetching && !error
+  if (resourceFetching) return <Skeleton active={true} />
+  const isLoggedIn = !!user
   let username =
     router.query.username ?? data?.primaryResourceBySlug?.user?.username ?? ''
-  const resourceSlug = router.query.resource
   const slugs = router.query.slugs as string[]
 
   const goToEditPage = async () => {

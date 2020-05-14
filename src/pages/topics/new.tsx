@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Form, Input, Skeleton } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
 
-import { useUser } from '../../lib/hooks/useUser'
 import { SEO } from '../../components/SEO'
 import { Topic, UserRole } from '../../graphql/types'
 import { slug } from '../../utils/slug'
@@ -11,9 +10,10 @@ import NotAuthorized from '../../components/result/NotAuthorized'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
+import { UserContext } from '../../lib/contexts/UserContext'
 
 export default function CreateTopic() {
-  const { user, fetching } = useUser()
+  const { user } = useContext(UserContext)
 
   const [form] = Form.useForm()
   const CREATE_TOPIC_MUTATION = `
@@ -57,7 +57,6 @@ export default function CreateTopic() {
     NProgress.done()
   }
 
-  if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
   if (!user.roles.includes(UserRole.Admin)) return <NotAuthorized />
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Form, Input, Select, Skeleton } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
@@ -7,15 +7,15 @@ import NProgress from 'nprogress'
 import { SEO } from '../../components/SEO'
 import { Resource, Topic } from '../../graphql/types'
 import { slug } from '../../utils/slug'
-import { useUser } from '../../lib/hooks/useUser'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
+import { UserContext } from '../../lib/contexts/UserContext'
 
 export default function CreateResource() {
   const [form] = Form.useForm()
   const router = useRouter()
-  const { user, fetching } = useUser()
+  const { user } = useContext(UserContext)
 
   const TOPICS_QUERY = `
       query {
@@ -82,7 +82,6 @@ export default function CreateResource() {
     NProgress.done()
   }
 
-  if (fetching) return <Skeleton active={true} />
   if (!user) return <NotAuthenticated />
   if (topicsFetching || resourcesFetching) return <Skeleton active={true} />
   if (topicsError) return <InternalServerError message={topicsError.message} />

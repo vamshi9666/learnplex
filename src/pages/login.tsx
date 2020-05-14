@@ -1,6 +1,6 @@
 import { useMutation } from 'urql'
-import React, { useState } from 'react'
-import { Alert, Button, Divider, Form, Input, Skeleton } from 'antd'
+import React, { useContext, useState } from 'react'
+import { Alert, Button, Divider, Form, Input } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -10,8 +10,8 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
-import { useUser } from '../lib/hooks/useUser'
 import AlreadyLoggedIn from '../components/result/AlreadyLoggedIn'
+import { UserContext } from '../lib/contexts/UserContext'
 
 export default function Login() {
   const router = useRouter()
@@ -20,12 +20,19 @@ export default function Login() {
     mutation($email: String!, $password: String!) {
       login(email: $email, password: $password) {
         accessToken
+        user {
+          name
+          email
+          username
+          roles
+        }
       }
     }
   `
   const [, login] = useMutation(LOGIN_MUTATION)
   const [loginError, setLoginError] = useState(false)
   const [errorDescription, setErrorDescription] = useState('')
+  const { setUser } = useContext(UserContext)
 
   const onFinish = async ({ email, password }: any) => {
     NProgress.start()
@@ -41,6 +48,7 @@ export default function Login() {
       } else {
         const { accessToken } = result.data.login
         console.log({ accessToken, result })
+        setUser(result.data.login.user)
         // Cookie will be set by server
         // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         logEvent('guest', 'LOGGED_IN')
@@ -50,11 +58,7 @@ export default function Login() {
     NProgress.done()
   }
 
-  const { user, fetching } = useUser()
-
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
+  const { user } = useContext(UserContext)
 
   if (user) {
     return <AlreadyLoggedIn />

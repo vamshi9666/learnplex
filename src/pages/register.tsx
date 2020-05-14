@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Divider, Form, Input, Skeleton } from 'antd'
+import React, { useContext } from 'react'
+import { Button, Divider, Form, Input } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -10,8 +10,8 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
-import { useUser } from '../lib/hooks/useUser'
 import AlreadyRegistered from '../components/result/AlreadyRegistered'
+import { UserContext } from '../lib/contexts/UserContext'
 
 const validateMessages = {
   types: {
@@ -63,14 +63,8 @@ export default function Register() {
     NProgress.done()
   }
 
-  const { user, fetching } = useUser()
+  const { user } = useContext(UserContext)
   const [form] = Form.useForm()
-
-  console.log({ user, fetching })
-
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
 
   if (user) {
     return <AlreadyRegistered />

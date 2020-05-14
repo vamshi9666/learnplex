@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import { useQuery } from 'urql'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { ACCESS_TOKEN_COOKIE } from '../../constants'
 
@@ -22,7 +22,8 @@ export function useUser() {
   const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
     query: ME_QUERY,
   })
-
+  const renders = useRef(0)
+  console.log('useUser called ', renders.current++)
   useEffect(() => {
     reExecuteMeQuery()
   }, [accessToken, reExecuteMeQuery])
