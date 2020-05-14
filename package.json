@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
+    "lint": "eslint --fix --ext .js,.ts,.tsx --ignore-path .gitignore .",
     "gen": "graphql-codegen --config codegen.yml && yarn lint",
     "dev": "cross-env NODE_OPTIONS=\"-r esm\" next",
     "build": "cross-env NODE_OPTIONS=\"-r esm\" next build",
     "analyze": "cross-env-shell NODE_OPTIONS=\"-r esm\" ANALYZE=true next build",
-    "start": "cross-env NODE_OPTIONS=\"-r esm\" next start"
+    "start": "cross-env NODE_OPTIONS=\"-r esm\" next start",
+    "check-types": "tsc",
+    "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts|tsx)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different",
+    "validate": "npm-run-all --parallel check-types check-format lint build"
   },
   "dependencies": {
     "@ant-design/icons": "^4.1.0",
@@ -81,16 +86,22 @@
     "eslint-plugin-react-hooks": "3.0.0",
     "husky": ">=4",
     "lint-staged": ">=10",
+    "npm-run-all": "^4.1.5",
     "prettier": "2.0.5",
     "serverless-next.js": "^1.11.1-alpha.0",
     "typescript": "^3.8.3"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "yarn run check-types && lint-staged"
     }
   },
   "lint-staged": {
-    "*.{js,ts,tsx,jsx}": "yarn lint"
+    "*.+(js|ts|tsx)": [
+      "yarn run lint"
+    ],
+    "*.+(js|json|ts|tsx)": [
+      "yarn run format"
+    ]
   }
 }
