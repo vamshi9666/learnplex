@@ -169,10 +169,7 @@ export default function Header() {
         {isLoggedIn
           ? [
               <Menu.SubMenu key={'user'} title={user?.username}>
-                <Menu.SubMenu key={'profile'} title={'Profile'}>
-                  <Menu.Item key={'/profile'}>Enrollments</Menu.Item>
-                  <Menu.Item key={'/profile/settings'}>Settings</Menu.Item>
-                </Menu.SubMenu>
+                <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
                 <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
                 <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
                 {user?.roles.includes(UserRole.Admin) && (
