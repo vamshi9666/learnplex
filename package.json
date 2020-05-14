@@ -6,7 +6,10 @@
     "node": "12.x"
   },
   "scripts": {
-    "test": "jest",
+    "test": "is-ci test:coverage test:watch",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
     "lint": "eslint --fix --ext .js,.ts,.tsx --ignore-path .gitignore .",
     "gen": "graphql-codegen --config codegen.yml && yarn lint",
     "dev": "cross-env NODE_OPTIONS=\"-r esm\" next",
@@ -17,7 +20,8 @@
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|json|ts|tsx)\"",
     "format": "npm run prettier -- --write",
     "check-format": "npm run prettier -- --list-different",
-    "validate": "npm-run-all --parallel check-types check-format lint build test"
+    "validate": "npm-run-all --parallel check-types check-format lint build test",
+    "open-coverage": "open coverage/lcov-report/index.html"
   },
   "dependencies": {
     "@ant-design/icons": "^4.1.0",
@@ -93,6 +97,7 @@
     "eslint-plugin-react-hooks": "4.0.2",
     "husky": ">=4",
     "identity-obj-proxy": "^3.0.0",
+    "is-ci-cli": "^2.0.0",
     "jest": "^26.0.1",
     "lint-staged": ">=10",
     "npm-run-all": "^4.1.5",
@@ -102,7 +107,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm-run-all --parallel check-types test && lint-staged"
+      "pre-commit": "CI=1 npm-run-all --parallel check-types test && lint-staged"
     }
   },
   "lint-staged": {

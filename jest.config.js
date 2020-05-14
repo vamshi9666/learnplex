@@ -1,10 +1,6 @@
 module.exports = {
   testEnvironment: 'jsdom',
-  collectCoverageFrom: [
-    '**/*.{js,jsx,ts,tsx}',
-    '!**/*.d.ts',
-    '!**/node_modules/**',
-  ],
+  collectCoverageFrom: ['**/src/**/*.{js,jsx,ts,tsx}'],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   transform: {
@@ -18,4 +14,12 @@ module.exports = {
   moduleNameMapper: {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
+  // coverageThreshold: {
+  //   global: {
+  //     statements: 1.4,
+  //     branches: 0.2,
+  //     lines: 1.3,
+  //     functions: 0.8,
+  //   },
+  // },
 }
