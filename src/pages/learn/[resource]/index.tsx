@@ -2,10 +2,10 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'urql'
 import React from 'react'
 import { Col, Row, Skeleton, Typography } from 'antd'
+import { pascalCase } from 'pascal-case'
 
 import InternalServerError from '../../../components/result/InternalServerError'
 import { SEO } from '../../../components/SEO'
-import { titleCase, upperCamelCase } from '../../../utils/upperCamelCase'
 import ResourceIndex from '../../../components/learn/ResourceIndex'
 import { useSections } from '../../../lib/hooks/useSections'
 import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../../constants'
@@ -53,7 +53,7 @@ export default function ViewPrimaryResourceIndex() {
 
   return (
     <>
-      <SEO title={`${upperCamelCase(resourceSlug)}`} />
+      <SEO title={`${pascalCase(resourceSlug)}`} />
       {body ? (
         body
       ) : (
@@ -61,7 +61,7 @@ export default function ViewPrimaryResourceIndex() {
           <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
             <Typography className={'pb-1 pt-2 pl-5'}>
               <Typography.Title level={2}>
-                {titleCase(resourceSlug)}
+                {pascalCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
                 {resource.description}

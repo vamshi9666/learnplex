@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useMutation, useQuery } from 'urql'
+import { pascalCase } from 'pascal-case'
 
 import { SEO } from '../../../../../components/SEO'
-import { titleCase } from '../../../../../utils/upperCamelCase'
 import Sidebar from '../../../../../components/learn/Sidebar'
 import { useSections } from '../../../../../lib/hooks/useSections'
 import ResourceIndexEdit from '../../../../../components/learn/ResourceIndexEdit'
@@ -119,7 +119,7 @@ export default function EditResourceIndex() {
 
   return (
     <>
-      <SEO title={`Edit ${titleCase(resourceSlug as string)} | Index`} />
+      <SEO title={`Edit ${pascalCase(resourceSlug as string)} | Index`} />
       {body ? (
         body
       ) : (
@@ -142,7 +142,7 @@ export default function EditResourceIndex() {
                   onChange: (value) => updateTitle(value),
                 }}
               >
-                {titleCase(resourceSlug)}
+                {pascalCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph
                 ellipsis={{ rows: 3, expandable: true }}

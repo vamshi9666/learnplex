@@ -2,10 +2,10 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { Col, Row, Skeleton, Typography } from 'antd'
 import { useQuery } from 'urql'
+import { pascalCase } from 'pascal-case'
 
 import { useSections } from '../../../../lib/hooks/useSections'
 import { SEO } from '../../../../components/SEO'
-import { titleCase, upperCamelCase } from '../../../../utils/upperCamelCase'
 import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../../../constants'
 import ResourceIndex from '../../../../components/learn/ResourceIndex'
 
@@ -43,7 +43,7 @@ export default function ViewResourceIndex() {
 
   return (
     <>
-      <SEO title={`${upperCamelCase(resourceSlug)}`} />
+      <SEO title={`${pascalCase(resourceSlug)}`} />
       {body ? (
         body
       ) : (
@@ -51,7 +51,7 @@ export default function ViewResourceIndex() {
           <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
             <Typography className={'pb-1 pt-2 pl-5'}>
               <Typography.Title level={2}>
-                {titleCase(resourceSlug)}
+                {pascalCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
                 {data.resource.description}

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Col, Row, Grid } from 'antd'
+import { pascalCase } from 'pascal-case'
 
 import useSlugs from '../../lib/hooks/useSlugs'
 import { SEO } from '../SEO'
-import { upperCamelCase } from '../../utils/upperCamelCase'
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
 import Sidebar from './Sidebar'
 import CustomEditor from './Editor'
@@ -44,9 +44,7 @@ export default function ResourcePage({
 
   return (
     <>
-      <SEO
-        title={`${inEditMode ? 'Edit ' : ''}${upperCamelCase(resourceSlug)}`}
-      />
+      <SEO title={`${inEditMode ? 'Edit ' : ''}${pascalCase(resourceSlug)}`} />
       {body ? (
         body
       ) : (

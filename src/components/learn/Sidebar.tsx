@@ -11,11 +11,11 @@ import {
   FileOutlined,
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
+import { pascalCase } from 'pascal-case'
 
 import { Section } from '../../graphql/types'
 import useProgress from '../../lib/hooks/useProgress'
 import { useSections } from '../../lib/hooks/useSections'
-import { titleCase } from '../../utils/upperCamelCase'
 
 interface Props {
   inEditMode: boolean
@@ -207,12 +207,12 @@ export default function Sidebar({
           <Breadcrumb>
             {slugs.length >= 2 && (
               <Breadcrumb.Item>
-                {titleCase(slugs[slugs.length - 2])}
+                {pascalCase(slugs[slugs.length - 2])}
               </Breadcrumb.Item>
             )}
             {slugs.length >= 1 && (
               <Breadcrumb.Item>
-                {titleCase(slugs[slugs.length - 1])}
+                {pascalCase(slugs[slugs.length - 1])}
               </Breadcrumb.Item>
             )}
           </Breadcrumb>
