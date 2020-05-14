@@ -82,7 +82,7 @@ export function useSections({
   }, [sectionsListData, sectionsListError, sectionsListFetching])
 
   let body
-  if (sectionsListError) {
+  if (username && sectionsListError) {
     body = React.createElement(PageNotFound)
   } else if (sectionsListFetching || sectionsMap.size === 0) {
     body = React.createElement(Skeleton, {

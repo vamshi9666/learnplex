@@ -102,7 +102,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run check-types && yarn test && lint-staged"
+      "pre-commit": "npm-run-all --parallel check-types test && lint-staged"
     }
   },
   "lint-staged": {
