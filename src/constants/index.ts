@@ -1,6 +1,14 @@
 export const ACCESS_TOKEN_COOKIE = 'pid'
 export const REFRESH_TOKEN_COOKIE = 'jid'
 
+// SEO
+export const DEFAULT_TITLE = 'Coderplex'
+export const DEFAULT_DESCRIPTION = 'Master any Technology'
+export const GET_TITLE = (title: string) => DEFAULT_TITLE + ' - ' + title
+export const SITE_NAME = 'Coderplex'
+export const TWITTER_HANDLE = '@coderplex'
+export const OG_URL = 'https://coderplex.in'
+
 export const FORM_LAYOUT = {
   labelCol: {
     xs: { span: 24 },
