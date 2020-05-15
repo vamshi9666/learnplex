@@ -32,7 +32,7 @@
     "babel-plugin-import": "1.13.0",
     "cookie": "0.4.1",
     "cross-env": "7.0.2",
-    "dayjs": "1.8.26",
+    "dayjs": "1.8.27",
     "dotenv": "8.2.0",
     "esm": "3.2.25",
     "graphql": "15.0.0",
