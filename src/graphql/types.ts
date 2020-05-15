@@ -179,7 +179,7 @@ export type Progress = {
 export type Mutation = {
   __typename?: 'Mutation'
   changePassword?: Maybe<LoginResponse>
-  confirmUser: Scalars['Boolean']
+  confirmUser: LoginResponse
   forgotPassword: Scalars['Boolean']
   login: LoginResponse
   logout: Scalars['Boolean']

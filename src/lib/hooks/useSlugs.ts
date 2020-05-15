@@ -24,6 +24,8 @@ export default function useSlugs({
     resourceId,
     resourceTitle,
     resourceDescription,
+    getNeighbourSectionSlugs,
+    deleteSection,
   } = useSections({ resourceSlug, username })
   const [keys, setKeys] = useState([] as string[])
 
@@ -74,5 +76,7 @@ export default function useSlugs({
     resourceId,
     resourceTitle,
     resourceDescription,
+    getNeighbourSectionSlugs,
+    deleteSectionInSectionsMap: deleteSection,
   }
 }
