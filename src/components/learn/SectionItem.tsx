@@ -62,20 +62,22 @@ export default function SectionItem({
         )
       }
     >
-      <Typography>
-        <Typography.Title level={4}>
-          {!currentSection.hasSubSections ? (
-            <span
-              className={'cursor-pointer text-primary'}
-              onClick={() => goToResource()}
-            >
-              {currentSection.title}
-            </span>
-          ) : (
-            currentSection.title
-          )}
-        </Typography.Title>
-      </Typography>
+      <div onClick={() => toggleOpen()} className={'cursor-pointer'}>
+        <Typography>
+          <Typography.Title level={4}>
+            {!currentSection.hasSubSections ? (
+              <span
+                className={'cursor-pointer text-primary'}
+                onClick={() => goToResource()}
+              >
+                {currentSection.title}
+              </span>
+            ) : (
+              currentSection.title
+            )}
+          </Typography.Title>
+        </Typography>
+      </div>
       {isOpen && currentSection.hasSubSections && (
         <SectionItems
           sections={currentSection.sections}

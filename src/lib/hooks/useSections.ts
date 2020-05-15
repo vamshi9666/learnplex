@@ -55,6 +55,7 @@ export function useSections({
       resourceSlug,
       username,
     },
+    pause: !username,
   })
   const initialSectionsMap: Map<string, Section> = new Map()
   const [sectionsMap, setSectionsMap] = useState(initialSectionsMap)
@@ -62,8 +63,10 @@ export function useSections({
 
   useEffect(() => {
     if (
+      username &&
       !sectionsListFetching &&
       !sectionsListError &&
+      sectionsListData &&
       sectionsListData.sectionsList.length !== 0
     ) {
       const [baseSection] = sectionsListData.sectionsList.filter(
@@ -79,7 +82,7 @@ export function useSections({
         return newSectionsMap
       })
     }
-  }, [sectionsListData, sectionsListError, sectionsListFetching])
+  }, [sectionsListData, sectionsListError, sectionsListFetching, username])
 
   let body
   if (username && sectionsListError) {

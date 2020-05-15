@@ -1,6 +1,6 @@
 {
   "name": "ej3l148-rt3xvs9",
-  "hash": "AZ74M+KQfnWkr2z8P+IJQplFsRTl4giRUTihXsDvxfE=",
+  "hash": "d9FeKL2rUi9CsP+oq6WoY805tBYs/gBMDu4UnOPZB84=",
   "description": "Default Lambda@Edge for Next CloudFront distribution",
   "memory": 512,
   "timeout": 10,

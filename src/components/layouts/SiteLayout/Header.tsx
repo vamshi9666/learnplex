@@ -10,7 +10,7 @@ import { UserContext } from '../../../lib/contexts/UserContext'
 export default function Header() {
   const router = useRouter()
   const { user } = useContext(UserContext)
-  const resourceSlug = router.query.slug as string
+  const resourceSlug = router.query.resource as string
 
   const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
     query($resourceSlug: String!) {
