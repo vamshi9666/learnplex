@@ -5,7 +5,6 @@ import { Skeleton } from 'antd'
 
 import ResourcePage from '../../../components/learn/ResourcePage'
 import InternalServerError from '../../../components/result/InternalServerError'
-import { SEO } from '../../../components/SEO'
 
 export default function ViewPrimaryResource() {
   const router = useRouter()

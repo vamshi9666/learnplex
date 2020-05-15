@@ -315,10 +315,18 @@ export function useSections({
   }
 
   const getSlugsPathFromSectionId = ({ sectionId }: { sectionId: string }) => {
-    return getSlugsPathUtil({
+    if (!sectionId) {
+      return {
+        slugs: [],
+        slugsPath: '/',
+      }
+    }
+    const slugs = getSlugsPathUtil({
       targetSectionId: sectionId,
       currentSectionId: baseSectionId,
     })
+    const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
+    return { slugs, slugsPath }
   }
 
   const getNeighbourSectionIds = ({ sectionId }: { sectionId: string }) => {
@@ -368,25 +376,22 @@ export function useSections({
       sectionId,
     })
 
-    const prevSectionSlugs = getSlugsPathFromSectionId({
+    const {
+      slugs: prevSectionSlugs,
+      slugsPath: prevSectionPath,
+    } = getSlugsPathFromSectionId({
       sectionId: prevSectionId,
     })
-    const nextSectionSlugs = getSlugsPathFromSectionId({
+    const {
+      slugs: nextSectionSlugs,
+      slugsPath: nextSectionPath,
+    } = getSlugsPathFromSectionId({
       sectionId: nextSectionId,
     })
 
-    let prevSectionPath = ''
-    let nextSectionPath = ''
-
-    if (prevSectionSlugs.length > 0) {
-      prevSectionPath = prevSectionSlugs.reduce((a, b) => `${a}/${b}`)
-    }
-
-    if (nextSectionSlugs.length > 0) {
-      nextSectionPath = nextSectionSlugs.reduce((a, b) => `${a}/${b}`)
-    }
-
     return {
+      prevSectionSlugs,
+      nextSectionSlugs,
       prevSectionPath,
       nextSectionPath,
     }
@@ -425,8 +430,10 @@ export function useSections({
     if (leastOrderSectionId === baseSectionId) {
       return ''
     }
-    const slugs = getSlugsPathFromSectionId({ sectionId: leastOrderSectionId })
-    return slugs.reduce((a, b) => `${a}/${b}`)
+    const { slugsPath } = getSlugsPathFromSectionId({
+      sectionId: leastOrderSectionId,
+    })
+    return slugsPath
   }
 
   return {

@@ -24,30 +24,27 @@ export default function SectionItem({
   if (!currentSection) {
     return <Skeleton active={true} />
   }
-  const slugs = getSlugsPathFromSectionId({ sectionId })
-  let slugsPath: string
-  if (slugs.length === 0) {
-    slugsPath = ''
-  } else {
-    slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-  }
+  const { slugs, slugsPath } = getSlugsPathFromSectionId({ sectionId })
 
   const toggleOpen = () => {
     setOpen(!isOpen)
   }
 
+  if (!slugsPath) {
+    return <Skeleton active={true} />
+  }
+
   const goToResource = async () => {
-    const isPrimary = router.query.username !== username
-    if (isPrimary) {
+    if (router.pathname === '/learn/[resource]') {
       await router.push(
         `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
-        `/learn/${resourceSlug}/${slugsPath}`
+        `/learn/${resourceSlug}${slugsPath}`
       )
       return
     }
     await router.push(
       `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/${resourceSlug}/${slugsPath}`
+      `/${username}/learn/${resourceSlug}${slugsPath}`
     )
   }
 

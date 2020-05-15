@@ -134,14 +134,10 @@ export default function Sidebar({
       return
     }
 
-    const slugs = getSlugsPathFromSectionId({ sectionId: e.key })
-    let slugsPath = ''
-    if (slugs.length > 0) {
-      slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    }
+    const { slugs, slugsPath } = getSlugsPathFromSectionId({ sectionId: e.key })
     await router.push(
       `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
-      `/learn/${resourceSlug}/${slugsPath}`,
+      `/learn/${resourceSlug}${slugsPath}`,
       { shallow: true }
     )
   }
@@ -168,22 +164,18 @@ export default function Sidebar({
 
       return
     }
-    const slugs = getSlugsPathFromSectionId({ sectionId: e.key })
-    let slugsPath = ''
-    if (slugs.length > 0) {
-      slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
-    }
+    const { slugs, slugsPath } = getSlugsPathFromSectionId({ sectionId: e.key })
     if (inEditMode) {
       await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+        `/${username}/learn/edit/${resourceSlug}${slugsPath}`,
         { shallow: true }
       )
       return
     }
     await router.push(
       `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-      `/${username}/learn/${resourceSlug}/${slugsPath}`,
+      `/${username}/learn/${resourceSlug}${slugsPath}`,
       { shallow: true }
     )
   }

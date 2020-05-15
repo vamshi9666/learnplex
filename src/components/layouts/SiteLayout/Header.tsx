@@ -43,10 +43,10 @@ export default function Header() {
       router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
       router.pathname === '/learn/[resource]/[...slugs]'
     ) {
-      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
       await router.push(
         `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+        `/${username}/learn/edit/${resourceSlug}${slugsPath}`,
         { shallow: true }
       )
     } else if (
@@ -63,18 +63,18 @@ export default function Header() {
 
   const exitEditMode = async () => {
     if (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]') {
-      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+      const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
       if (data?.primaryResourceBySlug?.verified) {
         await router.push(
           `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
-          `/learn/${resourceSlug}/${slugsPath}`,
+          `/learn/${resourceSlug}${slugsPath}`,
           { shallow: true }
         )
         return
       }
       await router.push(
         `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/${resourceSlug}/${slugsPath}`,
+        `/${username}/learn/${resourceSlug}${slugsPath}`,
         { shallow: true }
       )
     } else if (

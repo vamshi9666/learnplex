@@ -104,11 +104,11 @@ export default function CustomEditor({
         setSectionInSectionsMap({ updatedSection: result.data.updateSection })
         const slugs = router.query.slugs as string[]
         slugs[slugs?.length - 1] = slug
-        const slugsPath = slugs.reduce((a, b) => `${a}/${b}`)
+        const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
         if (slug !== previousSlug) {
           router.push(
             `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-            `/${username}/learn/edit/${resourceSlug}/${slugsPath}`,
+            `/${username}/learn/edit/${resourceSlug}${slugsPath}`,
             { shallow: true }
           )
         }
@@ -168,30 +168,34 @@ export default function CustomEditor({
 
   if (body) return body
 
-  const goTo = async ({ path }: { path: string }) => {
-    const slugs = path.split('/')
+  const goTo = async ({ path, slugs }: { path: string; slugs: string[] }) => {
     if (router.pathname === '/learn/[resource]/[...slugs]') {
       await router.push(
         `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
-        `/learn/${resourceSlug}/${path}`,
+        `/learn/${resourceSlug}${path}`,
         { shallow: true }
       )
     } else if (inEditMode) {
       await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}/${path}`,
+        `/${username}/learn/edit/${resourceSlug}${path}`,
         { shallow: true }
       )
     } else {
       await router.push(
         `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/${resourceSlug}/${path}`,
+        `/${username}/learn/${resourceSlug}${path}`,
         { shallow: true }
       )
     }
   }
 
-  const { prevSectionPath, nextSectionPath } = getNeighbourSectionSlugs({
+  const {
+    prevSectionSlugs,
+    nextSectionSlugs,
+    prevSectionPath,
+    nextSectionPath,
+  } = getNeighbourSectionSlugs({
     sectionId: currentSectionId,
   })
 
@@ -200,7 +204,7 @@ export default function CustomEditor({
     if (!prevSectionPath) {
       return
     }
-    await goTo({ path: prevSectionPath })
+    await goTo({ path: prevSectionPath, slugs: prevSectionSlugs })
   }
 
   const goToNextSection = async () => {
@@ -208,7 +212,7 @@ export default function CustomEditor({
     if (!nextSectionPath) {
       return
     }
-    await goTo({ path: nextSectionPath })
+    await goTo({ path: nextSectionPath, slugs: nextSectionSlugs })
   }
 
   const completeSection = () => {

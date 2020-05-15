@@ -60,18 +60,17 @@ export default function ResourcePage({
   `
   const [, deleteSectionMutation] = useMutation(DELETE_SECTION_MUTATION)
 
-  const goTo = async ({ path }: { path: string }) => {
-    const slugs = path.split('/')
+  const goTo = async ({ path, slugs }: { path: string; slugs: string[] }) => {
     if (inEditMode) {
       await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}/${path}`,
+        `/${username}/learn/edit/${resourceSlug}${path}`,
         { shallow: true }
       )
     } else {
       await router.push(
         `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/${resourceSlug}/${path}`,
+        `/${username}/learn/${resourceSlug}${path}`,
         { shallow: true }
       )
     }
@@ -94,11 +93,11 @@ export default function ResourcePage({
       } else {
         console.log({ result })
         deleteSectionInSectionsMap({ sectionId, parentSectionId })
-        const { nextSectionPath } = getNeighbourSectionSlugs({
+        const { nextSectionPath, nextSectionSlugs } = getNeighbourSectionSlugs({
           sectionId: currentSectionId,
         })
         if (nextSectionPath) {
-          goTo({ path: nextSectionPath })
+          goTo({ path: nextSectionPath, slugs: nextSectionSlugs })
           return
         }
       }
