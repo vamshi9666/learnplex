@@ -21,6 +21,9 @@ export default function useSlugs({
     sectionsMap,
     sectionsListData,
     body,
+    resourceId,
+    resourceTitle,
+    resourceDescription,
   } = useSections({ resourceSlug, username })
   const [keys, setKeys] = useState([] as string[])
 
@@ -68,5 +71,8 @@ export default function useSlugs({
     sectionsMap,
     sectionsListData,
     keys,
+    resourceId,
+    resourceTitle,
+    resourceDescription,
   }
 }

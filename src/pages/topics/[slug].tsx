@@ -2,12 +2,12 @@ import React from 'react'
 import { Skeleton } from 'antd'
 import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
-import { pascalCase } from 'pascal-case'
 
 import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 import PageNotFound from '../../components/result/PageNotFound'
 import { SEO } from '../../components/SEO'
+import { titleCase } from '../../utils/titleCase'
 
 export default function TopicResources() {
   const router = useRouter()
@@ -44,7 +44,7 @@ export default function TopicResources() {
 
   return (
     <>
-      <SEO title={`Resources | ${pascalCase(router.query.slug as string)}`} />
+      <SEO title={`Resources | ${titleCase(router.query.slug as string)}`} />
       <ResourceCards resources={resources} />
     </>
   )

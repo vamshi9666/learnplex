@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { useQuery } from 'urql'
 import React from 'react'
 import { Col, Row, Skeleton, Typography } from 'antd'
-import { pascalCase } from 'pascal-case'
 
 import InternalServerError from '../../../components/result/InternalServerError'
 import { SEO } from '../../../components/SEO'
@@ -50,19 +49,19 @@ export default function ViewPrimaryResourceIndex() {
 
   const resource = data.primaryResourceBySlug
   const username = resource.user.username
+  const title = resource.title
+  const description = resource.description
 
   return (
     <>
-      <SEO title={`${pascalCase(resourceSlug)}`} />
+      <SEO title={title} description={description} />
       {body ? (
         body
       ) : (
         <Row>
           <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
             <Typography className={'pb-1 pt-2 pl-5'}>
-              <Typography.Title level={2}>
-                {pascalCase(resourceSlug)}
-              </Typography.Title>
+              <Typography.Title level={2}>{title}</Typography.Title>
               <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
                 {resource.description}
               </Typography.Paragraph>

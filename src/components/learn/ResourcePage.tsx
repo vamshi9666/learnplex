@@ -1,13 +1,12 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Col, Row, Grid } from 'antd'
-import { pascalCase } from 'pascal-case'
 
 import useSlugs from '../../lib/hooks/useSlugs'
-import { SEO } from '../SEO'
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
 import Sidebar from './Sidebar'
 import CustomEditor from './Editor'
+import { SEO } from '../SEO'
 
 export default function ResourcePage({
   inEditMode,
@@ -26,6 +25,8 @@ export default function ResourcePage({
     pageContent,
     keys,
     baseSectionId,
+    resourceTitle,
+    resourceDescription,
   } = useSlugs({
     resourceSlug,
     username,
@@ -44,7 +45,10 @@ export default function ResourcePage({
 
   return (
     <>
-      <SEO title={`${inEditMode ? 'Edit ' : ''}${pascalCase(resourceSlug)}`} />
+      <SEO
+        title={`${inEditMode ? 'Edit ' : ''}${resourceTitle}`}
+        description={resourceDescription}
+      />
       {body ? (
         body
       ) : (

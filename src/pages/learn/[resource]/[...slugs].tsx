@@ -5,6 +5,7 @@ import { Skeleton } from 'antd'
 
 import ResourcePage from '../../../components/learn/ResourcePage'
 import InternalServerError from '../../../components/result/InternalServerError'
+import { SEO } from '../../../components/SEO'
 
 export default function ViewPrimaryResource() {
   const router = useRouter()
@@ -36,6 +37,15 @@ export default function ViewPrimaryResource() {
   if (error) {
     return <InternalServerError message={error.message} />
   }
+
+  const title = data.primaryResourceBySlug.title
+  const description = data.primaryResourceBySlug.description
+
   const username = data.primaryResourceBySlug.user.username
-  return <ResourcePage inEditMode={false} username={username} />
+  return (
+    <>
+      <SEO title={title} description={description} />
+      <ResourcePage inEditMode={false} username={username} />
+    </>
+  )
 }

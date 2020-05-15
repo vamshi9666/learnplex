@@ -37,6 +37,9 @@ export function useSections({
         }
         resource {
           id
+          title
+          slug
+          description
         }
       }
     }
@@ -57,6 +60,9 @@ export function useSections({
     },
     pause: !username,
   })
+  const [resourceId, setResourceId] = useState('')
+  const [resourceTitle, setResourceTitle] = useState('')
+  const [resourceDescription, setResourceDescription] = useState('')
   const initialSectionsMap: Map<string, Section> = new Map()
   const [sectionsMap, setSectionsMap] = useState(initialSectionsMap)
   const [baseSectionId, setBaseSectionId] = useState('')
@@ -73,6 +79,8 @@ export function useSections({
         (section: Section) => section.isBaseSection
       )
       setResourceId(baseSection.resource.id)
+      setResourceTitle(baseSection.resource.title)
+      setResourceDescription(baseSection.resource.description)
       setBaseSectionId(baseSection.id)
       setSectionsMap((prevSectionsMap) => {
         const newSectionsMap = new Map()
@@ -172,7 +180,6 @@ export function useSections({
   `
 
   const [, reorderSectionsMutation] = useMutation(REORDER_SECTIONS_MUTATION)
-  const [resourceId, setResourceId] = useState('')
 
   const reorderSections = async ({
     result,
@@ -437,5 +444,7 @@ export function useSections({
     firstPagePath,
     getSlugsPathFromSectionId,
     resourceId,
+    resourceTitle,
+    resourceDescription,
   }
 }

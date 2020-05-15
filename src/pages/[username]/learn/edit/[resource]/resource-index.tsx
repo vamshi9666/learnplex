@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useMutation, useQuery } from 'urql'
-import { pascalCase } from 'pascal-case'
 
 import { SEO } from '../../../../../components/SEO'
 import Sidebar from '../../../../../components/learn/Sidebar'
@@ -16,6 +15,7 @@ import {
   SIDEBAR_COL_LAYOUT,
 } from '../../../../../constants'
 import { UserContext } from '../../../../../lib/contexts/UserContext'
+import { titleCase } from '../../../../../utils/titleCase'
 
 export default function EditResourceIndex() {
   const router = useRouter()
@@ -66,7 +66,13 @@ export default function EditResourceIndex() {
     },
   })
 
-  const { baseSectionId, sectionsMap, body } = useSections({
+  const {
+    baseSectionId,
+    sectionsMap,
+    body,
+    resourceTitle,
+    resourceDescription,
+  } = useSections({
     resourceSlug,
     username,
   })
@@ -119,7 +125,10 @@ export default function EditResourceIndex() {
 
   return (
     <>
-      <SEO title={`Edit ${pascalCase(resourceSlug as string)} | Index`} />
+      <SEO
+        title={`Edit ${resourceTitle} | Index`}
+        description={resourceDescription}
+      />
       {body ? (
         body
       ) : (
@@ -142,7 +151,7 @@ export default function EditResourceIndex() {
                   onChange: (value) => updateTitle(value),
                 }}
               >
-                {pascalCase(resourceSlug)}
+                {titleCase(resourceSlug)}
               </Typography.Title>
               <Typography.Paragraph
                 ellipsis={{ rows: 3, expandable: true }}
