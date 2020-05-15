@@ -95,7 +95,7 @@ export default function NewSectionModal({
   return (
     <>
       <Modal
-        title={`Add new section under ' ${parentSection.title}'`}
+        title={`Add new section under '${parentSection.title}'`}
         visible={show}
         onOk={() => form.submit()}
         onCancel={() => setShow(false)}
