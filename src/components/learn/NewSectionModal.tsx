@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Typography } from 'antd'
+import { Button, Form, Input, Modal, Skeleton, Typography } from 'antd'
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'urql'
@@ -8,6 +8,11 @@ import { FileMarkdownOutlined } from '@ant-design/icons'
 import { slug } from '../../utils/slug'
 import { Section } from '../../graphql/types'
 import { useSections } from '../../lib/hooks/useSections'
+
+let KeyboardEventHandler: any
+if (process.browser) {
+  KeyboardEventHandler = require('react-keyboard-event-handler')
+}
 
 export default function NewSectionModal({
   parentSectionId,
@@ -72,10 +77,11 @@ export default function NewSectionModal({
         const newSection = result.data.addSection
         setSection({ updatedSection: newSection })
         reset()
+        form.resetFields()
+        NProgress.done()
       }
     })
     NProgress.done()
-    form.resetFields()
   }
 
   const FORM_LAYOUT_LOCAL = {
@@ -112,6 +118,10 @@ export default function NewSectionModal({
     setshowContentBox(false)
   }
 
+  if (!process.browser) {
+    return <Skeleton active={true} />
+  }
+
   return (
     <>
       <Modal
@@ -128,75 +138,90 @@ export default function NewSectionModal({
           initialValues={{ title: '' }}
           onFinish={({ title, content }) => addSection({ title, content })}
         >
-          <Form.Item
-            name={'title'}
-            label={'Title'}
-            rules={[
-              {
-                required: true,
-              },
-              () => ({
-                validator(rule, value) {
-                  const slugs = parentSection.sections
-                    .map(
-                      (currentSection) => sectionsMap.get(currentSection.id)!
-                    )
-                    .map((currentSection) => currentSection.slug)
-                  if (slugs.includes(slug(value))) {
-                    return Promise.reject(
-                      'A section with this title already exists'
-                    )
-                  }
-                  return Promise.resolve()
-                },
-              }),
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          {!showContentBox && (
-            <Form.Item {...FORM_TAIL_LAYOUT_LOCAL}>
-              <Button onClick={(e) => toggleShowContent(e)}>Add Content</Button>
-            </Form.Item>
-          )}
-
-          {showContentBox && (
-            <Form.Item
-              name={'content'}
-              label={'Content'}
-              help={
-                <>
-                  <Button
-                    type={'link'}
-                    target={'_blank'}
-                    href={
-                      'https://guides.github.com/features/mastering-markdown/'
-                    }
-                    className={'p-0 m-0'}
-                    icon={<FileMarkdownOutlined />}
-                  >
-                    Styling with Markdown is supported.
-                  </Button>
-                  <Typography>
-                    <Typography.Text>
-                      <b>Note:</b> If you add content for this section, there
-                      cannot be any more subsections for this page.
-                      <br />
-                      <br />
-                      You can always add/edit content later.
-                    </Typography.Text>
-                  </Typography>
-                </>
+          <KeyboardEventHandler
+            handleKeys={['ctrl+enter', 'meta+enter']}
+            onKeyEvent={(key: string, e: KeyboardEvent) => {
+              console.log({ e, key })
+              if (key === 'meta+enter' || key === 'ctrl+enter') {
+                addSection({
+                  title: form.getFieldValue('title') as string,
+                  content: form.getFieldValue('content') as string,
+                })
               }
+            }}
+          >
+            <Form.Item
+              name={'title'}
+              label={'Title'}
+              rules={[
+                {
+                  required: true,
+                },
+                () => ({
+                  validator(rule, value) {
+                    const slugs = parentSection.sections
+                      .map(
+                        (currentSection) => sectionsMap.get(currentSection.id)!
+                      )
+                      .map((currentSection) => currentSection.slug)
+                    if (slugs.includes(slug(value))) {
+                      return Promise.reject(
+                        'A section with this title already exists'
+                      )
+                    }
+                    return Promise.resolve()
+                  },
+                }),
+              ]}
             >
-              <Input.TextArea
-                autoSize={{
-                  minRows: 3,
-                  maxRows: 10,
-                }}
-              />
+              <Input />
             </Form.Item>
-          )}
+            {!showContentBox && (
+              <Form.Item {...FORM_TAIL_LAYOUT_LOCAL}>
+                <Button onClick={(e) => toggleShowContent(e)}>
+                  Add Content
+                </Button>
+              </Form.Item>
+            )}
+
+            {showContentBox && (
+              <Form.Item
+                name={'content'}
+                label={'Content'}
+                help={
+                  <>
+                    <Button
+                      type={'link'}
+                      target={'_blank'}
+                      href={
+                        'https://guides.github.com/features/mastering-markdown/'
+                      }
+                      className={'p-0 m-0'}
+                      icon={<FileMarkdownOutlined />}
+                    >
+                      Styling with Markdown is supported.
+                    </Button>
+                    <Typography>
+                      <Typography.Text>
+                        <b>Note:</b> If you add content for this section, there
+                        cannot be any more subsections for this page.
+                        <br />
+                        <br />
+                        You can always add/edit content later.
+                      </Typography.Text>
+                    </Typography>
+                  </>
+                }
+              >
+                <Input.TextArea
+                  autoSize={{
+                    minRows: 3,
+                    maxRows: 10,
+                  }}
+                />
+              </Form.Item>
+            )}
+          </KeyboardEventHandler>
         </Form>
       </Modal>
     </>
