@@ -16,6 +16,7 @@ export default function ConfirmEmail() {
           email
           username
           roles
+          confirmed
         }
       }
     }

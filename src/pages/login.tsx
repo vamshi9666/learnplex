@@ -1,6 +1,6 @@
 import { useMutation } from 'urql'
 import React, { useContext, useState } from 'react'
-import { Alert, Button, Divider, Form, Input } from 'antd'
+import { Alert, Button, Divider, Form, Input, message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -25,6 +25,7 @@ export default function Login() {
           email
           username
           roles
+          confirmed
         }
       }
     }
@@ -47,8 +48,14 @@ export default function Login() {
         setErrorDescription(result.error.message)
       } else {
         const { accessToken } = result.data.login
+        const user = result.data.login.user
+        if (!user.confirmed) {
+          message.warn(
+            'Your email is not yet verified. Please confirm your email address'
+          )
+        }
         console.log({ accessToken, result })
-        setUser(result.data.login.user)
+        setUser(user)
         // Cookie will be set by server
         // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         logEvent('guest', 'LOGGED_IN')

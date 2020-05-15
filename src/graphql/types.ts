@@ -183,7 +183,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean']
   login: LoginResponse
   logout: Scalars['Boolean']
-  register: Scalars['Boolean']
+  register: LoginResponse
   revokeTokensForUser: Scalars['Boolean']
   validateEmail: Scalars['Boolean']
   validateUsername: Scalars['Boolean']

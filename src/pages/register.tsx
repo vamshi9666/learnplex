@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Button, Divider, Form, Input } from 'antd'
+import { Button, Divider, Form, Input, message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -34,12 +34,22 @@ export default function Register() {
 
   const REGISTER_MUTATION = `
     mutation($data: RegisterInput!) {
-      register(data: $data)
+      register(data: $data) {
+        accessToken
+        user {
+          name
+          email
+          username
+          roles
+          confirmed
+        }
+      }
     }
   `
   const [, register] = useMutation(REGISTER_MUTATION)
   const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
   const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
+  const { setUser } = useContext(UserContext)
 
   const onFinish = async ({ name, email, username, password }: any) => {
     logEvent('guest', 'TRIES_TO_REGISTER')
@@ -57,6 +67,8 @@ export default function Register() {
       } else {
         console.log({ result })
         logEvent('guest', 'REGISTERS')
+        setUser(result.data.register.user)
+        message.warn('Please check your email inbox and verify your email')
         await router.push('/')
       }
     })

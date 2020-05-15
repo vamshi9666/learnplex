@@ -13,6 +13,7 @@ export function useUser() {
              email
              username
              roles
+             confirmed
           }
           accessToken
         }
