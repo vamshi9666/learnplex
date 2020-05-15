@@ -134,8 +134,15 @@ export default function ResourceCards({
       children
     )
 
+  const goToRegisterPage = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+    router.push('/register')
+  }
+
   const getActions = ({ resource }: { resource: Resource }) => {
     const actions = []
+    console.log({ isLoggedIn })
     if (isLoggedIn) {
       actions.push(
         <Tooltip title={'You can track your progress in your profile'}>
@@ -145,15 +152,16 @@ export default function ResourceCards({
               block={true}
               disabled={!isLoggedIn}
               onClick={() => goToResource({ resource })}
+              style={{ width: '70%' }}
             >
-              Resume Learning
+              Continue Learning
             </Button>
           ) : (
             <Button
               type={'primary'}
               block={true}
-              disabled={!isLoggedIn}
               onClick={() => startProgress({ resourceId: resource.id })}
+              style={{ width: '70%' }}
             >
               Start Learning
             </Button>
@@ -163,7 +171,11 @@ export default function ResourceCards({
     } else {
       actions.push(
         <Tooltip title={'Login to start learning and track your progress'}>
-          <Button type={'primary'} disabled={!isLoggedIn} block={true}>
+          <Button
+            type={'primary'}
+            onClick={(e) => goToRegisterPage(e)}
+            style={{ width: '70%' }}
+          >
             Start Learning
           </Button>
         </Tooltip>
@@ -251,22 +263,32 @@ export default function ResourceCards({
     )
   }
 
+  const primary = primaryResources()
+
   return (
     <>
-      <Typography className={'p-2'}>
-        <Typography.Title level={3}>Primary Resources</Typography.Title>
-      </Typography>
-      <br />
-      <ResourceGrid resources={primaryResources()} />
+      {primary.length > 0 && (
+        <>
+          <Typography className={'p-2'}>
+            <Typography.Title level={3}>Primary Resources</Typography.Title>
+          </Typography>
+          <br />
+          <ResourceGrid resources={primary} />
+        </>
+      )}
 
       {router.pathname !== '/resources' && (
         <>
-          <Divider />
+          {primary.length > 0 && (
+            <>
+              <Divider />
 
-          <Typography className={'p-2'}>
-            <Typography.Title level={3}>Other Resources</Typography.Title>
-          </Typography>
-          <br />
+              <Typography className={'p-2'}>
+                <Typography.Title level={3}>Other Resources</Typography.Title>
+              </Typography>
+              <br />
+            </>
+          )}
           <ResourceGrid resources={otherResources()} />
         </>
       )}

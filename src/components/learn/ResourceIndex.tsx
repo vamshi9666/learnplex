@@ -85,7 +85,7 @@ export default function ViewResourceIndex({
       <div className={'p-5'}>
         {!isLoggedIn ? (
           <Tooltip title={'Login to start learning and track your progress'}>
-            <Button type={'primary'} disabled={true}>
+            <Button type={'primary'} onClick={() => router.push('/register')}>
               Start Learning
             </Button>
           </Tooltip>
@@ -97,7 +97,7 @@ export default function ViewResourceIndex({
           </Tooltip>
         ) : (
           <Tooltip title={'You can track your progress in your profile'}>
-            <Button type={'primary'}>Already Enrolled</Button>
+            <Button type={'primary'}>Continue Learning</Button>
           </Tooltip>
         )}
       </div>

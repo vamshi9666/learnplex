@@ -90,8 +90,9 @@ export default function BottomActionControls({
       ) : !hasEnrolled ? (
         <Button
           type={'primary'}
-          disabled={!user}
-          onClick={() => startProgress({ resourceId })}
+          onClick={() =>
+            user ? startProgress({ resourceId }) : router.push('/register')
+          }
         >
           Start Learning
         </Button>

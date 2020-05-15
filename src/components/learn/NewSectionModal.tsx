@@ -1,5 +1,5 @@
 import { Button, Form, Input, Modal, Typography } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation } from 'urql'
 import NProgress from 'nprogress'
@@ -49,6 +49,7 @@ export default function NewSectionModal({
   const resourceSlug = router.query.resource as string
   const { setSection } = useSections({ username, resourceSlug })
   const [, addSectionMutation] = useMutation(ADD_SECTION_MUTATION)
+  const [showContentBox, setshowContentBox] = useState(false)
   const addSection = ({
     title,
     content,
@@ -70,7 +71,7 @@ export default function NewSectionModal({
         console.log({ result })
         const newSection = result.data.addSection
         setSection({ updatedSection: newSection })
-        setShow(false)
+        reset()
       }
     })
     NProgress.done()
@@ -92,13 +93,32 @@ export default function NewSectionModal({
     },
   }
 
+  const FORM_TAIL_LAYOUT_LOCAL = {
+    wrapperCol: {
+      xs: { offset: 0, span: 24 },
+      sm: { offset: 4, span: 20 },
+      md: { offset: 4, span: 20 },
+      lg: { offset: 4, span: 20 },
+    },
+  }
+
+  const toggleShowContent = (e: any) => {
+    e.preventDefault()
+    setshowContentBox(!showContentBox)
+  }
+
+  const reset = () => {
+    setShow(false)
+    setshowContentBox(false)
+  }
+
   return (
     <>
       <Modal
         title={`Add new section under '${parentSection.title}'`}
         visible={show}
         onOk={() => form.submit()}
-        onCancel={() => setShow(false)}
+        onCancel={() => reset()}
         okText={'Add'}
       >
         <Form
@@ -134,41 +154,49 @@ export default function NewSectionModal({
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name={'content'}
-            label={'Content'}
-            help={
-              <>
-                <Button
-                  type={'link'}
-                  target={'_blank'}
-                  href={
-                    'https://guides.github.com/features/mastering-markdown/'
-                  }
-                  className={'p-0 m-0'}
-                  icon={<FileMarkdownOutlined />}
-                >
-                  Styling with Markdown is supported.
-                </Button>
-                <Typography>
-                  <Typography.Text>
-                    <b>Note:</b> If you add content for this section, there
-                    cannot be any more subsections for this page.
-                    <br />
-                    <br />
-                    You can always add/edit content later.
-                  </Typography.Text>
-                </Typography>
-              </>
-            }
-          >
-            <Input.TextArea
-              autoSize={{
-                minRows: 3,
-                maxRows: 10,
-              }}
-            />
-          </Form.Item>
+          {!showContentBox && (
+            <Form.Item {...FORM_TAIL_LAYOUT_LOCAL}>
+              <Button onClick={(e) => toggleShowContent(e)}>Add Content</Button>
+            </Form.Item>
+          )}
+
+          {showContentBox && (
+            <Form.Item
+              name={'content'}
+              label={'Content'}
+              help={
+                <>
+                  <Button
+                    type={'link'}
+                    target={'_blank'}
+                    href={
+                      'https://guides.github.com/features/mastering-markdown/'
+                    }
+                    className={'p-0 m-0'}
+                    icon={<FileMarkdownOutlined />}
+                  >
+                    Styling with Markdown is supported.
+                  </Button>
+                  <Typography>
+                    <Typography.Text>
+                      <b>Note:</b> If you add content for this section, there
+                      cannot be any more subsections for this page.
+                      <br />
+                      <br />
+                      You can always add/edit content later.
+                    </Typography.Text>
+                  </Typography>
+                </>
+              }
+            >
+              <Input.TextArea
+                autoSize={{
+                  minRows: 3,
+                  maxRows: 10,
+                }}
+              />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     </>

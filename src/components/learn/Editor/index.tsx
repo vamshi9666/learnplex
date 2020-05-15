@@ -211,11 +211,12 @@ export default function CustomEditor({
       data: {
         sectionId: currentSectionId,
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.error) {
         console.log({ completeSectionError: result.error })
       } else {
         console.log({ result })
+        await goToNextSection()
       }
     })
     NProgress.done()
