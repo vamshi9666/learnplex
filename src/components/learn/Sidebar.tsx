@@ -197,14 +197,14 @@ export default function Sidebar({
       >
         <Menu.Item className={'cursor-initial'} disabled={true}>
           <Breadcrumb>
+            {slugs.length >= 3 && (
+              <Breadcrumb.Item>
+                {titleCase(slugs[slugs.length - 3])}
+              </Breadcrumb.Item>
+            )}
             {slugs.length >= 2 && (
               <Breadcrumb.Item>
                 {titleCase(slugs[slugs.length - 2])}
-              </Breadcrumb.Item>
-            )}
-            {slugs.length >= 1 && (
-              <Breadcrumb.Item>
-                {titleCase(slugs[slugs.length - 1])}
               </Breadcrumb.Item>
             )}
           </Breadcrumb>
