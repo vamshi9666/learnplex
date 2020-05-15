@@ -17,8 +17,8 @@ export default function Login() {
   const router = useRouter()
 
   const LOGIN_MUTATION = `
-    mutation($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
+    mutation($usernameOrEmail: String!, $password: String!) {
+      login(usernameOrEmail: $usernameOrEmail, password: $password) {
         accessToken
         user {
           name
@@ -35,11 +35,11 @@ export default function Login() {
   const [errorDescription, setErrorDescription] = useState('')
   const { setUser } = useContext(UserContext)
 
-  const onFinish = async ({ email, password }: any) => {
+  const onFinish = async ({ usernameOrEmail, password }: any) => {
     NProgress.start()
     logEvent('guest', 'TRIES_TO_LOGIN')
     login({
-      email,
+      usernameOrEmail,
       password,
     }).then(async (result) => {
       if (result.error) {
@@ -103,12 +103,11 @@ export default function Login() {
 
       <Form {...FORM_LAYOUT} name={'login'} onFinish={onFinish}>
         <Form.Item
-          name={'email'}
-          label={'Email'}
+          name={'usernameOrEmail'}
+          label={'Username/Email'}
           rules={[
             {
               required: true,
-              type: 'email',
             },
           ]}
         >
