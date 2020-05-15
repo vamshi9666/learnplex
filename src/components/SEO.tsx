@@ -23,6 +23,8 @@ export function SEO({
       <title>{GET_TITLE(title)}</title>
       <meta charSet={'utf-8'} />
       <meta name={'viewport'} content={'width=device-width, initial-scale=1'} />
+      <meta name="author" content="Bhanu Teja P" />
+      <meta property="og:type" content="website" />
       <meta name={'description'} content={description} />
       <meta name={'twitter:card'} content={'summary'} />
       <meta name={'twitter:creator'} content={TWITTER_HANDLE} />

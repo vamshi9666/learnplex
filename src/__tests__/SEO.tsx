@@ -31,6 +31,14 @@ describe('SEO', () => {
           name="viewport"
         />
         <meta
+          content="Bhanu Teja P"
+          name="author"
+        />
+        <meta
+          content="website"
+          property="og:type"
+        />
+        <meta
           content="Master any Technology"
           name="description"
         />
@@ -81,6 +89,14 @@ describe('SEO', () => {
         <meta
           content="width=device-width, initial-scale=1"
           name="viewport"
+        />
+        <meta
+          content="Bhanu Teja P"
+          name="author"
+        />
+        <meta
+          content="website"
+          property="og:type"
         />
         <meta
           content="This is some test description"
