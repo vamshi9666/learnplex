@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Col, Row, Grid, Button, Popconfirm } from 'antd'
 import NProgress from 'nprogress'
@@ -27,7 +27,6 @@ export default function ResourcePage({
     pageContent,
     keys,
     baseSectionId,
-    resourceTitle,
     resourceDescription,
     deleteSectionInSectionsMap,
     getNeighbourSectionSlugs,
@@ -40,7 +39,14 @@ export default function ResourcePage({
   const { xs } = Grid.useBreakpoint()
   const parentSectionId =
     sectionsMap.get(currentSectionId)?.parentSection?.id ?? ''
+  const currentSectionTitle = sectionsMap.get(currentSectionId)?.title ?? ''
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
 
+  useEffect(() => {
+    setTitle(currentSectionTitle)
+    setDescription(resourceDescription)
+  }, [currentSectionTitle, resourceDescription])
   let currentSections = sectionsMap.get(parentSectionId)?.sections ?? []
 
   if (parentSectionId === baseSectionId) {
@@ -103,8 +109,8 @@ export default function ResourcePage({
   return (
     <>
       <SEO
-        title={`${inEditMode ? 'Edit ' : ''}${resourceTitle}`}
-        description={resourceDescription}
+        title={`${inEditMode ? 'Edit ' : ''}${title}`}
+        description={description}
       />
       {body ? (
         body

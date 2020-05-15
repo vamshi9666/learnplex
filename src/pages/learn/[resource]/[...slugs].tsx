@@ -38,14 +38,6 @@ export default function ViewPrimaryResource() {
     return <InternalServerError message={error.message} />
   }
 
-  const title = data.primaryResourceBySlug.title
-  const description = data.primaryResourceBySlug.description
-
   const username = data.primaryResourceBySlug.user.username
-  return (
-    <>
-      <SEO title={title} description={description} />
-      <ResourcePage inEditMode={false} username={username} />
-    </>
-  )
+  return <ResourcePage inEditMode={false} username={username} />
 }

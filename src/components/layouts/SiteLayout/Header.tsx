@@ -119,12 +119,13 @@ export default function Header() {
 
   return (
     <>
-      <div
-        className={'logo float-left cursor-pointer'}
-        onClick={() => router.push('/')}
-      >
-        <img src={'/logo.png'} alt={'Coderplex Logo'} width={'32'} />
-        <span className={'ml-2 font-large'}>
+      <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
+        <img
+          className={'float-left'}
+          src={'/logo.png'}
+          alt={'Coderplex Logo'}
+        />
+        <span className={'font-large'}>
           <b>Coderplex</b>
         </span>
       </div>

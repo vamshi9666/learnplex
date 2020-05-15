@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import {
   DEFAULT_DESCRIPTION,
@@ -10,15 +10,13 @@ import {
   TWITTER_HANDLE,
 } from '../constants'
 
-interface Props {
-  title?: string
-  description?: string
-}
-
-export const SEO: FunctionComponent<Props> = ({
+export function SEO({
   title = DEFAULT_TITLE,
   description = DEFAULT_DESCRIPTION,
-}) => {
+}: {
+  title?: string
+  description?: string
+}) {
   const router = useRouter()
   return (
     <Head>

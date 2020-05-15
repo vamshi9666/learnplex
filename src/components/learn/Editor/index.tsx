@@ -170,7 +170,13 @@ export default function CustomEditor({
 
   const goTo = async ({ path }: { path: string }) => {
     const slugs = path.split('/')
-    if (inEditMode) {
+    if (router.pathname === '/learn/[resource]/[...slugs]') {
+      await router.push(
+        `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
+        `/learn/${resourceSlug}/${path}`,
+        { shallow: true }
+      )
+    } else if (inEditMode) {
       await router.push(
         `/[username]/learn/edit/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
         `/${username}/learn/edit/${resourceSlug}/${path}`,
