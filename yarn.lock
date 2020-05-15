@@ -1886,10 +1886,10 @@
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-2.1.0.tgz#ea3dd64c4805597311790b61e872cbd1ed2cd806"
   integrity sha512-Q7DYAOi9O/+cLLhdaSvKdaumWyHbm7HAk/bFwwyTuU0arR5yyCeW5GOoqt4tJTpDRxhpx9Q8kQL6vMpuw9hDSw==
 
-"@types/markdown-it-container@2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@types/markdown-it-container/-/markdown-it-container-2.0.2.tgz#0e624653415a1c2f088a5ae51f7bfff480c03f49"
-  integrity sha512-T770GL+zJz8Ssh1NpLiOruYhrU96yb8ovPSegLrWY5XIkJc6PVVC7kH/oQaVD0rkePpWMFJK018OgS/pwviOMw==
+"@types/markdown-it-container@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@types/markdown-it-container/-/markdown-it-container-2.0.3.tgz#436de4c019d7d71b60f759037fd4d03611569eb8"
+  integrity sha512-ouJluaEGWV7clX7NVMRjkQfS/a11hFXDG1U04l8vrS1P2UgAFPlgMpk1rAPgK0MWU1NhcBYWVW7w/SpgePLs0A==
   dependencies:
     "@types/markdown-it" "*"
 
