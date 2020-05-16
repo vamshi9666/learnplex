@@ -25,11 +25,18 @@ export type Query = {
   allResources: Array<Resource>
   allVerifiedResources: Array<Resource>
   baseSection: Section
+  resourceByOwnerUsernameAndSlug?: Maybe<Resource>
   sections: Array<Section>
   sectionsList: Array<Section>
+  sectionsListByBaseSectionId: Array<Section>
+  sectionBySlugsPathAndBaseSectionId: Section
+  siblingSections: Array<Section>
   userProgress?: Maybe<Progress>
+  userProgressByResourceId?: Maybe<Progress>
   userProgressList: Array<Progress>
   hasEnrolled: Scalars['Boolean']
+  hasEnrolledByResourceId: Scalars['Boolean']
+  hasCompletedSection: Scalars['Boolean']
 }
 
 export type QueryPrimaryResourceBySlugArgs = {
@@ -54,6 +61,11 @@ export type QueryBaseSectionArgs = {
   username: Scalars['String']
 }
 
+export type QueryResourceByOwnerUsernameAndSlugArgs = {
+  resourceSlug: Scalars['String']
+  username: Scalars['String']
+}
+
 export type QuerySectionsArgs = {
   resourceId: Scalars['String']
 }
@@ -63,14 +75,40 @@ export type QuerySectionsListArgs = {
   username: Scalars['String']
 }
 
+export type QuerySectionsListByBaseSectionIdArgs = {
+  baseSectionId: Scalars['String']
+}
+
+export type QuerySectionBySlugsPathAndBaseSectionIdArgs = {
+  baseSectionId: Scalars['String']
+  slugsPath: Scalars['String']
+}
+
+export type QuerySiblingSectionsArgs = {
+  sectionId: Scalars['String']
+}
+
 export type QueryUserProgressArgs = {
   ownerUsername: Scalars['String']
   resourceSlug: Scalars['String']
 }
 
+export type QueryUserProgressByResourceIdArgs = {
+  resourceId: Scalars['String']
+}
+
 export type QueryHasEnrolledArgs = {
   resourceSlug: Scalars['String']
   username: Scalars['String']
+}
+
+export type QueryHasEnrolledByResourceIdArgs = {
+  resourceId: Scalars['String']
+}
+
+export type QueryHasCompletedSectionArgs = {
+  sectionId: Scalars['String']
+  resourceId: Scalars['String']
 }
 
 export type LoginResponse = {
@@ -107,6 +145,7 @@ export type Resource = {
   forkedVersion?: Maybe<Scalars['Int']>
   forks: Array<Resource>
   baseSection: Section
+  baseSectionId: Scalars['String']
   user: User
   topic: Topic
   verified: Scalars['Boolean']
@@ -129,12 +168,26 @@ export type Section = {
   resource?: Maybe<Resource>
   sections: Array<Section>
   parentSection?: Maybe<Section>
+  parentSectionId?: Maybe<Scalars['String']>
   baseSection?: Maybe<Section>
+  baseSectionId?: Maybe<Scalars['String']>
   page?: Maybe<Page>
   createdDate: Scalars['DateTime']
   updatedDate: Scalars['DateTime']
   version: Scalars['Int']
   forkedVersion?: Maybe<Scalars['Int']>
+  slugsPath: Scalars['String']
+  pathWithSectionIds: Scalars['String']
+  previousSectionId: Scalars['String']
+  nextSectionId: Scalars['String']
+  firstLeafSectionId: Scalars['String']
+  firstLeafSlugsPath: Scalars['String']
+  lastLeafSectionId: Scalars['String']
+  lastLeafSlugsPath: Scalars['String']
+  nextSectionToGoTo: Scalars['String']
+  previousSectionToGoTo: Scalars['String']
+  previousSectionPath: Scalars['String']
+  nextSectionPath: Scalars['String']
   isPage: Scalars['Boolean']
   hasSubSections: Scalars['Boolean']
   isSection: Scalars['Boolean']
@@ -172,8 +225,10 @@ export type Progress = {
   __typename?: 'Progress'
   id: Scalars['ID']
   user: User
+  userId?: Maybe<Scalars['String']>
   completedSections: Array<Section>
   resource: Resource
+  resourceId?: Maybe<Scalars['String']>
 }
 
 export type Mutation = {
@@ -192,6 +247,7 @@ export type Mutation = {
   createResource: Resource
   addSection: Section
   makePrimary: Resource
+  initializeSlugsForAllSections: Scalars['Boolean']
   updateSection: Section
   deleteSection: Scalars['Boolean']
   reorderSections: Section
@@ -221,7 +277,7 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationLoginArgs = {
   password: Scalars['String']
-  email: Scalars['String']
+  usernameOrEmail: Scalars['String']
 }
 
 export type MutationRegisterArgs = {
@@ -285,7 +341,7 @@ export type MutationStartProgressArgs = {
 }
 
 export type MutationCompleteSectionArgs = {
-  data: CompleteSectionInput
+  sectionId: Scalars['String']
 }
 
 export type MutationUpdateResourceDescriptionArgs = {
@@ -361,10 +417,6 @@ export type SavePageInput = {
 export type ForkResourceInput = {
   username: Scalars['String']
   resourceSlug: Scalars['String']
-}
-
-export type CompleteSectionInput = {
-  sectionId: Scalars['String']
 }
 
 export type UpdateUserInput = {

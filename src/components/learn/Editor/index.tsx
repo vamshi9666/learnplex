@@ -128,8 +128,8 @@ export default function CustomEditor({
   })
 
   const COMPLETE_SECTION_MUTATION = `
-    mutation($data: CompleteSectionInput!) {
-      completeSection(data: $data) {
+    mutation($sectionId: String!) {
+      completeSection(sectionId: $sectionId) {
         id
         user {
           username
@@ -218,9 +218,7 @@ export default function CustomEditor({
   const completeSection = () => {
     NProgress.start()
     completeSectionMutation({
-      data: {
-        sectionId: currentSectionId,
-      },
+      sectionId: currentSectionId,
     }).then(async (result) => {
       if (result.error) {
         console.log({ completeSectionError: result.error })

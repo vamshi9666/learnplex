@@ -1,0 +1,17 @@
+{
+  "name": "ej3l148-x0ewho8",
+  "hash": "Z9zmDNRl/ny/H3O9ySCtdqZW8+HAlo/g7J0gHCNnvQM=",
+  "description": "undefined (API)",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/bhanuteja.p/coderplex-technologies/v3/Learning-Platform/.serverless_nextjs/api-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs10.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::114186083917:role/ej3l148-j5gd0ce"
+  },
+  "arn": "arn:aws:lambda:us-east-1:114186083917:function:ej3l148-x0ewho8",
+  "region": "us-east-1"
+}

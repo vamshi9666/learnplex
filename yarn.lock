@@ -1701,24 +1701,25 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sls-next/lambda-at-edge@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@sls-next/lambda-at-edge/-/lambda-at-edge-1.1.3.tgz#9ab325e9a0edcb1d04a8c0a52215c4c1fb3ac645"
-  integrity sha512-ODXiNhhBLJDDc0yVInjzemf57oP6yH18BiX3lAkpFUzNKipxPdou8EV69W18qd6cOTd8E9pGF98dipk182gvDQ==
+"@sls-next/lambda-at-edge@^1.2.0-alpha.0":
+  version "1.2.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/lambda-at-edge/-/lambda-at-edge-1.2.0-alpha.0.tgz#52b516fb7221e651ce96bbd2e48694a5f6e2d0f3"
+  integrity sha512-i5gqh0h0wTJ3fTcEsOBjFYp+fwFvrQ77B+ov+g4/iebdLV4BfSBeNGtdJ25JTFmuIW/8QVZpf+VOjpCnYSIJFg==
   dependencies:
     execa "^4.0.0"
     fs-extra "^9.0.0"
     path-to-regexp "^6.1.0"
 
-"@sls-next/s3-static-assets@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@sls-next/s3-static-assets/-/s3-static-assets-1.0.3.tgz#d0b45dacef68384f88f3b45ac7d2274dbf012c2b"
-  integrity sha512-xPmfMukU7DTEfpxvwZ+9GxuZkZehH+GB4DSxeFzOS9+MY2wmB3knwoPBfxnSajgmLtm10mgKtJTSdULyZUTRRg==
+"@sls-next/s3-static-assets@^1.1.0-alpha.0":
+  version "1.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@sls-next/s3-static-assets/-/s3-static-assets-1.1.0-alpha.0.tgz#d0facc5518dac11c59f7b6960ec0d70804ef39ad"
+  integrity sha512-Gl9R72PUH5zV9d2hdHePWolLQQ/jiZhhIOCfqqUZ/Hr4oTDm4cjdk2eFs8m6f9nPqyGGJkloEBv3NBBcS7autg==
   dependencies:
     aws-sdk "^2.664.0"
     fs-extra "^9.0.0"
     klaw "^3.0.0"
     mime-types "^2.1.27"
+    regex-parser "^2.2.10"
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -5327,6 +5328,11 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
+fast-deep-equal@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+  integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
+
 fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
@@ -8284,10 +8290,10 @@ neo-async@2.6.1, neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-next-aws-cloudfront@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/next-aws-cloudfront/-/next-aws-cloudfront-1.1.1.tgz#91124d5ad80e04f0bfccda40a863ae7304fb8f83"
-  integrity sha512-rEWjOZ3dEjc77NnsasnqrF9Lg556Bl4YxOBPvC5637q0m4RINMJh4rMY+yq5EGcjI/3zdaH9KBrmaJ5O9PUHaA==
+next-aws-cloudfront@^1.2.0-alpha.0:
+  version "1.2.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/next-aws-cloudfront/-/next-aws-cloudfront-1.2.0-alpha.0.tgz#455bb473392648c3c869299a5644012b1be9b55e"
+  integrity sha512-X2oZqB8btspKdRIjUbQCYaR442BAvHb3OznFULc3JT7s5F/zqVxckLM2kQGKvDrQF6sxvbauBWysABl8816FeQ==
 
 next-compose-plugins@2.2.0:
   version "2.2.0"
@@ -10701,7 +10707,7 @@ regex-not@^1.0.0, regex-not@^1.0.2:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
 
-regex-parser@2.2.10:
+regex-parser@2.2.10, regex-parser@^2.2.10:
   version "2.2.10"
   resolved "https://registry.yarnpkg.com/regex-parser/-/regex-parser-2.2.10.tgz#9e66a8f73d89a107616e63b39d4deddfee912b37"
   integrity sha512-8t6074A68gHfU8Neftl0Le6KTDwfGAj7IyjPIMSfikI2wJUTHDMaIq42bUsfVnj8mhx0R+45rdUXHGpN164avA==
@@ -11212,20 +11218,20 @@ serve-static@1.14.1:
     parseurl "~1.3.3"
     send "0.17.1"
 
-serverless-next.js@1.11.5:
-  version "1.11.5"
-  resolved "https://registry.yarnpkg.com/serverless-next.js/-/serverless-next.js-1.11.5.tgz#b35c49e58c72f8dc1036e702c4baed73fef023ac"
-  integrity sha512-U3hoJDbJgjP8MmpjxI1NR7tjwv3z1zy2hRAHmumzSNlXF3VbnXyZxdDb4bJClMqNHlFhQyUFzNHDZJqFZbe1GQ==
+serverless-next.js@1.12.0-alpha.2:
+  version "1.12.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/serverless-next.js/-/serverless-next.js-1.12.0-alpha.2.tgz#3190ec7107b5bc9a6f7ba3134b16e7f7b213f8c7"
+  integrity sha512-7XHY3QLfku4+cWmLg+Y/muIB5CC7Zh1n15Htu8iml68egAokveS9WHxArpsp3DiZ8G5jrby/yX4PgEAUrjXJpQ==
   dependencies:
     "@serverless/aws-cloudfront" "^5.0.0"
     "@serverless/aws-lambda" "^3.0.3"
     "@serverless/aws-s3" "^4.2.0"
     "@serverless/core" "^1.0.0"
     "@serverless/domain" "^6.1.0"
-    "@sls-next/lambda-at-edge" "^1.1.3"
-    "@sls-next/s3-static-assets" "^1.0.3"
+    "@sls-next/lambda-at-edge" "^1.2.0-alpha.0"
+    "@sls-next/s3-static-assets" "^1.1.0-alpha.0"
     fs-extra "^8.1.0"
-    next-aws-cloudfront "^1.1.1"
+    next-aws-cloudfront "^1.2.0-alpha.0"
 
 set-blocking@^2.0.0:
   version "2.0.0"
@@ -11913,6 +11919,13 @@ svgo@^1.0.0:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+swr@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-0.2.0.tgz#2088271bc0a8044089cf2badde013648f98783ee"
+  integrity sha512-8IZCdM0deUPhDiqOmyaj0BsnNjav1fu83nD0d07PEAzOHOn+lxcJOxwXeDBShwF6qCeZ8u8ab+a2yXkjD8yT3A==
+  dependencies:
+    fast-deep-equal "2.0.1"
 
 symbol-observable@^1.1.0, symbol-observable@^1.2.0:
   version "1.2.0"
