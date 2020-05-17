@@ -53,6 +53,7 @@ export default async (
   }: NextApiRequest,
   res: NextApiResponse
 ) => {
+  console.log({ headers, cookies })
   /**
    * Resource
    **/
@@ -106,7 +107,7 @@ export default async (
     headers,
     resourceId: resource.id,
   })
-  console.log({ enrolledResult })
+  console.log({ enrolledResult, headers })
   if (enrolledResult.error) {
     console.log({ enrolledResultError: enrolledResult.message })
     enrolled = false

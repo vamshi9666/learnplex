@@ -19,7 +19,9 @@ const clientWithHeaders = (headers: any) => {
     requestPolicy: 'network-only',
     fetchOptions: () => {
       return {
-        headers,
+        headers: {
+          cookie: headers.cookie,
+        },
         credentials: 'include',
       }
     },

@@ -1,10 +1,6 @@
 myNextApplication:
-  component: serverless-next.js
+  component: serverless-next.js@1.11.5
   inputs:
     domain: "coderplex.in"
-    cloudfront:
-      defaults:
-        forward:
-          cookies: "all"
   build:
     cmd: yarn build
