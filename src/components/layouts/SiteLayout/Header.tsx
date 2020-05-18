@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Button, Menu, Skeleton } from 'antd'
+import { Button, Menu, Skeleton, Affix } from 'antd'
 import { useRouter } from 'next/router'
 import { EditOutlined, ImportOutlined } from '@ant-design/icons'
 import { useQuery } from 'urql'
@@ -118,74 +118,72 @@ export default function Header() {
   }
 
   return (
-    <>
-      <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
-        <img
-          className={'float-left'}
-          src={'/logo.png'}
-          alt={'Coderplex Logo'}
-        />
-        <span className={'font-large'}>
-          <b>Coderplex</b>
-        </span>
+    <Affix>
+      <div className={'header'}>
+        <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
+          <img src={'/logo.png'} alt={'Coderplex Logo'} />
+          <span className={'font-large'}>
+            <b>Coderplex</b>
+          </span>
+        </div>
+        <Menu
+          className={'bg-initial border-0'}
+          mode={'horizontal'}
+          selectable={false}
+          onClick={async ({ key }) => {
+            await router.push(key)
+          }}
+        >
+          {showEditButton() && (
+            <Menu.Item
+              key={'edit'}
+              disabled={true}
+              className={'cursor-initial'}
+              style={{ marginBottom: '0px' }}
+            >
+              <Button
+                type={'primary'}
+                icon={<EditOutlined className={'mr-0'} />}
+                onClick={() => goToEditPage()}
+              >
+                Edit
+              </Button>
+            </Menu.Item>
+          )}
+          {showExitButton() && (
+            <Menu.Item
+              key={'exit'}
+              disabled={true}
+              className={'cursor-initial border-0 pr-1'}
+              style={{ marginBottom: '2px' }}
+            >
+              <Button
+                type={'primary'}
+                icon={<ImportOutlined className={'mr-0'} />}
+                onClick={() => exitEditMode()}
+              >
+                Exit
+              </Button>
+            </Menu.Item>
+          )}
+          {isLoggedIn
+            ? [
+                <Menu.SubMenu key={'user'} title={user?.username}>
+                  <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
+                  <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
+                  <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
+                  {user?.roles.includes(UserRole.Admin) && (
+                    <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
+                  )}
+                  <Menu.Item key={'/logout'}>Logout</Menu.Item>,
+                </Menu.SubMenu>,
+              ]
+            : [
+                <Menu.Item key={'/login'}>Login</Menu.Item>,
+                <Menu.Item key={'/register'}>Register</Menu.Item>,
+              ]}
+        </Menu>
       </div>
-      <Menu
-        className={'float-right bg-initial border-0'}
-        mode={'horizontal'}
-        selectable={false}
-        onClick={async ({ key }) => {
-          await router.push(key)
-        }}
-      >
-        {showEditButton() && (
-          <Menu.Item
-            key={'edit'}
-            disabled={true}
-            className={'cursor-initial'}
-            style={{ marginBottom: '0px' }}
-          >
-            <Button
-              type={'primary'}
-              icon={<EditOutlined className={'mr-0'} />}
-              onClick={() => goToEditPage()}
-            >
-              Edit
-            </Button>
-          </Menu.Item>
-        )}
-        {showExitButton() && (
-          <Menu.Item
-            key={'exit'}
-            disabled={true}
-            className={'cursor-initial border-0 pr-1'}
-            style={{ marginBottom: '2px' }}
-          >
-            <Button
-              type={'primary'}
-              icon={<ImportOutlined className={'mr-0'} />}
-              onClick={() => exitEditMode()}
-            >
-              Exit
-            </Button>
-          </Menu.Item>
-        )}
-        {isLoggedIn
-          ? [
-              <Menu.SubMenu key={'user'} title={user?.username}>
-                <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
-                <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
-                <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
-                {user?.roles.includes(UserRole.Admin) && (
-                  <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
-                )}
-                <Menu.Item key={'/logout'}>Logout</Menu.Item>,
-              </Menu.SubMenu>,
-            ]
-          : [
-              <Menu.Item key={'/login'}>Login</Menu.Item>,
-              <Menu.Item key={'/register'}>Register</Menu.Item>,
-            ]}
-      </Menu>
-    </>
+    </Affix>
   )
 }
