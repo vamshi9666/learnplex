@@ -1,10 +1,20 @@
-import React from 'react'
 import { useRouter } from 'next/router'
+import React from 'react'
 
-import ResourcePage from '../../../../components/learn/ResourcePage'
+import ResourcePageV2 from '../../../../components/v2/ResourcePage'
 
-export default function ViewResource() {
+export default function ViewResourcePageV2() {
   const router = useRouter()
+  const resourceSlug = router.query.resource as string
   const username = router.query.username as string
-  return <ResourcePage inEditMode={false} username={username} />
+  const slugs = router.query.slugs as string[]
+
+  return (
+    <ResourcePageV2
+      inEditMode={false}
+      username={username}
+      slugs={slugs}
+      resourceSlug={resourceSlug}
+    />
+  )
 }

@@ -115,7 +115,7 @@ export default function ResourcePageV2({
     const isPrimary =
       !router.pathname.startsWith('/v2/[username]') && !inEditMode
     await router.push(
-      `/v2/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
+      `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
         currentSection.previousSectionPath
       }`
     )
@@ -125,7 +125,7 @@ export default function ResourcePageV2({
     const isPrimary =
       !router.pathname.startsWith('/v2/[username]') && !inEditMode
     await router.push(
-      `/v2/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
+      `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
         currentSection.nextSectionPath
       }`
     )
@@ -143,14 +143,14 @@ export default function ResourcePageV2({
       console.log(`${router.asPath}${result.resource.firstPageSlugsPath}`)
       if (resource.verified) {
         await router.push(
-          `/v2/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
+          `/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
         )
       } else {
         console.log({
-          path: `/v2/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`,
+          path: `/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`,
         })
         await router.push(
-          `/v2/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
+          `/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
         )
       }
       NProgress.done()

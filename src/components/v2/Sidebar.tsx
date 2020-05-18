@@ -50,11 +50,11 @@ export default function SidebarV2({
     // Clicked on index button
     if (e.key === 'resource-index') {
       if (inEditMode) {
-        await router.push(`/v2/${username}/learn/edit/${resourceSlug}`)
+        await router.push(`/${username}/learn/edit/${resourceSlug}`)
         return
       }
       await router.push(
-        `/v2/${isPrimary ? '' : username + '/'}learn/${resourceSlug}`
+        `/${isPrimary ? '' : username + '/'}learn/${resourceSlug}`
       )
       return
     }
@@ -63,13 +63,11 @@ export default function SidebarV2({
       ? clickedSection.firstLeafSlugsPath
       : clickedSection.slugsPath
     if (inEditMode) {
-      await router.push(
-        `/v2/${username}/learn/edit/${resourceSlug}${slugsPath}`
-      )
+      await router.push(`/${username}/learn/edit/${resourceSlug}${slugsPath}`)
       return
     }
     await router.push(
-      `/v2/${isPrimary ? '' : username + '/'}learn/${resourceSlug}${slugsPath}`
+      `/${isPrimary ? '' : username + '/'}learn/${resourceSlug}${slugsPath}`
     )
   }
 
