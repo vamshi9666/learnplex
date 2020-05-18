@@ -26,6 +26,8 @@ export default function MyResources() {
         }
         firstPageSlugsPath
         verified
+        published
+        createdDate
       }
     }
   `

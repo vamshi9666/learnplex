@@ -28,6 +28,7 @@ export default function TopicResources() {
         firstPageSlugsPath
         verified
         published
+        createdDate
       }
     }
   `

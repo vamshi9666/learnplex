@@ -211,6 +211,17 @@ export default function ResourceCards({
       return adminActions({ resource })
     }
     const actions = []
+    if (router.asPath === '/resources/me') {
+      actions.push(
+        <Button
+          type={resource.published ? 'default' : 'primary'}
+          danger={resource.published}
+          onClick={(e) => togglePublish({ resourceId: resource.id, e })}
+        >
+          {resource.published ? 'Un Publish' : 'Publish'}
+        </Button>
+      )
+    }
     console.log({ isLoggedIn })
     if (isLoggedIn) {
       actions.push(

@@ -27,6 +27,7 @@ export default function UserResources() {
         firstPageSlugsPath
         verified
         published
+        createdDate
       }
     }
   `
