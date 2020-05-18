@@ -22,6 +22,7 @@ export async function getResourceByUsernameAndSlug({
         user {
           username
         }
+        verified
       }
     }
   `

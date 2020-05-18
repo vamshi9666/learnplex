@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Button, Col, Row, Skeleton, Tooltip, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import NProgress from 'nprogress'
 
 import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../constants'
 import SectionItemsV2 from './SectionItems'
@@ -9,7 +10,7 @@ import { SEO } from '../SEO'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { fetcher } from '../../utils/fetcher'
 import InternalServerError from '../result/InternalServerError'
-import { checkIfEnrolledQuery } from '../../utils/progress'
+import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
 
 interface Props {
   username?: string
@@ -64,6 +65,22 @@ export default function ResourceIndexV2({
   const title = resource.title
   const baseSection = sectionsMap[baseSectionId]
   const isLoggedIn = !!user
+
+  const startLearning = async () => {
+    console.log({ resource })
+    if (resource?.id) {
+      console.log('here')
+      NProgress.start()
+      const result = await startProgress({
+        resourceId: resource.id,
+      })
+      console.log({ result })
+      console.log(`${router.asPath}${result.resource.firstPageSlugsPath}`)
+      await router.push(`${router.asPath}${result.resource.firstPageSlugsPath}`)
+      NProgress.done()
+    }
+  }
+
   return (
     <>
       <SEO title={title} description={description} />
@@ -98,13 +115,15 @@ export default function ResourceIndexV2({
               </Tooltip>
             ) : !enrolled ? (
               <Tooltip title={'You can track your progress in your profile'}>
-                <Button type={'primary'} onClick={() => {}}>
+                <Button type={'primary'} onClick={() => startLearning()}>
                   Start Learning
                 </Button>
               </Tooltip>
             ) : (
               <Tooltip title={'You can track your progress in your profile'}>
-                <Button type={'primary'}>Continue Learning</Button>
+                <Button type={'primary'} onClick={() => startLearning()}>
+                  Continue Learning
+                </Button>
               </Tooltip>
             )}
           </div>

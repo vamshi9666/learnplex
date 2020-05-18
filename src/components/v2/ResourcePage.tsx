@@ -8,6 +8,7 @@ import {
   CheckOutlined,
   ArrowRightOutlined,
 } from '@ant-design/icons'
+import NProgress from 'nprogress'
 
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
 import { SEO } from '../SEO'
@@ -18,7 +19,7 @@ import InternalServerError from '../result/InternalServerError'
 import { Resource, Section } from '../../graphql/types'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { completeSection } from '../../utils/completeSection'
-import { checkIfEnrolledQuery } from '../../utils/progress'
+import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
 import { getUserProgressByResourceId } from '../../utils/getUserProgressByResourceId'
 
 interface Props {
@@ -130,6 +131,32 @@ export default function ResourcePageV2({
     )
   }
 
+  const startLearning = async () => {
+    console.log({ resource })
+    if (resource?.id) {
+      console.log('here')
+      NProgress.start()
+      const result = await startProgress({
+        resourceId: resource.id,
+      })
+      console.log({ result })
+      console.log(`${router.asPath}${result.resource.firstPageSlugsPath}`)
+      if (resource.verified) {
+        await router.push(
+          `/v2/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
+        )
+      } else {
+        console.log({
+          path: `/v2/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`,
+        })
+        await router.push(
+          `/v2/${resource.user.username}/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
+        )
+      }
+      NProgress.done()
+    }
+  }
+
   return (
     <>
       <SEO
@@ -215,7 +242,9 @@ export default function ResourcePageV2({
             ) : (
               <Button
                 type={'primary'}
-                onClick={() => (user ? {} : router.push('/register'))}
+                onClick={() =>
+                  user ? startLearning() : router.push('/register')
+                }
               >
                 Start Learning
               </Button>

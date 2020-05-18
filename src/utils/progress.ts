@@ -1,4 +1,5 @@
 import { Client } from '@urql/core'
+import { message } from 'antd'
 
 import { client as defaultClient } from './urqlClient'
 
@@ -53,4 +54,44 @@ export async function hasCompletedCurrentSection({
   }
 
   return result.data.hasCompletedSection
+}
+
+export async function startProgress({
+  client = defaultClient,
+  resourceId,
+}: {
+  client?: Client
+  resourceId: string
+}) {
+  const START_PROGRESS_MUTATION = `
+    mutation($resourceId: String!) {
+      startProgress(resourceId: $resourceId) {
+        id
+        resource {
+          slug
+          user {
+            username
+          }
+          firstPageSlugsPath
+        }
+      }
+    }
+  `
+  const result = await client
+    ?.mutation(START_PROGRESS_MUTATION, {
+      resourceId,
+    })
+    .toPromise()
+
+  if (result.error) {
+    console.log({ startProgressError: result.error })
+    message.error('Something went wrong. Please try after sometime.')
+    return {
+      error: true,
+      message: result.error.message,
+    }
+  } else {
+    console.log({ result })
+    return result.data.startProgress
+  }
 }

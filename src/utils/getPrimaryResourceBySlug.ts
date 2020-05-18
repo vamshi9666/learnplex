@@ -20,6 +20,7 @@ export async function getPrimaryResourceBySlug({
         user {
           username
         }
+        verified
       }
     }
   `
