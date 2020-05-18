@@ -252,7 +252,6 @@ export type Mutation = {
   addSection: Section
   makePrimary: Resource
   togglePrimaryStatus: Resource
-  initializeSlugsForAllSections: Scalars['Boolean']
   updateSection: Section
   deleteSection: Scalars['Boolean']
   reorderSections: Section
@@ -267,6 +266,8 @@ export type Mutation = {
   updatePassword: Scalars['Boolean']
   updateUserDetailsAsAdmin: Scalars['Boolean']
   togglePublishStatus: Resource
+  populateSlugsForAllResources: Scalars['Boolean']
+  populateSlugsByResourceId: Scalars['Boolean']
 }
 
 export type MutationChangePasswordArgs = {
@@ -381,6 +382,10 @@ export type MutationUpdateUserDetailsAsAdminArgs = {
 }
 
 export type MutationTogglePublishStatusArgs = {
+  resourceId: Scalars['String']
+}
+
+export type MutationPopulateSlugsByResourceIdArgs = {
   resourceId: Scalars['String']
 }
 

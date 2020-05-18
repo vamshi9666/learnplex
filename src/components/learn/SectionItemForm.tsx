@@ -22,6 +22,7 @@ import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 import { Section } from '../../graphql/types'
 import { slug } from '../../utils/slug'
 import { useSections } from '../../lib/hooks/useSections'
+import { populateSlugsForResource } from '../../utils/populateSlugs'
 
 export default function SectionItemForm({
   section,
@@ -38,6 +39,7 @@ export default function SectionItemForm({
   const {
     setSection: setSectionInSectionsMap,
     deleteSection: deleteSectionInSectionsMap,
+    resourceId,
   } = useSections({ resourceSlug, username })
   const [editing, setEditing] = useState(false)
 
@@ -96,7 +98,7 @@ export default function SectionItemForm({
         title,
         sectionId,
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.error) {
         console.log({ updateSectionError: result.error })
       } else {
@@ -104,6 +106,7 @@ export default function SectionItemForm({
           section: result.data.updateSection,
           old: sectionsMap.get(section.id),
         })
+        await populateSlugsForResource({ resourceId })
         setSectionInSectionsMap({ updatedSection: result.data.updateSection })
         setEditing(false)
         message.success('Title updated successfully', 1)

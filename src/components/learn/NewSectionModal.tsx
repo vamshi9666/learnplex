@@ -8,6 +8,7 @@ import { FileMarkdownOutlined } from '@ant-design/icons'
 import { slug } from '../../utils/slug'
 import { Section } from '../../graphql/types'
 import { useSections } from '../../lib/hooks/useSections'
+import { populateSlugsForResource } from '../../utils/populateSlugs'
 
 let KeyboardEventHandler: any
 if (process.browser) {
@@ -52,9 +53,9 @@ export default function NewSectionModal({
   const router = useRouter()
   const username = router.query.username as string
   const resourceSlug = router.query.resource as string
-  const { setSection } = useSections({ username, resourceSlug })
+  const { setSection, resourceId } = useSections({ username, resourceSlug })
   const [, addSectionMutation] = useMutation(ADD_SECTION_MUTATION)
-  const [showContentBox, setshowContentBox] = useState(false)
+  const [showContentBox, setShowContentBox] = useState(false)
   const addSection = ({
     title,
     content,
@@ -69,7 +70,7 @@ export default function NewSectionModal({
         parentSectionId: parentSection.id,
         content,
       },
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.error) {
         console.log({ addSectionError: result.error })
       } else {
@@ -77,6 +78,7 @@ export default function NewSectionModal({
         const newSection = result.data.addSection
         setSection({ updatedSection: newSection })
         reset()
+        await populateSlugsForResource({ resourceId })
         form.resetFields()
         NProgress.done()
       }
@@ -110,12 +112,12 @@ export default function NewSectionModal({
 
   const toggleShowContent = (e: any) => {
     e.preventDefault()
-    setshowContentBox(!showContentBox)
+    setShowContentBox(!showContentBox)
   }
 
   const reset = () => {
     setShow(false)
-    setshowContentBox(false)
+    setShowContentBox(false)
   }
 
   if (!process.browser) {

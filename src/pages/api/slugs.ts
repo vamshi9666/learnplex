@@ -77,6 +77,7 @@ export default async (
     return res.status(500).json({ message: sectionResult.message })
   }
   currentSection = sectionResult
+  console.log({ currentSection })
 
   /**
    * sibling sections
@@ -93,6 +94,7 @@ export default async (
   /**
    * sectionsMap
    **/
+  console.log({ siblingSections })
   const sectionsMap = getSectionsMapFromSectionsList({
     sectionsList: siblingSections,
   })

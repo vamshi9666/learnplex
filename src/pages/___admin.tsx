@@ -7,7 +7,7 @@ import ResourceCards from '../components/learn/ResourceCards'
 import { UserContext } from '../lib/contexts/UserContext'
 import { UserRole } from '../graphql/types'
 import NotAuthorized from '../components/result/NotAuthorized'
-import { repopulateAllSlugs } from '../utils/repopulateAllSlugs'
+import { repopulateAllSlugs } from '../utils/populateSlugs'
 import { fetcher } from '../utils/fetcher'
 import InternalServerError from '../components/result/InternalServerError'
 

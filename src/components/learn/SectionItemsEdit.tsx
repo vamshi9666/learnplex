@@ -13,6 +13,7 @@ import { Section } from '../../graphql/types'
 import SectionItemEdit from './SectionItemEdit'
 import NewSectionButton from './NewSectionButton'
 import { useSections } from '../../lib/hooks/useSections'
+import { populateSlugsForResource } from '../../utils/populateSlugs'
 
 export default function SectionItemsEdit({
   sections,
@@ -29,7 +30,10 @@ export default function SectionItemsEdit({
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const username = router.query.username as string
-  const { reorderSections } = useSections({ resourceSlug, username })
+  const { reorderSections, resourceId } = useSections({
+    resourceSlug,
+    username,
+  })
 
   if (!sections) return <Skeleton active={true} />
 
@@ -50,6 +54,7 @@ export default function SectionItemsEdit({
       parentSectionId: parentSection.id,
       sections: sortedSections,
     })
+    await populateSlugsForResource({ resourceId })
     NProgress.done()
   }
 

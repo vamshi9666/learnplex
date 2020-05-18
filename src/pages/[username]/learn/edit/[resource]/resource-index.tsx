@@ -16,6 +16,7 @@ import {
 } from '../../../../../constants'
 import { UserContext } from '../../../../../lib/contexts/UserContext'
 import { titleCase } from '../../../../../utils/titleCase'
+import { populateSlugsForResource } from '../../../../../utils/populateSlugs'
 
 export default function EditResourceIndex() {
   const router = useRouter()
@@ -112,6 +113,7 @@ export default function EditResourceIndex() {
         console.log({ result })
         const slug = result.data.updateResourceTitle.slug
         if (slug !== data.resource.slug) {
+          await populateSlugsForResource({ resourceId: data.resource.id })
           await router.push(
             `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${slug}`,
             `/${username}/learn/edit/${slug}/resource-index`,
