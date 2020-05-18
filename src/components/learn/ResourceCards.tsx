@@ -10,6 +10,7 @@ import {
   Skeleton,
   Divider,
   Empty,
+  message,
 } from 'antd'
 import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
@@ -19,6 +20,10 @@ import { TagOutlined, UserOutlined, StarTwoTone } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
 import { UserContext } from '../../lib/contexts/UserContext'
+import {
+  togglePrimaryStatus,
+  togglePublishStatus,
+} from '../../utils/togglePublishStatus'
 
 export default function ResourceCards({
   resources,
@@ -26,6 +31,7 @@ export default function ResourceCards({
   resources: Resource[]
 }) {
   const router = useRouter()
+  resources = resources.sort((a, b) => (a.createdDate < b.createdDate ? -1 : 1))
 
   const goToTopic = async ({ e, slug }: { e: any; slug: string }) => {
     e.preventDefault()
@@ -47,6 +53,7 @@ export default function ResourceCards({
 
   const { user } = useContext(UserContext)
   const isLoggedIn = !!user
+  const isAdminPage = router.asPath === '/___admin'
 
   const USER_PROGRESS_LIST_QUERY = `
     query {
@@ -140,7 +147,69 @@ export default function ResourceCards({
     router.push('/register')
   }
 
+  const togglePublish = async ({
+    resourceId,
+    e,
+  }: {
+    resourceId: string
+    e: any
+  }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const result = await togglePublishStatus({ resourceId })
+    if (result.error) {
+      message.error(result.message)
+    } else {
+      message.success('Status updated successfully.')
+      router.reload()
+    }
+  }
+
+  const togglePrimary = async ({
+    resourceId,
+    e,
+  }: {
+    resourceId: string
+    e: any
+  }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const result = await togglePrimaryStatus({ resourceId })
+    if (result.error) {
+      message.error(result.message)
+    } else {
+      message.success('Status updated successfully.')
+      router.reload()
+    }
+  }
+
+  const adminActions = ({ resource }: { resource: Resource }) => {
+    const adminActions = []
+    if (resource.verified) {
+      adminActions.push(<Button>Toggle Primary</Button>)
+    }
+    return [
+      <Button
+        type={resource.published ? 'default' : 'primary'}
+        danger={resource.published}
+        onClick={(e) => togglePublish({ resourceId: resource.id, e })}
+      >
+        {resource.published ? 'Un Publish' : 'Publish'}
+      </Button>,
+      <Button
+        type={resource.verified ? 'default' : 'primary'}
+        danger={resource.verified}
+        onClick={(e) => togglePrimary({ resourceId: resource.id, e })}
+      >
+        {resource.verified ? 'Remove as Primary' : 'Make Primary'}
+      </Button>,
+    ]
+  }
+
   const getActions = ({ resource }: { resource: Resource }) => {
+    if (isAdminPage) {
+      return adminActions({ resource })
+    }
     const actions = []
     console.log({ isLoggedIn })
     if (isLoggedIn) {

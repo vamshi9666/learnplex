@@ -23,6 +23,7 @@ export type Query = {
   resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
   allResources: Array<Resource>
+  allResourcesForAdmin: Array<Resource>
   allVerifiedResources: Array<Resource>
   baseSection: Section
   resourceByOwnerUsernameAndSlug?: Maybe<Resource>
@@ -148,12 +149,14 @@ export type Resource = {
   baseSectionId: Scalars['String']
   user: User
   topic: Topic
+  topicId: Scalars['Int']
   verified: Scalars['Boolean']
   description?: Maybe<Scalars['String']>
   userId: Scalars['Int']
   createdDate: Scalars['DateTime']
   updatedDate: Scalars['DateTime']
   version: Scalars['Int']
+  published: Scalars['Boolean']
   firstPageSlugsPath: Scalars['String']
 }
 
@@ -248,6 +251,7 @@ export type Mutation = {
   createResource: Resource
   addSection: Section
   makePrimary: Resource
+  togglePrimaryStatus: Resource
   initializeSlugsForAllSections: Scalars['Boolean']
   updateSection: Section
   deleteSection: Scalars['Boolean']
@@ -262,6 +266,7 @@ export type Mutation = {
   updateUser: Scalars['Boolean']
   updatePassword: Scalars['Boolean']
   updateUserDetailsAsAdmin: Scalars['Boolean']
+  togglePublishStatus: Resource
 }
 
 export type MutationChangePasswordArgs = {
@@ -317,6 +322,10 @@ export type MutationMakePrimaryArgs = {
   resourceId: Scalars['String']
 }
 
+export type MutationTogglePrimaryStatusArgs = {
+  resourceId: Scalars['String']
+}
+
 export type MutationUpdateSectionArgs = {
   data: UpdateSectionInput
 }
@@ -369,6 +378,10 @@ export type MutationUpdatePasswordArgs = {
 
 export type MutationUpdateUserDetailsAsAdminArgs = {
   data: UpdateUserOptionalInput
+}
+
+export type MutationTogglePublishStatusArgs = {
+  resourceId: Scalars['String']
 }
 
 export type ChangePasswordInput = {
