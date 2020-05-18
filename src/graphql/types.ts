@@ -235,6 +235,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   changePassword?: Maybe<LoginResponse>
   confirmUser: LoginResponse
+  resendConfirmationEmail: Scalars['Boolean']
   forgotPassword: Scalars['Boolean']
   login: LoginResponse
   logout: Scalars['Boolean']

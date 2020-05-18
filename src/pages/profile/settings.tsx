@@ -1,7 +1,19 @@
 import React, { useContext, useState } from 'react'
-import { Button, Col, Form, Grid, Input, Menu, message, Row } from 'antd'
+import {
+  Button,
+  Col,
+  Form,
+  Grid,
+  Input,
+  Menu,
+  message,
+  Row,
+  Tooltip,
+} from 'antd'
 import { useMutation } from 'urql'
 import { useRouter } from 'next/router'
+import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons'
+import NProgress from 'nprogress'
 
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 import { SEO } from '../../components/SEO'
@@ -40,17 +52,37 @@ export default function ProfileSettings() {
     }
   `
 
+  const RESEND_VERIFICATION_EMAIL_MUTATION = `
+    mutation {
+      resendConfirmationEmail
+    }
+  `
+
   const router = useRouter()
   const [, updateUser] = useMutation(UPDATE_USER_MUTATION)
   const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
   const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
   const [, updatePassword] = useMutation(UPDATE_PASSWORD_MUTATION)
+  const [, resendConfirmationEmailMutation] = useMutation(
+    RESEND_VERIFICATION_EMAIL_MUTATION
+  )
   const [updatePasswordForm] = Form.useForm()
   const [updateUserForm] = Form.useForm()
   const { xs } = Grid.useBreakpoint()
 
   if (!user) {
     return <NotAuthenticated />
+  }
+
+  const resendVerificationEmail = async () => {
+    NProgress.start()
+    const result = await resendConfirmationEmailMutation()
+    if (result.error) {
+      console.log({ verificationEmailError: result.error })
+    } else {
+      message.success('Please check your inbox for verification email.')
+    }
+    NProgress.done()
   }
 
   const onFinish = ({ name, email, username }: any) => {
@@ -83,6 +115,7 @@ export default function ProfileSettings() {
       },
     }).then((result) => {
       if (result.error) {
+        message.error('Something went wrong. Please try again.')
         console.log({ updatePasswordError: result.error })
       } else {
         console.log({ result })
@@ -167,7 +200,25 @@ export default function ProfileSettings() {
                   }),
                 ]}
               >
-                <Input />
+                <Input
+                  suffix={
+                    user.confirmed ? (
+                      <Tooltip
+                        placement={'topLeft'}
+                        title={'Email is verified.'}
+                      >
+                        <CheckCircleTwoTone twoToneColor="#52c41a" />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        placement={'topLeft'}
+                        title={'Please verify your email address.'}
+                      >
+                        <ExclamationCircleTwoTone twoToneColor={'magenta'} />
+                      </Tooltip>
+                    )
+                  }
+                />
               </Form.Item>
 
               <Form.Item
@@ -207,8 +258,17 @@ export default function ProfileSettings() {
 
               <Form.Item {...FORM_TAIL_LAYOUT}>
                 <Button type={'primary'} htmlType={'submit'}>
-                  Update Information
+                  Update
                 </Button>
+                {!user.confirmed && (
+                  <Button
+                    className={'float-right'}
+                    type={'link'}
+                    onClick={() => resendVerificationEmail()}
+                  >
+                    Resend Verification Email
+                  </Button>
+                )}
               </Form.Item>
             </Form>
           )}
