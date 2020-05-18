@@ -45,8 +45,7 @@ export default function SidebarV2({
 
   const handleClick = async (e: ClickParam) => {
     const clickedSection = sectionsMap[e.key]
-    const isPrimary =
-      !router.pathname.startsWith('/v2/[username]') && !inEditMode
+    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
     // Clicked on index button
     if (e.key === 'resource-index') {
       if (inEditMode) {

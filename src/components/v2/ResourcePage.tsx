@@ -112,8 +112,7 @@ export default function ResourcePageV2({
       : resource.description) ?? ''
 
   const goToPreviousSection = async () => {
-    const isPrimary =
-      !router.pathname.startsWith('/v2/[username]') && !inEditMode
+    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
     await router.push(
       `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
         currentSection.previousSectionPath
@@ -122,8 +121,7 @@ export default function ResourcePageV2({
   }
 
   const goToNextSection = async () => {
-    const isPrimary =
-      !router.pathname.startsWith('/v2/[username]') && !inEditMode
+    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
     await router.push(
       `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
         currentSection.nextSectionPath
