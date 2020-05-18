@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Col, Row, Skeleton, Tooltip, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -9,6 +9,7 @@ import { SEO } from '../SEO'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { fetcher } from '../../utils/fetcher'
 import InternalServerError from '../result/InternalServerError'
+import { checkIfEnrolledQuery } from '../../utils/progress'
 
 interface Props {
   username?: string
@@ -26,6 +27,27 @@ export default function ResourceIndexV2({
   console.log({ url })
   const { data, error } = useSWR(url, fetcher)
   const { user } = useContext(UserContext)
+
+  /**
+   * Temporary fix, after figuring out why cookies are not being sent in /api,
+   * remove the following useEffect, and get enrolled status directly from /api
+   **/
+  const [enrolled, setEnrolled] = useState(false)
+  useEffect(() => {
+    if (data?.resource?.id) {
+      checkIfEnrolledQuery({
+        resourceId: data.resource.id,
+      }).then((enrolledResult) => {
+        if (enrolledResult.error) {
+          console.log({ enrolledResultError: enrolledResult.message })
+          setEnrolled(false)
+        } else {
+          setEnrolled(enrolledResult)
+        }
+      })
+    }
+  }, [data?.resource?.id])
+
   if (error) {
     return <InternalServerError message={error.message} />
   }
@@ -35,7 +57,7 @@ export default function ResourceIndexV2({
 
   const resource = data.resource
   const sectionsMap = data.sectionsMap
-  const enrolled = data.enrolled
+  // const enrolled = data.enrolled
   const ownerUsername = resource.user.username
   const baseSectionId = resource.baseSectionId
   const description = resource.description as string

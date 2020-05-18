@@ -2,11 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { Section } from '../../graphql/types'
 import { client } from '../../utils/urqlClient'
-import { checkIfEnrolledQuery } from '../../utils/progress'
 import { getResource } from '../../utils/getResourceForApi'
 import { getSiblingSections } from '../../utils/getSiblingSections'
 import { getSectionsMapFromSectionsList } from '../../utils/getSectionsListByBaseSectionId'
-import { getUserProgressByResourceId } from '../../utils/getUserProgressByResourceId'
 
 async function getSectionBySlugsPathAndBaseSectionId({
   slugsPath,
@@ -101,51 +99,53 @@ export default async (
 
   /**
    * Resource enrollment
+   * TODO: Figure out why cookies are not being sent from here
    **/
-  let enrolled
-  const enrolledResult = await checkIfEnrolledQuery({
-    headers,
-    resourceId: resource.id,
-  })
-  console.log({ enrolledResult, headers })
-  if (enrolledResult.error) {
-    console.log({ enrolledResultError: enrolledResult.message })
-    enrolled = false
-  } else {
-    enrolled = enrolledResult
-  }
+  // let enrolled
+  // const enrolledResult = await checkIfEnrolledQuery({
+  //   client: clientWithHeaders(headers),
+  //   resourceId: resource.id,
+  // })
+  // console.log({ enrolledResult, headers })
+  // if (enrolledResult.error) {
+  //   console.log({ enrolledResultError: enrolledResult.message })
+  //   enrolled = false
+  // } else {
+  //   enrolled = enrolledResult
+  // }
 
   /**
-   * UserProgressList currentSection
+   * UserProgressList
+   * TODO: Figure out why cookies are not being sent from here
    **/
-  let completedSectionIds = []
-  if (enrolled) {
-    const userProgressResult = await getUserProgressByResourceId({
-      headers,
-      resourceId: resource.id,
-    })
-    if (userProgressResult.error) {
-      console.log({ userProgressError: userProgressResult.message })
-      return res.status(500).json({ message: userProgressResult.message })
-    }
-    completedSectionIds = userProgressResult
-  }
-  console.log({ completedSectionIds })
+  // let completedSectionIds = []
+  // if (enrolled) {
+  //   const userProgressResult = await getUserProgressByResourceId({
+  //     client: clientWithHeaders(headers),
+  //     resourceId: resource.id,
+  //   })
+  //   if (userProgressResult.error) {
+  //     console.log({ userProgressError: userProgressResult.message })
+  //     return res.status(500).json({ message: userProgressResult.message })
+  //   }
+  //   completedSectionIds = userProgressResult
+  // }
+  // console.log({ completedSectionIds })
 
   /**
    * completed currentSection
    **/
-  const completedCurrentSection = completedSectionIds.includes(
-    currentSection.id
-  )
+  // const completedCurrentSection = completedSectionIds.includes(
+  //   currentSection.id
+  // )
 
   return res.status(200).json({
     resource,
     sectionsMap,
     siblingSections,
     currentSection,
-    enrolled,
-    completedSectionIds,
-    completedCurrentSection,
+    // enrolled,
+    // completedSectionIds,
+    // completedCurrentSection,
   })
 }

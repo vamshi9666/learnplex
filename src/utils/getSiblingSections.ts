@@ -1,6 +1,14 @@
-import { client } from './urqlClient'
+import { Client } from '@urql/core'
 
-export async function getSiblingSections({ sectionId }: { sectionId: string }) {
+import { client as defaultClient } from './urqlClient'
+
+export async function getSiblingSections({
+  sectionId,
+  client = defaultClient,
+}: {
+  sectionId: string
+  client?: Client
+}) {
   const SIBLING_SECTIONS_QUERY = `
     query($sectionId: String!) {
       siblingSections(sectionId: $sectionId) {

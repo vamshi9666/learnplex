@@ -1,8 +1,15 @@
 import NProgress from 'nprogress'
+import { Client } from '@urql/core'
 
-import { client } from './urqlClient'
+import { client as defaultClient } from './urqlClient'
 
-export async function completeSection({ sectionId }: { sectionId: string }) {
+export async function completeSection({
+  client = defaultClient,
+  sectionId,
+}: {
+  client?: Client
+  sectionId: string
+}) {
   console.log({ sectionId })
   const COMPLETE_SECTION_MUTATION = `
     mutation($sectionId: String!) {

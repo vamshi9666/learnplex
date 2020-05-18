@@ -1,11 +1,13 @@
-import { clientWithHeaders } from './urqlClient'
+import { Client } from '@urql/core'
+
+import { client as defaultClient } from './urqlClient'
 import { Section } from '../graphql/types'
 
 export async function getUserProgressByResourceId({
-  headers,
+  client = defaultClient,
   resourceId,
 }: {
-  headers: any
+  client?: Client
   resourceId: string
 }) {
   const USER_PROGRESS_BY_RESOURCE_ID_QUERY = `
@@ -18,7 +20,7 @@ export async function getUserProgressByResourceId({
       }
     }
   `
-  const result = await clientWithHeaders(headers)
+  const result = await client
     .query(USER_PROGRESS_BY_RESOURCE_ID_QUERY, {
       resourceId,
     })

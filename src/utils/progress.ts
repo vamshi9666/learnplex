@@ -1,18 +1,20 @@
-import { clientWithHeaders } from './urqlClient'
+import { Client } from '@urql/core'
+
+import { client as defaultClient } from './urqlClient'
 
 export async function checkIfEnrolledQuery({
-  headers,
   resourceId,
+  client = defaultClient,
 }: {
-  headers: any
   resourceId: string
+  client?: Client
 }) {
   const HAS_ENROLLED_QUERY = `
     query($resourceId: String!) {
       hasEnrolledByResourceId(resourceId: $resourceId)
     }
   `
-  const result = await clientWithHeaders(headers)
+  const result = await client
     .query(HAS_ENROLLED_QUERY, {
       resourceId,
     })
@@ -26,11 +28,11 @@ export async function checkIfEnrolledQuery({
 }
 
 export async function hasCompletedCurrentSection({
-  headers,
+  client = defaultClient,
   resourceId,
   sectionId,
 }: {
-  headers: any
+  client?: Client
   resourceId: string
   sectionId: string
 }) {
@@ -39,7 +41,7 @@ export async function hasCompletedCurrentSection({
       hasCompletedSection(resourceId: $resourceId, sectionId: $sectionId)
     }
   `
-  const result = await clientWithHeaders(headers)
+  const result = await client
     .query(HAS_COMPLETED_SECTION, {
       resourceId,
       sectionId,

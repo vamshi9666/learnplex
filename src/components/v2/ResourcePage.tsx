@@ -1,5 +1,5 @@
 import { Button, Col, Grid, Row, Skeleton, Typography } from 'antd'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
@@ -18,6 +18,8 @@ import InternalServerError from '../result/InternalServerError'
 import { Resource, Section } from '../../graphql/types'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { completeSection } from '../../utils/completeSection'
+import { checkIfEnrolledQuery } from '../../utils/progress'
+import { getUserProgressByResourceId } from '../../utils/getUserProgressByResourceId'
 
 interface Props {
   inEditMode: boolean
@@ -45,15 +47,61 @@ export default function ResourcePageV2({
   const { xs } = Grid.useBreakpoint()
   const { user } = useContext(UserContext)
 
+  /**
+   * Temporary fix, after figuring out why cookies are not being sent in /api,
+   * remove the following useEffect, and get enrolled status directly from /api
+   **/
+  const [enrolled, setEnrolled] = useState(false)
+  useEffect(() => {
+    if (data?.resource?.id) {
+      checkIfEnrolledQuery({
+        resourceId: data.resource.id,
+      }).then((enrolledResult) => {
+        if (enrolledResult.error) {
+          console.log({ enrolledResultError: enrolledResult.message })
+          setEnrolled(false)
+        } else {
+          setEnrolled(enrolledResult)
+        }
+      })
+    }
+  }, [data?.resource?.id])
+
+  /**
+   * Temporary fix, after figuring out why cookies are not being sent in /api,
+   * remove the following useEffect, and get completedSectionIds directly from /api
+   **/
+  const [completedSectionIds, setCompletedSectionIds] = useState([] as string[])
+  useEffect(() => {
+    if (enrolled && data?.resource?.id) {
+      getUserProgressByResourceId({
+        resourceId: data.resource.id,
+      }).then((userProgressResult) => {
+        if (userProgressResult.error) {
+          console.log({ userProgressError: userProgressResult.message })
+        } else {
+          setCompletedSectionIds(userProgressResult)
+        }
+      })
+    }
+  }, [data?.resource?.id, enrolled])
+
   if (error) return <InternalServerError message={error.message} />
   if (!data) return <Skeleton active={true} />
 
   const sectionsMap: Record<string, Section> = data.sectionsMap
   const currentSection: Section = data.currentSection
   const resource: Resource = data.resource
-  const enrolled: boolean = data.enrolled
-  const completedCurrentSection: boolean = data.completedCurrentSection
-  const completedSectionIds = data.completedSectionIds
+  // const enrolled: boolean = data.enrolled
+  // const completedCurrentSection: boolean = data.completedCurrentSection
+  /**
+   * Temporary fix, after figuring out why cookies are not being sent in /api,
+   * remove the following useEffect, and get completedCurrentSection directly from /api
+   **/
+  const completedCurrentSection = completedSectionIds.includes(
+    currentSection.id
+  )
+  // const completedSectionIds = data.completedSectionIds
   const ownerUsername = resource.user.username
   const currentSections: Section[] = data.siblingSections
 

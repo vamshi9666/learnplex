@@ -1,8 +1,12 @@
-import { client } from './urqlClient'
+import { Client } from '@urql/core'
+
+import { client as defaultClient } from './urqlClient'
 
 export async function getPrimaryResourceBySlug({
+  client = defaultClient,
   resourceSlug,
 }: {
+  client?: Client
   resourceSlug: string
 }) {
   const PRIMARY_RESOURCE_BY_SLUG = `

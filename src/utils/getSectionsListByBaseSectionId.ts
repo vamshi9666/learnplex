@@ -1,10 +1,14 @@
-import { client } from './urqlClient'
+import { Client } from '@urql/core'
+
+import { client as defaultClient } from './urqlClient'
 import { Section } from '../graphql/types'
 
 export default async function getSectionsListByBaseSectionId({
   baseSectionId,
+  client = defaultClient,
 }: {
   baseSectionId: string
+  client?: Client
 }) {
   const SECTIONS_LIST_BY_BASE_SECTION_ID = `
     query($baseSectionId: String!) {
