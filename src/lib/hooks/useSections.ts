@@ -168,6 +168,7 @@ export function useSections({
         sections {
           id
           order
+          slug
         }
         parentSection {
           id

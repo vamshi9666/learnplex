@@ -24,7 +24,7 @@ export function useUser() {
     query: ME_QUERY,
   })
   const renders = useRef(0)
-  console.log('useUser called ', renders.current++)
+  // console.log('useUser called ', renders.current++)
   useEffect(() => {
     reExecuteMeQuery()
   }, [accessToken, reExecuteMeQuery])

@@ -44,7 +44,7 @@ export default function SectionItemForm({
   const [editing, setEditing] = useState(false)
 
   const renders = useRef(0)
-  console.log(`renders: ${renders.current++}`)
+  // console.log(`renders: ${renders.current++}`)
 
   const handleTitleChange = ({ e, section }: { e: any; section: Section }) => {
     console.log(e.target.value)

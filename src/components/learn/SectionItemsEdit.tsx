@@ -54,7 +54,6 @@ export default function SectionItemsEdit({
       parentSectionId: parentSection.id,
       sections: sortedSections,
     })
-    await populateSlugsForResource({ resourceId })
     NProgress.done()
   }
 
