@@ -8,7 +8,7 @@ export default function SiteLayout({ children }: { children: any }) {
   return (
     <>
       <Layout className={'mh-100vh'}>
-        <Layout.Header className={'mb-3'}>
+        <Layout.Header className={'mb-3 pl-0'}>
           <Header />
         </Layout.Header>
         <br />
