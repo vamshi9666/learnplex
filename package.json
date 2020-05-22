@@ -60,7 +60,7 @@
     "react-keyboard-event-handler": "1.5.4",
     "react-markdown-editor-lite": "1.1.2",
     "slugify": "1.4.0",
-    "swr": "0.2.1",
+    "swr": "0.2.2",
     "url-join": "4.0.1",
     "urql": "1.9.7"
   },
