@@ -261,6 +261,7 @@ export type Mutation = {
   completeSection?: Maybe<Progress>
   updateResourceDescription: Resource
   updateResourceTitle: Resource
+  updateResourceSlug: Resource
   searchResources: Array<Resource>
   updateUser: Scalars['Boolean']
   updatePassword: Scalars['Boolean']
@@ -365,6 +366,11 @@ export type MutationUpdateResourceTitleArgs = {
   resourceSlug: Scalars['String']
 }
 
+export type MutationUpdateResourceSlugArgs = {
+  updatedSlug: Scalars['String']
+  resourceId: Scalars['String']
+}
+
 export type MutationSearchResourcesArgs = {
   value: Scalars['String']
 }
@@ -409,6 +415,7 @@ export type CreateResourceInput = {
   title: Scalars['String']
   topicId: Scalars['String']
   description: Scalars['String']
+  slug: Scalars['String']
 }
 
 export type AddSectionInput = {

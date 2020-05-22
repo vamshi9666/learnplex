@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { Col, Row, Skeleton, Typography, Grid } from 'antd'
@@ -15,8 +15,6 @@ import {
   SIDEBAR_COL_LAYOUT,
 } from '../../../../../constants'
 import { UserContext } from '../../../../../lib/contexts/UserContext'
-import { titleCase } from '../../../../../utils/titleCase'
-import { populateSlugsForResource } from '../../../../../utils/populateSlugs'
 
 export default function EditResourceIndex() {
   const router = useRouter()
@@ -54,12 +52,24 @@ export default function EditResourceIndex() {
     }
   `
 
+  const UPDATE_RESOURCE_SLUG_MUTATION = `
+    mutation($resourceId: String!, $updatedSlug: String!) {
+      updateResourceSlug(resourceId: $resourceId, updatedSlug: $updatedSlug) {
+        id
+        title
+        slug
+        description
+      }
+    }
+  `
+
   const [, updateDescriptionMutation] = useMutation(
     UPDATE_RESOURCE_DESCRIPTION_MUTATION
   )
   const [, updateTitleMutation] = useMutation(UPDATE_RESOURCE_TITLE_MUTATION)
+  const [, updateSlugMutation] = useMutation(UPDATE_RESOURCE_SLUG_MUTATION)
 
-  const [{ data, fetching }, reExecuteQuery] = useQuery({
+  const [{ data, fetching }, reExecuteResourceQuery] = useQuery({
     query: RESOURCE_QUERY,
     variables: {
       username,
@@ -72,11 +82,17 @@ export default function EditResourceIndex() {
     sectionsMap,
     body,
     resourceTitle,
+    resourceId,
     resourceDescription,
   } = useSections({
     resourceSlug,
     username,
   })
+
+  useEffect(() => {
+    reExecuteResourceQuery()
+  }, [reExecuteResourceQuery, resourceSlug, username])
+  console.log({ data })
 
   const { user } = useContext(UserContext)
 
@@ -95,7 +111,8 @@ export default function EditResourceIndex() {
         console.log({ updateDescriptionError: result.error })
       } else {
         console.log({ result })
-        reExecuteQuery()
+        reExecuteResourceQuery()
+        console.log({ data })
       }
     })
     NProgress.done()
@@ -111,15 +128,29 @@ export default function EditResourceIndex() {
         console.log({ updateTitleError: result.error })
       } else {
         console.log({ result })
-        const slug = result.data.updateResourceTitle.slug
-        if (slug !== data.resource.slug) {
-          await populateSlugsForResource({ resourceId: data.resource.id })
-          await router.push(
-            `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${slug}`,
-            `/${username}/learn/edit/${slug}/resource-index`,
-            { shallow: true }
-          )
-        }
+        reExecuteResourceQuery()
+      }
+    })
+    NProgress.done()
+  }
+
+  const updateSlug = (value: string) => {
+    NProgress.start()
+    if (value === resourceSlug) {
+      NProgress.done()
+      return
+    }
+    updateSlugMutation({
+      resourceId,
+      updatedSlug: value,
+    }).then(async (result) => {
+      if (result.error) {
+        console.log({ updateSlugError: result.error })
+      } else {
+        console.log({ result })
+        const slug = result.data.updateResourceSlug.slug
+        await router.push(`/${username}/learn/edit/${slug}/resource-index`)
+        reExecuteResourceQuery()
       }
     })
     NProgress.done()
@@ -153,15 +184,22 @@ export default function EditResourceIndex() {
                   onChange: (value) => updateTitle(value),
                 }}
               >
-                {titleCase(resourceSlug)}
+                {data?.resource?.title ?? ''}
               </Typography.Title>
+              <Typography.Text
+                editable={{
+                  onChange: (value) => updateSlug(value),
+                }}
+              >
+                {data?.resource?.slug ?? ''}
+              </Typography.Text>
               <Typography.Paragraph
                 ellipsis={{ rows: 3, expandable: true }}
                 editable={{
                   onChange: (value) => updateDescription(value),
                 }}
               >
-                {data.resource.description}
+                {data?.resource?.description ?? ''}
               </Typography.Paragraph>
             </Typography>
 

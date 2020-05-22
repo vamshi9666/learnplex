@@ -7,7 +7,7 @@ import {
   Skeleton,
   message,
 } from 'antd'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   CheckCircleOutlined,
   CheckCircleTwoTone,
@@ -43,7 +43,7 @@ export default function SectionItemForm({
   } = useSections({ resourceSlug, username })
   const [editing, setEditing] = useState(false)
 
-  const renders = useRef(0)
+  // const renders = useRef(0)
   // console.log(`renders: ${renders.current++}`)
 
   const handleTitleChange = ({ e, section }: { e: any; section: Section }) => {

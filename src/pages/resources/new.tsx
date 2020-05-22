@@ -6,7 +6,6 @@ import NProgress from 'nprogress'
 
 import { SEO } from '../../components/SEO'
 import { Resource, Topic } from '../../graphql/types'
-import { slug } from '../../utils/slug'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
@@ -61,13 +60,20 @@ export default function CreateResource() {
     query: TOPICS_QUERY,
   })
 
-  const onFinish = async ({ title, topic: topicId, description }: any) => {
+  const onFinish = async ({
+    title,
+    topic: topicId,
+    description,
+    slug,
+  }: any) => {
+    console.log({ title, topicId, description, slug })
     NProgress.start()
     createResource({
       data: {
         title,
         topicId,
         description,
+        slug,
       },
     }).then((result) => {
       if (result.error) {
@@ -98,20 +104,6 @@ export default function CreateResource() {
           name={'title'}
           rules={[
             { required: true, message: 'Please enter the new resource title!' },
-            () => ({
-              validator(rule, value) {
-                if (!value) {
-                  return Promise.resolve()
-                }
-                const slugs = resourcesData.resources.map(
-                  (resource: Resource) => resource.slug
-                )
-                if (slugs.includes(slug(value))) {
-                  return Promise.reject('Resource already exists!')
-                }
-                return Promise.resolve()
-              },
-            }),
           ]}
         >
           <Input />
@@ -125,6 +117,30 @@ export default function CreateResource() {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          label={'Unique Custom Slug'}
+          name={'slug'}
+          rules={[
+            { required: true },
+            () => ({
+              validator(rule, value) {
+                if (!value) {
+                  return Promise.resolve()
+                }
+                const slugs = resourcesData.resources.map(
+                  (resource: Resource) => resource.slug
+                )
+                if (slugs.includes(value)) {
+                  return Promise.reject('Slug already taken!')
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item
