@@ -189,7 +189,7 @@ export default function ResourceCards({
         danger={resource.published}
         onClick={(e) => togglePublish({ resourceId: resource.id, e })}
       >
-        {resource.published ? 'Un Publish' : 'Publish'}
+        {resource.published ? 'Unpublish' : 'Publish'}
       </Button>,
       <Button
         type={resource.verified ? 'default' : 'primary'}
@@ -213,7 +213,7 @@ export default function ResourceCards({
           danger={resource.published}
           onClick={(e) => togglePublish({ resourceId: resource.id, e })}
         >
-          {resource.published ? 'Un Publish' : 'Publish'}
+          {resource.published ? 'Unpublish' : 'Publish'}
         </Button>
       )
     }
