@@ -110,7 +110,15 @@ export default function CreateResource() {
         </Form.Item>
 
         <Form.Item name={'topic'} label={'Topic'} rules={[{ required: true }]}>
-          <Select placeholder={'Select a topic for the resource'}>
+          <Select
+            showSearch
+            placeholder={'Select a topic for the resource'}
+            filterOption={(input, option) =>
+              option?.props.children
+                .toLowerCase()
+                .indexOf(input.toLowerCase()) >= 0
+            }
+          >
             {topicsData.topics.map((topic: Topic) => (
               <Select.Option key={topic.id} value={topic.id}>
                 {topic.title}
