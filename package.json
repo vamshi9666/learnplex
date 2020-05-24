@@ -27,7 +27,7 @@
     "@ant-design/icons": "4.1.0",
     "@next/bundle-analyzer": "9.4.2",
     "@zeit/next-less": "1.0.1",
-    "antd": "4.2.4",
+    "antd": "4.2.5",
     "antd-dayjs-webpack-plugin": "1.0.0",
     "babel-plugin-import": "1.13.0",
     "cookie": "0.4.1",
