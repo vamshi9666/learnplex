@@ -4,7 +4,7 @@ import { DownOutlined, RightOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 
 import SectionItemsV2 from './SectionItems'
-import { Section } from '../../graphql/types'
+import { Section } from '../../../graphql/types'
 
 interface Props {
   sectionId: string

@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react'
 import { Button, Form, Input, message, Modal, Typography } from 'antd'
 import { FileMarkdownOutlined } from '@ant-design/icons'
 
-import { SectionsContext } from '../../../lib/contexts/SectionsContext'
-import { Section } from '../../../graphql/types'
-import { slug } from '../../../utils/slug'
-import { addSection as addSectionInDB } from '../../../utils/addSection'
+import { SectionsContext } from '../../../../lib/contexts/SectionsContext'
+import { Section } from '../../../../graphql/types'
+import { slug } from '../../../../utils/slug'
+import { addSection as addSectionInDB } from '../../../../utils/addSection'
 
 interface Props {
   visible: boolean

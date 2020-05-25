@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Skeleton } from 'antd'
 import useSWR from 'swr'
 
-import EditResourcePageV2 from '../../../../components/v2/edit/EditResourcePageV2'
+import EditResourcePageV2 from '../../../../components/learn/v2/edit/EditResourcePageV2'
 import { fetcher } from '../../../../utils/fetcher'
 import InternalServerError from '../../../../components/result/InternalServerError'
 import { UserContext } from '../../../../lib/contexts/UserContext'

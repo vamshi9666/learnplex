@@ -9,14 +9,14 @@ import {
 } from '@ant-design/icons'
 import NProgress from 'nprogress'
 
-import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
+import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../constants'
 import SidebarV2 from './Sidebar'
-import customMdParser from '../learn/Editor/lib/customMdParser'
-import { Resource, Section } from '../../graphql/types'
-import { UserContext } from '../../lib/contexts/UserContext'
-import { completeSection } from '../../utils/completeSection'
-import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
-import { getUserProgressByResourceId } from '../../utils/getUserProgressByResourceId'
+import customMdParser from '../Editor/lib/customMdParser'
+import { Resource, Section } from '../../../graphql/types'
+import { UserContext } from '../../../lib/contexts/UserContext'
+import { completeSection } from '../../../utils/completeSection'
+import { checkIfEnrolledQuery, startProgress } from '../../../utils/progress'
+import { getUserProgressByResourceId } from '../../../utils/getUserProgressByResourceId'
 
 interface Props {
   slugs: string[]

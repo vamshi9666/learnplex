@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { Section } from '../../../graphql/types'
-import { SectionsContext } from '../../../lib/contexts/SectionsContext'
+import { Section } from '../../../../graphql/types'
+import { SectionsContext } from '../../../../lib/contexts/SectionsContext'
 import EditSectionItemsV2 from './EditSectionItemsV2'
 
 interface Props {

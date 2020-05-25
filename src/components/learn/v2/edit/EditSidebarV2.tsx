@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 
-import { Section } from '../../../graphql/types'
+import { Section } from '../../../../graphql/types'
 
 interface Props {
   resourceSlug: string

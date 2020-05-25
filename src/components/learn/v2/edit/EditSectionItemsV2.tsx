@@ -8,10 +8,10 @@ import {
 } from 'react-beautiful-dnd'
 
 import EditSectionItemV2 from './EditSectionItemV2'
-import { Section } from '../../../graphql/types'
+import { Section } from '../../../../graphql/types'
 import NewSectionV2 from './NewSectionV2'
-import { reorderSections as reorderSectionsInDB } from '../../../utils/reorderSections'
-import { SectionsContext } from '../../../lib/contexts/SectionsContext'
+import { reorderSections as reorderSectionsInDB } from '../../../../utils/reorderSections'
+import { SectionsContext } from '../../../../lib/contexts/SectionsContext'
 
 interface Props {
   sections: Section[]

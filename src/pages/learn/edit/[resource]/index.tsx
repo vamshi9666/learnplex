@@ -10,11 +10,11 @@ import NotAuthorized from '../../../../components/result/NotAuthorized'
 import NotAuthenticated from '../../../../components/result/NotAuthenticated'
 import { SEO } from '../../../../components/SEO'
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../../constants'
-import EditResourceIndexV2 from '../../../../components/v2/edit/EditResourceIndexV2'
+import EditResourceIndexV2 from '../../../../components/learn/v2/edit/EditResourceIndexV2'
 import { updateResourceTitle as updateResourceTitleInDB } from '../../../../utils/updateResourceTitle'
 import { updateResourceDescription as updateResourceDescriptionInDB } from '../../../../utils/updateResourceDescription'
 import { updateResourceSlug as updateResourceSlugInDB } from '../../../../utils/updateResourceSlug'
-import EditSidebarV2 from '../../../../components/v2/edit/EditSidebarV2'
+import EditSidebarV2 from '../../../../components/learn/v2/edit/EditSidebarV2'
 
 export default function EditResourceIndexPageV2() {
   const router = useRouter()

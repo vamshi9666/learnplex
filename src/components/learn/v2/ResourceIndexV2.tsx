@@ -3,11 +3,11 @@ import { Button, Col, Row, Tooltip, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 
-import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../constants'
+import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../../constants'
 import SectionItemsV2 from './SectionItems'
-import { UserContext } from '../../lib/contexts/UserContext'
-import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
-import { Resource, Section } from '../../graphql/types'
+import { UserContext } from '../../../lib/contexts/UserContext'
+import { checkIfEnrolledQuery, startProgress } from '../../../utils/progress'
+import { Resource, Section } from '../../../graphql/types'
 
 interface Props {
   resource: Resource

@@ -2,7 +2,7 @@ import { Timeline } from 'antd'
 import React from 'react'
 import SectionItemV2 from './SectionItem'
 
-import { Section } from '../../graphql/types'
+import { Section } from '../../../graphql/types'
 
 interface Props {
   sections: Section[]

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Breadcrumb, Grid, Menu, Typography } from 'antd'
 import { useRouter } from 'next/router'
 
-import { Section } from '../../graphql/types'
-import { titleCase } from '../../utils/titleCase'
+import { Section } from '../../../graphql/types'
+import { titleCase } from '../../../utils/titleCase'
 import SidebarMenuItemV2 from './SidebarMenuItem'
 
 export interface ClickParam {

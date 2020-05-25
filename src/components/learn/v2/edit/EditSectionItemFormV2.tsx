@@ -8,11 +8,11 @@ import {
 } from '@ant-design/icons'
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
-import { slug } from '../../../utils/slug'
-import { updateSectionTitle as updateSectionTitleInDB } from '../../../utils/updateSectionTitle'
-import { SectionsContext } from '../../../lib/contexts/SectionsContext'
-import { Section } from '../../../graphql/types'
-import { deleteSection as deleteSectionInDB } from '../../../utils/deleteSection'
+import { slug } from '../../../../utils/slug'
+import { updateSectionTitle as updateSectionTitleInDB } from '../../../../utils/updateSectionTitle'
+import { SectionsContext } from '../../../../lib/contexts/SectionsContext'
+import { Section } from '../../../../graphql/types'
+import { deleteSection as deleteSectionInDB } from '../../../../utils/deleteSection'
 
 interface Props {
   currentSectionId: string

@@ -9,12 +9,12 @@ import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import NProgress from 'nprogress'
 
-import { updateSectionTitle as updateSectionTitleInDB } from '../../../utils/updateSectionTitle'
-import { Section } from '../../../graphql/types'
-import customMdParser from '../../learn/Editor/lib/customMdParser'
-import CustomKeyboardEventHandler from '../../learn/Editor/CustomKeyboardEventHandler'
-import { savePageContent as savePageContentInDB } from '../../../utils/savePageContent'
-import usePreventRouteChangeIf from '../../../lib/hooks/usePreventRouteChangeIf'
+import { updateSectionTitle as updateSectionTitleInDB } from '../../../../../utils/updateSectionTitle'
+import { Section } from '../../../../../graphql/types'
+import customMdParser from '../../../Editor/lib/customMdParser'
+import CustomKeyboardEventHandler from '../../../Editor/CustomKeyboardEventHandler'
+import { savePageContent as savePageContentInDB } from '../../../../../utils/savePageContent'
+import usePreventRouteChangeIf from '../../../../../lib/hooks/usePreventRouteChangeIf'
 
 interface Props {
   currentSection: Section
@@ -81,7 +81,8 @@ export default function CustomEditorV2({
     )
   }
 
-  const isSaved = () => currentSection.page?.content === editorState
+  const isSaved = () =>
+    !currentSection.page || currentSection.page?.content === editorState
 
   const handleWindowClose = (e: any) => {
     if (!isSaved()) {

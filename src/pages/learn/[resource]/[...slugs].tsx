@@ -3,7 +3,7 @@ import React from 'react'
 import useSWR from 'swr'
 import { Skeleton } from 'antd'
 
-import ResourcePageV2 from '../../../components/v2/ResourcePageV2'
+import ResourcePageV2 from '../../../components/learn/v2/ResourcePageV2'
 import { SEO } from '../../../components/SEO'
 import { fetcher } from '../../../utils/fetcher'
 import InternalServerError from '../../../components/result/InternalServerError'

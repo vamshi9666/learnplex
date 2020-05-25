@@ -2,11 +2,11 @@ import { useRouter } from 'next/router'
 import { Button, Col, Grid, message, Popconfirm, Row } from 'antd'
 import React from 'react'
 
-import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../constants'
+import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../../../constants'
 import EditSidebarV2 from './EditSidebarV2'
-import CustomEditorV2 from '../editor/CustomEditorV2'
-import { deleteSection as deleteSectionInDB } from '../../../utils/deleteSection'
-import { Resource, Section } from '../../../graphql/types'
+import CustomEditorV2 from './editor/CustomEditorV2'
+import { deleteSection as deleteSectionInDB } from '../../../../utils/deleteSection'
+import { Resource, Section } from '../../../../graphql/types'
 
 interface Props {
   resource: Resource

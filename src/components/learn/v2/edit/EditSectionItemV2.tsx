@@ -5,7 +5,7 @@ import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd'
 
 import EditSectionItemsV2 from './EditSectionItemsV2'
 import EditSectionItemFormV2 from './EditSectionItemFormV2'
-import { SectionsContext } from '../../../lib/contexts/SectionsContext'
+import { SectionsContext } from '../../../../lib/contexts/SectionsContext'
 
 interface Props {
   currentSectionId: string
