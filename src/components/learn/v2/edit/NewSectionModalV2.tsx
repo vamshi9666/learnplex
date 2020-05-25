@@ -101,28 +101,32 @@ export default function NewSectionModalV2({
             }
           }}
         >
-          <Form.Item
-            name={'title'}
-            label={'Title'}
-            rules={[
-              { required: true },
-              () => ({
-                validator(rule, value) {
-                  const slugs = parentSection.sections
-                    .map((section: Section) => sectionsMap[section.id])
-                    .map((section: Section) => section.slug)
-                  if (slugs.includes(slug(value))) {
-                    return Promise.reject(
-                      'A section with this title already exists'
-                    )
-                  }
-                  return Promise.resolve()
-                },
-              }),
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          {visible ? (
+            <Form.Item
+              name={'title'}
+              label={'Title'}
+              rules={[
+                { required: true },
+                () => ({
+                  validator(rule, value) {
+                    const slugs = parentSection.sections
+                      .map((section: Section) => sectionsMap[section.id])
+                      .map((section: Section) => section.slug)
+                    if (slugs.includes(slug(value))) {
+                      return Promise.reject(
+                        'A section with this title already exists'
+                      )
+                    }
+                    return Promise.resolve()
+                  },
+                }),
+              ]}
+            >
+              <Input autoFocus />
+            </Form.Item>
+          ) : (
+            ''
+          )}
           {!showContentBox && (
             <Form.Item {...FORM_TAIL_LAYOUT_LOCAL}>
               <Button
@@ -165,6 +169,7 @@ export default function NewSectionModalV2({
               }
             >
               <Input.TextArea
+                autoFocus
                 autoSize={{
                   minRows: 3,
                   maxRows: 10,
