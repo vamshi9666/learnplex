@@ -49,7 +49,9 @@ export default function EditSectionItemsV2({
   }
 
   return (
-    <Timeline className={`timeline-bg ${topLevel ? 'p-5' : ''}`}>
+    <Timeline
+      className={`edit-resource-timeline timeline-bg ${topLevel ? 'p-5' : ''}`}
+    >
       <DragDropContext onDragEnd={(result) => reorderSections({ result })}>
         <Droppable droppableId={`droppable-${parentSectionId}`}>
           {(provided) => (

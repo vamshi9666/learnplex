@@ -45,18 +45,13 @@ export default function ResourceIndexV2({ resource, sectionsMap }: Props) {
   const isLoggedIn = !!user
 
   const startLearning = async () => {
-    console.log({ resource })
-    if (resource?.id) {
-      console.log('here')
-      NProgress.start()
-      const result = await startProgress({
-        resourceId: resource.id,
-      })
-      console.log({ result })
-      console.log(`${router.asPath}${result.resource.firstPageSlugsPath}`)
-      await router.push(`${router.asPath}${result.resource.firstPageSlugsPath}`)
-      NProgress.done()
-    }
+    NProgress.start()
+    const result = await startProgress({
+      resourceId: resource.id,
+    })
+    console.log({ result })
+    await router.push(`${router.asPath}${result.resource.firstPageSlugsPath}`)
+    NProgress.done()
   }
 
   return (
