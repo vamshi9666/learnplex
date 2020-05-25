@@ -16,7 +16,7 @@ import { initGA, logPageView } from '../utils/analytics'
 import { getSiteLayout } from '../components/layouts/SiteLayout'
 import { UserContext } from '../lib/contexts/UserContext'
 import { User } from '../graphql/types'
-import { useUser } from '../lib/hooks/useUser'
+import getLoggedInUser from '../utils/getLoggedInUser'
 
 Router.events.on('routeChangeStart', (url) => {
   console.log(`Loading: ${url}`)
@@ -44,13 +44,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     Router.events.on('routeChangeComplete', logPageView)
   }, [])
 
-  const { user: fetchedUser, fetching, error } = useUser()
-
   useEffect(() => {
-    if (!fetching && !error) {
-      setUser(fetchedUser)
-    }
-  }, [error, fetchedUser, fetching])
+    getLoggedInUser().then((result) => {
+      if (!result.error) {
+        setUser(result.user)
+      }
+    })
+  }, [])
 
   const getLayout = (Component as any).getLayout || getSiteLayout
 
