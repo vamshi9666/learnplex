@@ -128,7 +128,7 @@ export default function CreateResource() {
         </Form.Item>
 
         <Form.Item
-          label={'Unique Custom Slug'}
+          label={'Url'}
           name={'slug'}
           rules={[
             { required: true },
@@ -141,14 +141,14 @@ export default function CreateResource() {
                   (resource: Resource) => resource.slug
                 )
                 if (slugs.includes(value)) {
-                  return Promise.reject('Slug already taken!')
+                  return Promise.reject('Url already taken!')
                 }
                 return Promise.resolve()
               },
             }),
           ]}
         >
-          <Input />
+          <Input addonBefore={'https://coderplex.in/learn/'} />
         </Form.Item>
 
         <Form.Item
