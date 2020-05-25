@@ -3,17 +3,16 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import getSectionsListByBaseSectionId, {
   getSectionsMapFromSectionsList,
 } from '../../utils/getSectionsListByBaseSectionId'
-import { getResource } from '../../utils/getResourceForApi'
+import { getResourceBySlug } from '../../utils/getResourceBySlug'
 
 export default async (
-  { headers, cookies, query: { username, resourceSlug } }: NextApiRequest,
+  { headers, cookies, query: { resourceSlug } }: NextApiRequest,
   res: NextApiResponse
 ) => {
   /**
    * Resource
    **/
-  const resourceResult = await getResource({
-    username: username as string,
+  const resourceResult = await getResourceBySlug({
     resourceSlug: resourceSlug as string,
   })
   if (resourceResult.error) {

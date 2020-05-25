@@ -13,19 +13,12 @@ import InternalServerError from '../result/InternalServerError'
 import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
 
 interface Props {
-  username?: string
   resourceSlug: string
 }
 
-export default function ResourceIndexV2({
-  username = '',
-  resourceSlug,
-}: Props) {
+export default function ResourceIndexV2({ resourceSlug }: Props) {
   const router = useRouter()
-  const url = !!username
-    ? `/api/resource?username=${username}&resourceSlug=${resourceSlug}`
-    : `/api/resource?resourceSlug=${resourceSlug}`
-  console.log({ url })
+  const url = `/api/resource?resourceSlug=${resourceSlug}`
   const { data, error } = useSWR(url, fetcher)
   const { user } = useContext(UserContext)
 
@@ -47,6 +40,7 @@ export default function ResourceIndexV2({
         }
       })
     }
+    // eslint-disable-next-line
   }, [data?.resource?.id])
 
   if (error) {

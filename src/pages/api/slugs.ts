@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { Section } from '../../graphql/types'
 import { client } from '../../utils/urqlClient'
-import { getResource } from '../../utils/getResourceForApi'
 import { getSiblingSections } from '../../utils/getSiblingSections'
-import { getSectionsMapFromSectionsList } from '../../utils/getSectionsListByBaseSectionId'
+import getSectionsListByBaseSectionId, {
+  getSectionsMapFromSectionsList,
+} from '../../utils/getSectionsListByBaseSectionId'
+import { getResourceBySlug } from '../../utils/getResourceBySlug'
 
 async function getSectionBySlugsPathAndBaseSectionId({
   slugsPath,
@@ -24,6 +26,7 @@ async function getSectionBySlugsPathAndBaseSectionId({
         previousSectionPath
         nextSectionPath
         isPage
+        pathWithSectionIds
       }
     }
   `
@@ -47,7 +50,7 @@ export default async (
   {
     headers,
     cookies,
-    query: { username, resourceSlug, slugsPath },
+    query: { resourceSlug, slugsPath, editMode },
   }: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -55,8 +58,7 @@ export default async (
   /**
    * Resource
    **/
-  const resourceResult = await getResource({
-    username: username as string,
+  const resourceResult = await getResourceBySlug({
     resourceSlug: resourceSlug as string,
   })
   if (resourceResult.error) {
@@ -79,24 +81,37 @@ export default async (
   currentSection = sectionResult
   console.log({ currentSection })
 
-  /**
-   * sibling sections
-   **/
-  const siblingSectionsResult = await getSiblingSections({
-    sectionId: currentSection.id,
-  })
-  if (siblingSectionsResult.error) {
-    console.log({ siblingSectionsResultError: siblingSectionsResult.message })
-    return res.status(500).json({ message: siblingSectionsResult.message })
+  let sections
+
+  if (editMode) {
+    const sectionsListResult = await getSectionsListByBaseSectionId({
+      baseSectionId: resource.baseSectionId,
+    })
+    if (sectionsListResult.error) {
+      console.log({ sectionsListResultError: sectionsListResult.message })
+      return res.status(500).json({ message: sectionsListResult.message })
+    }
+    sections = sectionsListResult
+  } else {
+    /**
+     * sibling sections
+     **/
+    const siblingSectionsResult = await getSiblingSections({
+      sectionId: currentSection.id,
+    })
+    if (siblingSectionsResult.error) {
+      console.log({ siblingSectionsResultError: siblingSectionsResult.message })
+      return res.status(500).json({ message: siblingSectionsResult.message })
+    }
+    sections = siblingSectionsResult
   }
-  const siblingSections = siblingSectionsResult
 
   /**
    * sectionsMap
    **/
-  console.log({ siblingSections })
+  console.log({ sections })
   const sectionsMap = getSectionsMapFromSectionsList({
-    sectionsList: siblingSections,
+    sectionsList: sections,
   })
 
   /**
@@ -144,7 +159,7 @@ export default async (
   return res.status(200).json({
     resource,
     sectionsMap,
-    siblingSections,
+    sections,
     currentSection,
     // enrolled,
     // completedSectionIds,

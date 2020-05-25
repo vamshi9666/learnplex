@@ -2,16 +2,16 @@ import { Client } from '@urql/core'
 
 import { client as defaultClient } from './urqlClient'
 
-export async function getPrimaryResourceBySlug({
+export async function getResourceBySlug({
   client = defaultClient,
   resourceSlug,
 }: {
   client?: Client
   resourceSlug: string
 }) {
-  const PRIMARY_RESOURCE_BY_SLUG = `
+  const RESOURCE_BY_SLUG = `
     query($resourceSlug: String!) {
-      primaryResourceBySlug(resourceSlug: $resourceSlug) {
+      resourceBySlug(resourceSlug: $resourceSlug) {
         id
         title
         description
@@ -25,7 +25,7 @@ export async function getPrimaryResourceBySlug({
     }
   `
   const result = await client
-    .query(PRIMARY_RESOURCE_BY_SLUG, {
+    .query(RESOURCE_BY_SLUG, {
       resourceSlug,
     })
     .toPromise()
@@ -36,5 +36,5 @@ export async function getPrimaryResourceBySlug({
       message: result.error.message,
     }
   }
-  return result.data.primaryResourceBySlug
+  return result.data.resourceBySlug
 }

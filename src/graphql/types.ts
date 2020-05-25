@@ -19,6 +19,7 @@ export type Query = {
   topics: Array<Topic>
   resources: Array<Resource>
   primaryResourceBySlug: Resource
+  resourceBySlug: Resource
   resourcesByUsername: Array<Resource>
   resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
@@ -41,6 +42,10 @@ export type Query = {
 }
 
 export type QueryPrimaryResourceBySlugArgs = {
+  resourceSlug: Scalars['String']
+}
+
+export type QueryResourceBySlugArgs = {
   resourceSlug: Scalars['String']
 }
 
@@ -253,6 +258,7 @@ export type Mutation = {
   makePrimary: Resource
   togglePrimaryStatus: Resource
   updateSection: Section
+  updateSectionTitle: Section
   deleteSection: Scalars['Boolean']
   reorderSections: Section
   savePage: Section
@@ -330,6 +336,11 @@ export type MutationTogglePrimaryStatusArgs = {
 
 export type MutationUpdateSectionArgs = {
   data: UpdateSectionInput
+}
+
+export type MutationUpdateSectionTitleArgs = {
+  sectionId: Scalars['String']
+  title: Scalars['String']
 }
 
 export type MutationDeleteSectionArgs = {

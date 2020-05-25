@@ -1,107 +1,59 @@
-import React, { useContext } from 'react'
-import { Button, Menu, Skeleton, Affix } from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
+import { Button, Menu, Affix, message } from 'antd'
 import { useRouter } from 'next/router'
 import { EditOutlined, ImportOutlined } from '@ant-design/icons'
-import { useQuery } from 'urql'
 
-import { UserRole } from '../../../graphql/types'
+import { Resource, UserRole } from '../../../graphql/types'
 import { UserContext } from '../../../lib/contexts/UserContext'
+import { getResourceBySlug } from '../../../utils/getResourceBySlug'
 
 export default function Header() {
   const router = useRouter()
   const { user } = useContext(UserContext)
   const resourceSlug = router.query.resource as string
 
-  const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
-    query($resourceSlug: String!) {
-      primaryResourceBySlug(resourceSlug: $resourceSlug) {
-        user {
-          username
+  const [resource, setResource] = useState(null as Resource | null)
+
+  useEffect(() => {
+    if (resourceSlug) {
+      getResourceBySlug({
+        resourceSlug,
+      }).then((result) => {
+        if (result.error) {
+          message.error(result.message)
+        } else {
+          setResource(result)
         }
-        verified
-      }
+      })
     }
-  `
+  }, [resourceSlug])
 
-  const [{ data, fetching: resourceFetching }] = useQuery({
-    query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
-    variables: {
-      resourceSlug,
-    },
-    pause: !resourceSlug,
-    requestPolicy: 'network-only',
-  })
-
-  if (resourceFetching) return <Skeleton active={true} />
   const isLoggedIn = !!user
-  let username =
-    router.query.username ?? data?.primaryResourceBySlug?.user?.username ?? ''
+  let username = resource?.user?.username ?? ''
   const slugs = router.query.slugs as string[]
 
   const goToEditPage = async () => {
-    if (
-      router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
-      router.pathname === '/learn/[resource]/[...slugs]'
-    ) {
+    if (router.pathname === '/learn/[resource]') {
+      await router.push(`/learn/edit/${resourceSlug}`)
+    } else {
       const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
-      await router.push(
-        `/[username]/learn/edit/[resource]/slugs?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/edit/${resourceSlug}${slugsPath}`,
-        { shallow: true }
-      )
-    } else if (
-      router.pathname === '/[username]/learn/[resource]' ||
-      router.pathname === '/learn/[resource]'
-    ) {
-      await router.push(
-        `/[username]/learn/edit/[resource]/resource-index?username=${username}&resource=${resourceSlug}`,
-        `/${username}/learn/edit/${resourceSlug}/resource-index`,
-        { shallow: true }
-      )
+      await router.push(`/learn/edit/${resourceSlug}${slugsPath}`)
     }
   }
 
   const exitEditMode = async () => {
-    if (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]') {
+    if (router.pathname === '/learn/edit/[resource]') {
+      await router.push(`/learn/${resourceSlug}`)
+    } else {
       const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
-      if (data?.primaryResourceBySlug?.verified) {
-        await router.push(
-          `/learn/[resource]/[...slugs]?resource=${resourceSlug}&slugs=${slugs}`,
-          `/learn/${resourceSlug}${slugsPath}`,
-          { shallow: true }
-        )
-        return
-      }
-      await router.push(
-        `/[username]/learn/[resource]/[...slugs]?username=${username}&resource=${resourceSlug}&slugs=${slugs}`,
-        `/${username}/learn/${resourceSlug}${slugsPath}`,
-        { shallow: true }
-      )
-    } else if (
-      router.pathname === '/[username]/learn/edit/[resource]/resource-index'
-    ) {
-      if (data?.primaryResourceBySlug?.verified) {
-        await router.push(
-          `/learn/[resource]?resource=${resourceSlug}`,
-          `/learn/${resourceSlug}`,
-          { shallow: true }
-        )
-        return
-      }
-      await router.push(
-        `/[username]/learn/[resource]?username=${username}&resource=${resourceSlug}`,
-        `/${username}/learn/${resourceSlug}`,
-        { shallow: true }
-      )
+      await router.push(`/learn/${resourceSlug}${slugsPath}`)
     }
   }
 
   const showEditButton = () => {
     return (
       isLoggedIn &&
-      (router.pathname === '/[username]/learn/[resource]/[...slugs]' ||
-        router.pathname === '/[username]/learn/[resource]' ||
-        router.pathname === '/learn/[resource]' ||
+      (router.pathname === '/learn/[resource]' ||
         router.pathname === '/learn/[resource]/[...slugs]') &&
       username === user?.username
     )
@@ -110,9 +62,8 @@ export default function Header() {
   const showExitButton = () => {
     return (
       isLoggedIn &&
-      (router.pathname === '/[username]/learn/edit/[resource]/[...slugs]' ||
-        router.pathname ===
-          '/[username]/learn/edit/[resource]/resource-index') &&
+      (router.pathname === '/learn/edit/[resource]/[...slugs]' ||
+        router.pathname === '/learn/edit/[resource]') &&
       username === user?.username
     )
   }

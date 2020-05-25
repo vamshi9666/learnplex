@@ -19,10 +19,12 @@ export default async function getSectionsListByBaseSectionId({
         order
         slugsPath
         hasSubSections
+        isPage
         sections {
           id
           order
         }
+        parentSectionId
       }
     }
   `

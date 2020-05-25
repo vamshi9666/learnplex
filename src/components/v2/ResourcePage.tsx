@@ -25,7 +25,6 @@ import { getUserProgressByResourceId } from '../../utils/getUserProgressByResour
 interface Props {
   inEditMode: boolean
   slugs: string[]
-  username?: string
   resourceSlug: string
 }
 
@@ -36,14 +35,11 @@ let MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
 export default function ResourcePageV2({
   inEditMode,
   slugs,
-  username = '',
   resourceSlug,
 }: Props) {
   const router = useRouter()
   const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
-  const url = !!username
-    ? `/api/slugs?username=${username}&resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
-    : `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
+  const url = `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
   const { data, error } = useSWR(url, fetcher)
   const { xs } = Grid.useBreakpoint()
   const { user } = useContext(UserContext)
@@ -66,6 +62,7 @@ export default function ResourcePageV2({
         }
       })
     }
+    // eslint-disable-next-line
   }, [data?.resource?.id])
 
   /**
@@ -85,6 +82,7 @@ export default function ResourcePageV2({
         }
       })
     }
+    // eslint-disable-next-line
   }, [data?.resource?.id, enrolled])
 
   if (error) return <InternalServerError message={error.message} />
@@ -104,7 +102,7 @@ export default function ResourcePageV2({
   )
   // const completedSectionIds = data.completedSectionIds
   const ownerUsername = resource.user.username
-  const currentSections: Section[] = data.siblingSections
+  const currentSections: Section[] = data.sections
 
   const description =
     (currentSection.page?.content
@@ -112,21 +110,13 @@ export default function ResourcePageV2({
       : resource.description) ?? ''
 
   const goToPreviousSection = async () => {
-    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
     await router.push(
-      `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
-        currentSection.previousSectionPath
-      }`
+      `/learn/${resourceSlug}${currentSection.previousSectionPath}`
     )
   }
 
   const goToNextSection = async () => {
-    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
-    await router.push(
-      `/${isPrimary ? '' : ownerUsername + '/'}learn/${resourceSlug}${
-        currentSection.nextSectionPath
-      }`
-    )
+    await router.push(`/learn/${resourceSlug}${currentSection.nextSectionPath}`)
   }
 
   const startLearning = async () => {

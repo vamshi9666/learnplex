@@ -33,7 +33,7 @@ export default function EditResourceIndex() {
   `
   const UPDATE_RESOURCE_DESCRIPTION_MUTATION = `
     mutation($resourceSlug: String!, $description: String!) {
-      updateResourceDescription(resourceSlug: $resourceSlug, description: $description) {
+      updateResourceDescriptionOld(resourceSlug: $resourceSlug, description: $description) {
         id
         title
         slug
@@ -43,7 +43,7 @@ export default function EditResourceIndex() {
   `
   const UPDATE_RESOURCE_TITLE_MUTATION = `
     mutation($resourceSlug: String!, $title: String!) {
-      updateResourceTitle(resourceSlug: $resourceSlug, title: $title) {
+      updateResourceTitleOld(resourceSlug: $resourceSlug, title: $title) {
         id
         title
         slug

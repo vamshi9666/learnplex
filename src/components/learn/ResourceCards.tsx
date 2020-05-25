@@ -8,7 +8,6 @@ import {
   Button,
   Tooltip,
   Skeleton,
-  Divider,
   Empty,
   message,
 } from 'antd'
@@ -16,7 +15,7 @@ import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { TagOutlined, UserOutlined, StarTwoTone } from '@ant-design/icons'
+import { TagOutlined, UserOutlined } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
 import { UserContext } from '../../lib/contexts/UserContext'
@@ -99,11 +98,7 @@ export default function ResourceCards({
   }
 
   const goToResource = async ({ resource }: { resource: Resource }) => {
-    if (resource.verified) {
-      await router.push(`/learn/${resource.slug}`)
-      return
-    }
-    await router.push(`/${resource.user.username}/learn/${resource.slug}`)
+    await router.push(`/learn/${resource.slug}`)
   }
 
   const startProgress = ({ resourceId }: { resourceId: string }) => {
@@ -264,12 +259,6 @@ export default function ResourceCards({
     return actions
   }
 
-  const primaryResources = () =>
-    resources.filter((resource) => resource.verified)
-
-  const otherResources = () =>
-    resources.filter((resource) => !resource.verified)
-
   const ResourceGrid = ({ resources }: { resources: Resource[] }) => {
     return (
       <Row gutter={[16, 16]}>
@@ -281,31 +270,31 @@ export default function ResourceCards({
               actions={getActions({ resource })}
               onClick={() => goToResource({ resource })}
             >
-              {resource.verified && (
-                <StarTwoTone
-                  style={{
-                    color: '#1890ff',
-                    borderColor: '#91d5ff',
-                  }}
-                  className={'float-right font-x-large'}
-                />
-              )}
               <Card.Meta
-                title={`${resource.title}`}
+                title={
+                  <Typography>
+                    <Typography.Title level={3} ellipsis={true}>
+                      {resource.title}
+                    </Typography.Title>
+                  </Typography>
+                }
                 description={
-                  <Typography.Paragraph
-                    ellipsis={{
-                      rows: 3,
-                    }}
-                  >
-                    {resource.description}
-                  </Typography.Paragraph>
+                  <Typography>
+                    <Typography.Paragraph
+                      ellipsis={{
+                        rows: 3,
+                      }}
+                    >
+                      {resource.description}
+                    </Typography.Paragraph>
+                  </Typography>
                 }
                 // className={'overflow-scroll'}
                 style={{
                   height: '100px',
                 }}
               />
+              <br />
               <br />
               <Space style={{ overflowWrap: 'normal' }}>
                 <TruncatedTag value={resource.user.username}>
@@ -343,35 +332,5 @@ export default function ResourceCards({
     )
   }
 
-  const primary = primaryResources()
-
-  return (
-    <>
-      {primary.length > 0 && (
-        <>
-          <Typography className={'p-2'}>
-            <Typography.Title level={3}>Primary Resources</Typography.Title>
-          </Typography>
-          <br />
-          <ResourceGrid resources={primary} />
-        </>
-      )}
-
-      {router.pathname !== '/resources' && (
-        <>
-          {primary.length > 0 && (
-            <>
-              <Divider />
-
-              <Typography className={'p-2'}>
-                <Typography.Title level={3}>Other Resources</Typography.Title>
-              </Typography>
-              <br />
-            </>
-          )}
-          <ResourceGrid resources={otherResources()} />
-        </>
-      )}
-    </>
-  )
+  return <ResourceGrid resources={resources} />
 }
