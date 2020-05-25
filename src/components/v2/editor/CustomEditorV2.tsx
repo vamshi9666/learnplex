@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, message, Typography } from 'antd'
 import {
   ArrowLeftOutlined,
@@ -7,16 +7,19 @@ import {
 } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import NProgress from 'nprogress'
 
 import { updateSectionTitle as updateSectionTitleInDB } from '../../../utils/updateSectionTitle'
 import { Section } from '../../../graphql/types'
 import customMdParser from '../../learn/Editor/lib/customMdParser'
 import CustomKeyboardEventHandler from '../../learn/Editor/CustomKeyboardEventHandler'
 import { savePageContent as savePageContentInDB } from '../../../utils/savePageContent'
+import usePreventRouteChangeIf from '../../../lib/hooks/usePreventRouteChangeIf'
 
 interface Props {
   currentSection: Section
   resourceSlug: string
+  reValidate: Function
 }
 
 let MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -26,6 +29,7 @@ let MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
 export default function CustomEditorV2({
   currentSection,
   resourceSlug,
+  reValidate,
 }: Props) {
   const router = useRouter()
   const [editorState, setEditorState] = useState(
@@ -36,6 +40,9 @@ export default function CustomEditorV2({
   }
   const mdParser = customMdParser()
   const updateSectionTitle = async ({ title }: { title: string }) => {
+    if (title === currentSection.title) {
+      return
+    }
     const result = await updateSectionTitleInDB({
       title,
       sectionId: currentSection.id,
@@ -58,6 +65,7 @@ export default function CustomEditorV2({
       message.error(result.message)
       return
     }
+    await reValidate()
     message.success('Page content updated successfully')
   }
 
@@ -72,6 +80,31 @@ export default function CustomEditorV2({
       `/learn/edit/${resourceSlug}${currentSection.nextSectionPath}`
     )
   }
+
+  const isSaved = () => currentSection.page?.content === editorState
+
+  const handleWindowClose = (e: any) => {
+    if (!isSaved()) {
+      NProgress.done()
+      e.preventDefault()
+      // TODO: A default message is being shown instead of this, figure out why
+      return (e.returnValue =
+        'You have unsaved changes - are you sure you wish to close?')
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleWindowClose)
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose)
+    }
+  })
+
+  usePreventRouteChangeIf({
+    shouldPreventRouteChange: !isSaved(),
+    onRouteChangePrevented: () =>
+      message.error('You have some unsaved changes.', 1),
+  })
 
   return (
     <>

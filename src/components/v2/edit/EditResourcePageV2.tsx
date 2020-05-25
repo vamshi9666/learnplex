@@ -24,7 +24,7 @@ export default function EditResourcePageV2({ resourceSlug, slugs }: Props) {
   const { user } = useContext(UserContext)
   const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
   const url = `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}&editMode=${true}`
-  const { data, error } = useSWR(url, fetcher)
+  const { data, error, mutate } = useSWR(url, fetcher)
   const { xs } = Grid.useBreakpoint()
 
   if (error) return <InternalServerError message={error.message} />
@@ -86,6 +86,7 @@ export default function EditResourcePageV2({ resourceSlug, slugs }: Props) {
             </Button>
           </Popconfirm>
           <CustomEditorV2
+            reValidate={mutate}
             currentSection={currentSection}
             resourceSlug={resourceSlug}
           />
