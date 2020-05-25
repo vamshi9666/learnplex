@@ -272,11 +272,13 @@ export default function ResourceCards({
             >
               <Card.Meta
                 title={
-                  <Typography>
-                    <Typography.Title level={3} ellipsis={true}>
-                      {resource.title}
-                    </Typography.Title>
-                  </Typography>
+                  <Tooltip title={resource.title}>
+                    <Typography>
+                      <Typography.Title level={4} ellipsis={true}>
+                        {resource.title}
+                      </Typography.Title>
+                    </Typography>
+                  </Tooltip>
                 }
                 description={
                   <Typography>
