@@ -154,10 +154,8 @@ export default function ResourcePageV2({
       <Row>
         <Col {...SIDEBAR_COL_LAYOUT}>
           <SidebarV2
-            inEditMode={false}
             sectionsMap={sectionsMap}
             currentSections={currentSections}
-            username={resource.user.username}
             resourceSlug={resource.slug}
             slugs={slugs}
             defaultSelectedKeys={[currentSection.id as string]}

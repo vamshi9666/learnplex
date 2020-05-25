@@ -4,17 +4,17 @@ import NProgress from 'nprogress'
 import { Col, Row, Skeleton, Typography, Grid } from 'antd'
 import { useMutation, useQuery } from 'urql'
 
-import { SEO } from '../../../../../components/SEO'
-import Sidebar from '../../../../../components/learn/Sidebar'
-import { useSections } from '../../../../../lib/hooks/useSections'
-import ResourceIndexEdit from '../../../../../components/learn/ResourceIndexEdit'
-import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
-import NotAuthorized from '../../../../../components/result/NotAuthorized'
+import { SEO } from '../../../../../../components/SEO'
+import Sidebar from '../../../../../../components/learn/Sidebar'
+import { useSections } from '../../../../../../lib/hooks/useSections'
+import ResourceIndexEdit from '../../../../../../components/learn/ResourceIndexEdit'
+import NotAuthenticated from '../../../../../../components/result/NotAuthenticated'
+import NotAuthorized from '../../../../../../components/result/NotAuthorized'
 import {
   CONTENT_COL_LAYOUT,
   SIDEBAR_COL_LAYOUT,
-} from '../../../../../constants'
-import { UserContext } from '../../../../../lib/contexts/UserContext'
+} from '../../../../../../constants'
+import { UserContext } from '../../../../../../lib/contexts/UserContext'
 
 export default function EditResourceIndex() {
   const router = useRouter()

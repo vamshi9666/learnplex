@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 
-import NotAuthenticated from '../../../../../components/result/NotAuthenticated'
-import NotAuthorized from '../../../../../components/result/NotAuthorized'
-import ResourcePage from '../../../../../components/learn/ResourcePage'
-import { UserContext } from '../../../../../lib/contexts/UserContext'
+import NotAuthenticated from '../../../../../../components/result/NotAuthenticated'
+import NotAuthorized from '../../../../../../components/result/NotAuthorized'
+import ResourcePage from '../../../../../../components/learn/ResourcePage'
+import { UserContext } from '../../../../../../lib/contexts/UserContext'
 
 export default function EditResource() {
   const { user } = useContext(UserContext)

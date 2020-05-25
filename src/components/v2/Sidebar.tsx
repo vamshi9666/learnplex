@@ -14,24 +14,20 @@ export interface ClickParam {
 }
 
 interface Props {
-  inEditMode: boolean
   sectionsMap: Record<string, Section>
   defaultSelectedKeys?: string[]
   defaultOpenKeys?: string[]
   currentSections: Section[]
-  username: string
   resourceSlug: string
   slugs?: string[]
   completedSectionIds: string[]
 }
 
 export default function SidebarV2({
-  inEditMode,
   sectionsMap,
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
   currentSections,
-  username,
   resourceSlug,
   slugs = [],
   completedSectionIds,
@@ -45,34 +41,19 @@ export default function SidebarV2({
 
   const handleClick = async (e: ClickParam) => {
     const clickedSection = sectionsMap[e.key]
-    const isPrimary = !router.pathname.startsWith('/[username]') && !inEditMode
     // Clicked on index button
     if (e.key === 'resource-index') {
-      if (inEditMode) {
-        await router.push(`/${username}/learn/edit/${resourceSlug}`)
-        return
-      }
-      await router.push(
-        `/${isPrimary ? '' : username + '/'}learn/${resourceSlug}`
-      )
+      await router.push(`/learn/${resourceSlug}`)
       return
     }
 
     const slugsPath = clickedSection.hasSubSections
       ? clickedSection.firstLeafSlugsPath
       : clickedSection.slugsPath
-    if (inEditMode) {
-      await router.push(`/${username}/learn/edit/${resourceSlug}${slugsPath}`)
-      return
-    }
-    await router.push(
-      `/${isPrimary ? '' : username + '/'}learn/${resourceSlug}${slugsPath}`
-    )
+    await router.push(`/learn/${resourceSlug}${slugsPath}`)
   }
 
   const sidebar = document.getElementById('sidebar')
-
-  console.log({ defaultSelectedKeys, defaultOpenKeys })
 
   return (
     <>
@@ -106,7 +87,7 @@ export default function SidebarV2({
         >
           <Typography className={'text-center'}>
             <Typography.Text style={{ width: '75%' }} ellipsis={true}>
-              {inEditMode ? 'Edit Index' : 'Index'}
+              Index
             </Typography.Text>
           </Typography>
         </Menu.Item>
