@@ -36,8 +36,6 @@ export default function EditResourceIndexPageV2() {
   const sectionsMap = data.sectionsMap
   const baseSection = sectionsMap[baseSectionId]
   const ownerUsername = resource.user.username
-  const description = resource.description as string
-  const title = resource.title
   const isLoggedIn = !!loggedInUser
   const canViewPage = isLoggedIn && ownerUsername === loggedInUser.username
 
@@ -103,7 +101,7 @@ export default function EditResourceIndexPageV2() {
 
   return (
     <>
-      <SEO title={title} description={description} />
+      <SEO title={resource.title} description={resource.description} />
       <Row gutter={[16, 16]} justify={'start'}>
         <Col {...SIDEBAR_COL_LAYOUT}>
           <EditSidebarV2

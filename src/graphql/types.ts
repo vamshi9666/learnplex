@@ -265,7 +265,9 @@ export type Mutation = {
   forkResource?: Maybe<Resource>
   startProgress: Progress
   completeSection?: Maybe<Progress>
+  updateResourceDescriptionOld: Resource
   updateResourceDescription: Resource
+  updateResourceTitleOld: Resource
   updateResourceTitle: Resource
   updateResourceSlug: Resource
   searchResources: Array<Resource>
@@ -367,14 +369,24 @@ export type MutationCompleteSectionArgs = {
   sectionId: Scalars['String']
 }
 
+export type MutationUpdateResourceDescriptionOldArgs = {
+  description: Scalars['String']
+  resourceSlug: Scalars['String']
+}
+
 export type MutationUpdateResourceDescriptionArgs = {
   description: Scalars['String']
+  resourceId: Scalars['String']
+}
+
+export type MutationUpdateResourceTitleOldArgs = {
+  title: Scalars['String']
   resourceSlug: Scalars['String']
 }
 
 export type MutationUpdateResourceTitleArgs = {
   title: Scalars['String']
-  resourceSlug: Scalars['String']
+  resourceId: Scalars['String']
 }
 
 export type MutationUpdateResourceSlugArgs = {

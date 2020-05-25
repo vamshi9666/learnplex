@@ -1,25 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Col, Row, Skeleton, Tooltip, Typography } from 'antd'
+import { Button, Col, Row, Tooltip, Typography } from 'antd'
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
 import NProgress from 'nprogress'
 
 import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../constants'
 import SectionItemsV2 from './SectionItems'
-import { SEO } from '../SEO'
 import { UserContext } from '../../lib/contexts/UserContext'
-import { fetcher } from '../../utils/fetcher'
-import InternalServerError from '../result/InternalServerError'
 import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
+import { Resource, Section } from '../../graphql/types'
 
 interface Props {
-  resourceSlug: string
+  resource: Resource
+  sectionsMap: Record<string, Section>
 }
 
-export default function ResourceIndexV2({ resourceSlug }: Props) {
+export default function ResourceIndexV2({ resource, sectionsMap }: Props) {
   const router = useRouter()
-  const url = `/api/resource?resourceSlug=${resourceSlug}`
-  const { data, error } = useSWR(url, fetcher)
   const { user } = useContext(UserContext)
 
   /**
@@ -28,9 +24,9 @@ export default function ResourceIndexV2({ resourceSlug }: Props) {
    **/
   const [enrolled, setEnrolled] = useState(false)
   useEffect(() => {
-    if (data?.resource?.id) {
+    if (resource.id) {
       checkIfEnrolledQuery({
-        resourceId: data.resource.id,
+        resourceId: resource.id,
       }).then((enrolledResult) => {
         if (enrolledResult.error) {
           console.log({ enrolledResultError: enrolledResult.message })
@@ -40,23 +36,11 @@ export default function ResourceIndexV2({ resourceSlug }: Props) {
         }
       })
     }
-    // eslint-disable-next-line
-  }, [data?.resource?.id])
+  }, [resource.id])
 
-  if (error) {
-    return <InternalServerError message={error.message} />
-  }
-  if (!data) {
-    return <Skeleton active={true} />
-  }
-
-  const resource = data.resource
-  const sectionsMap = data.sectionsMap
   // const enrolled = data.enrolled
   const ownerUsername = resource.user.username
   const baseSectionId = resource.baseSectionId
-  const description = resource.description as string
-  const title = resource.title
   const baseSection = sectionsMap[baseSectionId]
   const isLoggedIn = !!user
 
@@ -77,7 +61,6 @@ export default function ResourceIndexV2({ resourceSlug }: Props) {
 
   return (
     <>
-      <SEO title={title} description={description} />
       <Row>
         <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
           <Typography className={'pb-1 pt-2 pl-5'}>
@@ -92,7 +75,7 @@ export default function ResourceIndexV2({ resourceSlug }: Props) {
             sectionsMap={sectionsMap}
             topLevel={true}
             username={ownerUsername}
-            resourceSlug={resourceSlug}
+            resourceSlug={resource.slug}
           />
 
           <div className={'p-5'}>

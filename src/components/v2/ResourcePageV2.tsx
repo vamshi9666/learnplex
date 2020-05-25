@@ -1,6 +1,5 @@
-import { Button, Col, Grid, Row, Skeleton, Typography } from 'antd'
+import { Button, Col, Grid, Row, Typography } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
-import useSWR from 'swr'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import {
@@ -11,11 +10,8 @@ import {
 import NProgress from 'nprogress'
 
 import { CONTENT_COL_LAYOUT, SIDEBAR_COL_LAYOUT } from '../../constants'
-import { SEO } from '../SEO'
 import SidebarV2 from './Sidebar'
 import customMdParser from '../learn/Editor/lib/customMdParser'
-import { fetcher } from '../../utils/fetcher'
-import InternalServerError from '../result/InternalServerError'
 import { Resource, Section } from '../../graphql/types'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { completeSection } from '../../utils/completeSection'
@@ -23,9 +19,11 @@ import { checkIfEnrolledQuery, startProgress } from '../../utils/progress'
 import { getUserProgressByResourceId } from '../../utils/getUserProgressByResourceId'
 
 interface Props {
-  inEditMode: boolean
   slugs: string[]
-  resourceSlug: string
+  resource: Resource
+  currentSection: Section
+  sectionsMap: Record<string, Section>
+  currentSections: Section[]
 }
 
 let MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -33,14 +31,13 @@ let MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
 })
 
 export default function ResourcePageV2({
-  inEditMode,
   slugs,
-  resourceSlug,
+  resource,
+  currentSection,
+  sectionsMap,
+  currentSections,
 }: Props) {
   const router = useRouter()
-  const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
-  const url = `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
-  const { data, error } = useSWR(url, fetcher)
   const { xs } = Grid.useBreakpoint()
   const { user } = useContext(UserContext)
 
@@ -50,9 +47,9 @@ export default function ResourcePageV2({
    **/
   const [enrolled, setEnrolled] = useState(false)
   useEffect(() => {
-    if (data?.resource?.id) {
+    if (resource.id) {
       checkIfEnrolledQuery({
-        resourceId: data.resource.id,
+        resourceId: resource.id,
       }).then((enrolledResult) => {
         if (enrolledResult.error) {
           console.log({ enrolledResultError: enrolledResult.message })
@@ -62,8 +59,7 @@ export default function ResourcePageV2({
         }
       })
     }
-    // eslint-disable-next-line
-  }, [data?.resource?.id])
+  }, [resource.id])
 
   /**
    * Temporary fix, after figuring out why cookies are not being sent in /api,
@@ -71,9 +67,9 @@ export default function ResourcePageV2({
    **/
   const [completedSectionIds, setCompletedSectionIds] = useState([] as string[])
   useEffect(() => {
-    if (enrolled && data?.resource?.id) {
+    if (enrolled && resource.id) {
       getUserProgressByResourceId({
-        resourceId: data.resource.id,
+        resourceId: resource.id,
       }).then((userProgressResult) => {
         if (userProgressResult.error) {
           console.log({ userProgressError: userProgressResult.message })
@@ -82,15 +78,8 @@ export default function ResourcePageV2({
         }
       })
     }
-    // eslint-disable-next-line
-  }, [data?.resource?.id, enrolled])
+  }, [enrolled, resource.id])
 
-  if (error) return <InternalServerError message={error.message} />
-  if (!data) return <Skeleton active={true} />
-
-  const sectionsMap: Record<string, Section> = data.sectionsMap
-  const currentSection: Section = data.currentSection
-  const resource: Resource = data.resource
   // const enrolled: boolean = data.enrolled
   // const completedCurrentSection: boolean = data.completedCurrentSection
   /**
@@ -101,22 +90,17 @@ export default function ResourcePageV2({
     currentSection.id
   )
   // const completedSectionIds = data.completedSectionIds
-  const ownerUsername = resource.user.username
-  const currentSections: Section[] = data.sections
-
-  const description =
-    (currentSection.page?.content
-      ? currentSection.page.content
-      : resource.description) ?? ''
 
   const goToPreviousSection = async () => {
     await router.push(
-      `/learn/${resourceSlug}${currentSection.previousSectionPath}`
+      `/learn/${resource.slug}${currentSection.previousSectionPath}`
     )
   }
 
   const goToNextSection = async () => {
-    await router.push(`/learn/${resourceSlug}${currentSection.nextSectionPath}`)
+    await router.push(
+      `/learn/${resource.slug}${currentSection.nextSectionPath}`
+    )
   }
 
   const startLearning = async () => {
@@ -147,10 +131,6 @@ export default function ResourcePageV2({
 
   return (
     <>
-      <SEO
-        title={`${inEditMode ? 'Edit ' : ''}${currentSection.title}`}
-        description={description}
-      />
       <Row>
         <Col {...SIDEBAR_COL_LAYOUT}>
           <SidebarV2

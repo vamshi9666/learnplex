@@ -1,22 +1,42 @@
 import { useRouter } from 'next/router'
 import React from 'react'
+import useSWR from 'swr'
+import { Skeleton } from 'antd'
 
-import ResourcePageV2 from '../../../components/v2/ResourcePage'
+import ResourcePageV2 from '../../../components/v2/ResourcePageV2'
 import { SEO } from '../../../components/SEO'
-import { titleCase } from '../../../utils/titleCase'
+import { fetcher } from '../../../utils/fetcher'
+import InternalServerError from '../../../components/result/InternalServerError'
 
-export default function ViewPrimaryResourcePageV2() {
+export default function ViewResourcePageV2() {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
   const slugs = router.query.slugs as string[]
+  const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
+  const url = `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
+  const { data, error } = useSWR(url, fetcher)
+
+  if (error) return <InternalServerError message={error.message} />
+  if (!data) return <Skeleton active={true} />
+
+  const resource = data.resource
+  const currentSection = data.currentSection
+  const sections = data.sections
+  const sectionsMap = data.sectionsMap
 
   return (
     <>
-      <SEO title={titleCase(slugs[slugs.length - 1])} />
+      <SEO />
+      <SEO
+        title={currentSection.title}
+        description={resource.description + currentSection.page?.content ?? ''}
+      />
       <ResourcePageV2
-        inEditMode={false}
         slugs={slugs}
-        resourceSlug={resourceSlug}
+        currentSection={currentSection}
+        currentSections={sections}
+        resource={resource}
+        sectionsMap={sectionsMap}
       />
     </>
   )
