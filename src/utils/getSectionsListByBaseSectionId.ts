@@ -20,6 +20,7 @@ export default async function getSectionsListByBaseSectionId({
         slugsPath
         hasSubSections
         isPage
+        depth
         sections {
           id
           order
