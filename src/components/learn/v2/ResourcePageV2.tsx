@@ -107,10 +107,13 @@ export default function ResourcePageV2({
     <>
       <Row>
         <Col {...SIDEBAR_COL_LAYOUT}>
-          <MenuOutlined
-            style={{ fontSize: 'x-large' }}
-            onClick={() => setSidebarVisible(!sidebarVisible)}
-          />
+          {xs && (
+            <MenuOutlined
+              className={'mb-3'}
+              style={{ fontSize: 'x-large' }}
+              onClick={() => setSidebarVisible(!sidebarVisible)}
+            />
+          )}
           {(sidebarVisible || !xs) && (
             <SidebarV2
               sectionsMap={sectionsMap}

@@ -59,7 +59,12 @@ export default function Login() {
         // Cookie will be set by server
         // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         logEvent('guest', 'LOGGED_IN')
-        await router.push('/')
+        const redirectTo = router.query.redirectTo as string
+        if (redirectTo) {
+          await router.push(redirectTo)
+        } else {
+          await router.push('/')
+        }
       }
     })
     NProgress.done()
@@ -134,7 +139,15 @@ export default function Login() {
           <Button
             type={'link'}
             className={'float-right'}
-            onClick={() => router.push('/register')}
+            onClick={async () => {
+              if (router.query.redirectTo) {
+                await router.push(
+                  `/register?redirectTo=${router.query.redirectTo}`
+                )
+              } else {
+                await router.push('/register')
+              }
+            }}
           >
             Register
           </Button>

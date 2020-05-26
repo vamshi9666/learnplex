@@ -69,7 +69,12 @@ export default function Register() {
         logEvent('guest', 'REGISTERS')
         setUser(result.data.register.user)
         message.warn('Please check your email inbox and verify your email')
-        await router.push('/')
+        const redirectTo = router.query.redirectTo as string
+        if (redirectTo) {
+          await router.push(redirectTo)
+        } else {
+          await router.push('/')
+        }
       }
     })
     NProgress.done()
@@ -230,7 +235,15 @@ export default function Register() {
           <Button
             className={'float-right'}
             type={'link'}
-            onClick={() => router.push('/login')}
+            onClick={async () => {
+              if (router.query.redirectTo) {
+                await router.push(
+                  `/login?redirectTo=${router.query.redirectTo}`
+                )
+              } else {
+                await router.push('/login')
+              }
+            }}
           >
             Login
           </Button>

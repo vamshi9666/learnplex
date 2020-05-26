@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, Form, Input, Select, Skeleton } from 'antd'
 import { useMutation, useQuery } from 'urql'
 import { useRouter } from 'next/router'
@@ -10,9 +10,11 @@ import NotAuthenticated from '../../components/result/NotAuthenticated'
 import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 import { UserContext } from '../../lib/contexts/UserContext'
+import { slug } from '../../utils/slug'
 
 export default function CreateResource() {
   const [form] = Form.useForm()
+  const [slugChangedByUser, setSlugChangedByUser] = useState(false)
   const router = useRouter()
   const { user } = useContext(UserContext)
 
@@ -94,6 +96,12 @@ export default function CreateResource() {
   if (resourcesError)
     return <InternalServerError message={resourcesError.message} />
 
+  const handleChange = (e: any) => {
+    if (!slugChangedByUser) {
+      form.setFieldsValue({ slug: slug(e.target.value) })
+    }
+  }
+
   return (
     <>
       <SEO title={'New Resource'} />
@@ -106,7 +114,7 @@ export default function CreateResource() {
             { required: true, message: 'Please enter the new resource title!' },
           ]}
         >
-          <Input />
+          <Input onChange={handleChange} />
         </Form.Item>
 
         <Form.Item name={'topic'} label={'Topic'} rules={[{ required: true }]}>
@@ -128,7 +136,7 @@ export default function CreateResource() {
         </Form.Item>
 
         <Form.Item
-          label={'Custom Url'}
+          label={'Custom URL'}
           name={'slug'}
           rules={[
             { required: true },
@@ -148,7 +156,10 @@ export default function CreateResource() {
             }),
           ]}
         >
-          <Input addonBefore={'https://coderplex.in/learn/'} />
+          <Input
+            onKeyPress={() => setSlugChangedByUser(true)}
+            addonBefore={'https://coderplex.in/learn/'}
+          />
         </Form.Item>
 
         <Form.Item

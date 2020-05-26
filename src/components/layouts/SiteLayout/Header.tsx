@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Menu, Affix, message } from 'antd'
+import { Button, Menu, Affix, message, Grid } from 'antd'
 import { useRouter } from 'next/router'
-import {
-  EditOutlined,
-  ImportOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons'
+import { EditOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons'
 
 import { Resource, UserRole } from '../../../graphql/types'
 import { UserContext } from '../../../lib/contexts/UserContext'
@@ -17,6 +13,7 @@ export default function Header() {
   const resourceSlug = router.query.resource as string
 
   const [resource, setResource] = useState(null as Resource | null)
+  const { xs } = Grid.useBreakpoint()
 
   useEffect(() => {
     if (resourceSlug) {
@@ -73,7 +70,7 @@ export default function Header() {
   }
 
   return (
-    <Affix>
+    <Affix offsetTop={0}>
       <div className={'header'}>
         <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
           <img src={'/logo.png'} alt={'Coderplex Logo'} />
@@ -89,7 +86,7 @@ export default function Header() {
             await router.push(key)
           }}
         >
-          {showEditButton() && (
+          {!xs && showEditButton() && (
             <Menu.Item
               key={'edit'}
               disabled={true}
@@ -105,7 +102,7 @@ export default function Header() {
               </Button>
             </Menu.Item>
           )}
-          {showExitButton() && (
+          {!xs && showExitButton() && (
             <Menu.Item
               key={'exit'}
               disabled={true}
@@ -121,21 +118,33 @@ export default function Header() {
               </Button>
             </Menu.Item>
           )}
+          {!xs && (
+            <Menu.Item
+              key={
+                isLoggedIn
+                  ? '/resources/new'
+                  : '/register?redirectTo=/resources/new'
+              }
+            >
+              <PlusOutlined
+                style={{
+                  fontSize: 'x-large',
+                  position: 'relative',
+                  top: '5px',
+                }}
+              />
+            </Menu.Item>
+          )}
           {isLoggedIn
             ? [
-                <Menu.Item key={'/resources/new'}>
-                  <PlusCircleOutlined
-                    style={{
-                      fontSize: 'x-large',
-                      position: 'relative',
-                      top: '4px',
-                    }}
-                  />
-                </Menu.Item>,
                 <Menu.SubMenu key={'user'} title={user?.username}>
                   <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
                   <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
-                  <Menu.Item key={'/resources/new'}>Create Resource</Menu.Item>
+                  {!xs && (
+                    <Menu.Item key={'/resources/new'}>
+                      Create Resource
+                    </Menu.Item>
+                  )}
                   {user?.roles.includes(UserRole.Admin) && (
                     <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
                   )}
@@ -143,15 +152,6 @@ export default function Header() {
                 </Menu.SubMenu>,
               ]
             : [
-                <Menu.Item key={'/resources/new'}>
-                  <PlusCircleOutlined
-                    style={{
-                      fontSize: 'x-large',
-                      position: 'relative',
-                      top: '4px',
-                    }}
-                  />
-                </Menu.Item>,
                 <Menu.Item key={'/login'}>Login</Menu.Item>,
                 <Menu.Item key={'/register'}>Register</Menu.Item>,
               ]}
