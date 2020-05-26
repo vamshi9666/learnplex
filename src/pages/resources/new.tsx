@@ -82,9 +82,8 @@ export default function CreateResource() {
         console.log({ 'create resource error': result.error })
       } else {
         console.log({ result })
-        const username = result.data.createResource.user.username
         const resourceSlug = result.data.createResource.slug
-        router.push(`/${username}/learn/edit/${resourceSlug}/resource-index`)
+        router.push(`/learn/edit/${resourceSlug}`)
       }
     })
     NProgress.done()
