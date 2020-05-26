@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Menu, Affix, message, Grid } from 'antd'
+import { Button, Menu, Affix, message, Grid, Tooltip } from 'antd'
 import { useRouter } from 'next/router'
-import { EditOutlined, ImportOutlined, PlusOutlined } from '@ant-design/icons'
+import { EditOutlined, ImportOutlined, EyeOutlined } from '@ant-design/icons'
 
 import { Resource, UserRole } from '../../../graphql/types'
 import { UserContext } from '../../../lib/contexts/UserContext'
@@ -42,13 +42,26 @@ export default function Header() {
     }
   }
 
-  const exitEditMode = async () => {
+  const getViewModePath = () => {
     if (router.pathname === '/learn/edit/[resource]') {
-      await router.push(`/learn/${resourceSlug}`)
+      return `/learn/${resourceSlug}`
     } else {
       const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
-      await router.push(`/learn/${resourceSlug}${slugsPath}`)
+      return `/learn/${resourceSlug}${slugsPath}`
     }
+  }
+
+  const openPreviewPage = async () => {
+    const fullUrl =
+      window.location.protocol +
+      '//' +
+      window.location.hostname +
+      (window.location.port ? ':' + window.location.port : '')
+    window.open(fullUrl + getViewModePath(), '_blank')
+  }
+
+  const exitEditMode = async () => {
+    await router.push(getViewModePath())
   }
 
   const showEditButton = () => {
@@ -102,22 +115,37 @@ export default function Header() {
               </Button>
             </Menu.Item>
           )}
-          {!xs && showExitButton() && (
-            <Menu.Item
-              key={'exit'}
-              disabled={true}
-              className={'cursor-initial border-0 pr-1'}
-              style={{ marginBottom: '2px' }}
-            >
-              <Button
-                type={'primary'}
-                icon={<ImportOutlined className={'mr-0'} />}
-                onClick={() => exitEditMode()}
+          {!xs &&
+            showExitButton() && [
+              <Menu.Item
+                key={'preview'}
+                disabled={true}
+                className={'cursor-initial border-0'}
+                style={{ marginBottom: '2px' }}
               >
-                Exit
-              </Button>
-            </Menu.Item>
-          )}
+                <Tooltip title={'Show Preview'}>
+                  <EyeOutlined
+                    className={'font-x-large text-black-50'}
+                    onClick={() => openPreviewPage()}
+                    style={{ position: 'relative', top: '3px' }}
+                  />
+                </Tooltip>
+              </Menu.Item>,
+              <Menu.Item
+                key={'exit'}
+                disabled={true}
+                className={'cursor-initial border-0 pr-1'}
+                style={{ marginBottom: '2px' }}
+              >
+                <Button
+                  type={'primary'}
+                  icon={<ImportOutlined className={'mr-0'} />}
+                  onClick={() => exitEditMode()}
+                >
+                  Exit
+                </Button>
+              </Menu.Item>,
+            ]}
           {!xs && (
             <Menu.Item
               key={
