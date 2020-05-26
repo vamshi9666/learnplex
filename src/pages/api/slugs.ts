@@ -83,28 +83,25 @@ export default async (
 
   let sections
 
-  if (editMode) {
-    const sectionsListResult = await getSectionsListByBaseSectionId({
-      baseSectionId: resource.baseSectionId,
-    })
-    if (sectionsListResult.error) {
-      console.log({ sectionsListResultError: sectionsListResult.message })
-      return res.status(500).json({ message: sectionsListResult.message })
-    }
-    sections = sectionsListResult
-  } else {
-    /**
-     * sibling sections
-     **/
-    const siblingSectionsResult = await getSiblingSections({
-      sectionId: currentSection.id,
-    })
-    if (siblingSectionsResult.error) {
-      console.log({ siblingSectionsResultError: siblingSectionsResult.message })
-      return res.status(500).json({ message: siblingSectionsResult.message })
-    }
-    sections = siblingSectionsResult
+  const sectionsListResult = await getSectionsListByBaseSectionId({
+    baseSectionId: resource.baseSectionId,
+  })
+  if (sectionsListResult.error) {
+    console.log({ sectionsListResultError: sectionsListResult.message })
+    return res.status(500).json({ message: sectionsListResult.message })
   }
+  sections = sectionsListResult
+  /**
+   * sibling sections
+   **/
+  const siblingSectionsResult = await getSiblingSections({
+    sectionId: currentSection.id,
+  })
+  if (siblingSectionsResult.error) {
+    console.log({ siblingSectionsResultError: siblingSectionsResult.message })
+    return res.status(500).json({ message: siblingSectionsResult.message })
+  }
+  const siblingSections = siblingSectionsResult
 
   /**
    * sectionsMap
@@ -114,55 +111,11 @@ export default async (
     sectionsList: sections,
   })
 
-  /**
-   * Resource enrollment
-   * TODO: Figure out why cookies are not being sent from here
-   **/
-  // let enrolled
-  // const enrolledResult = await checkIfEnrolledQuery({
-  //   client: clientWithHeaders(headers),
-  //   resourceId: resource.id,
-  // })
-  // console.log({ enrolledResult, headers })
-  // if (enrolledResult.error) {
-  //   console.log({ enrolledResultError: enrolledResult.message })
-  //   enrolled = false
-  // } else {
-  //   enrolled = enrolledResult
-  // }
-
-  /**
-   * UserProgressList
-   * TODO: Figure out why cookies are not being sent from here
-   **/
-  // let completedSectionIds = []
-  // if (enrolled) {
-  //   const userProgressResult = await getUserProgressByResourceId({
-  //     client: clientWithHeaders(headers),
-  //     resourceId: resource.id,
-  //   })
-  //   if (userProgressResult.error) {
-  //     console.log({ userProgressError: userProgressResult.message })
-  //     return res.status(500).json({ message: userProgressResult.message })
-  //   }
-  //   completedSectionIds = userProgressResult
-  // }
-  // console.log({ completedSectionIds })
-
-  /**
-   * completed currentSection
-   **/
-  // const completedCurrentSection = completedSectionIds.includes(
-  //   currentSection.id
-  // )
-
   return res.status(200).json({
     resource,
     sectionsMap,
     sections,
     currentSection,
-    // enrolled,
-    // completedSectionIds,
-    // completedCurrentSection,
+    siblingSections,
   })
 }

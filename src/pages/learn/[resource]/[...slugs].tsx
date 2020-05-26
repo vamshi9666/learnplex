@@ -21,8 +21,8 @@ export default function ViewResourcePageV2() {
 
   const resource = data.resource
   const currentSection = data.currentSection
-  const sections = data.sections
   const sectionsMap = data.sectionsMap
+  const siblingSections = data.siblingSections
 
   return (
     <>
@@ -34,7 +34,7 @@ export default function ViewResourcePageV2() {
       <ResourcePageV2
         slugs={slugs}
         currentSection={currentSection}
-        currentSections={sections}
+        currentSections={siblingSections}
         resource={resource}
         sectionsMap={sectionsMap}
       />

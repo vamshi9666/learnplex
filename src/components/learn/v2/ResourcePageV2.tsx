@@ -6,6 +6,7 @@ import {
   ArrowLeftOutlined,
   CheckOutlined,
   ArrowRightOutlined,
+  MenuOutlined,
 } from '@ant-design/icons'
 import NProgress from 'nprogress'
 
@@ -40,11 +41,8 @@ export default function ResourcePageV2({
   const router = useRouter()
   const { xs } = Grid.useBreakpoint()
   const { user } = useContext(UserContext)
+  const [sidebarVisible, setSidebarVisible] = useState(false)
 
-  /**
-   * Temporary fix, after figuring out why cookies are not being sent in /api,
-   * remove the following useEffect, and get enrolled status directly from /api
-   **/
   const [enrolled, setEnrolled] = useState(false)
   useEffect(() => {
     if (resource.id) {
@@ -61,10 +59,6 @@ export default function ResourcePageV2({
     }
   }, [resource.id])
 
-  /**
-   * Temporary fix, after figuring out why cookies are not being sent in /api,
-   * remove the following useEffect, and get completedSectionIds directly from /api
-   **/
   const [completedSectionIds, setCompletedSectionIds] = useState([] as string[])
   useEffect(() => {
     if (enrolled && resource.id) {
@@ -80,16 +74,9 @@ export default function ResourcePageV2({
     }
   }, [enrolled, resource.id])
 
-  // const enrolled: boolean = data.enrolled
-  // const completedCurrentSection: boolean = data.completedCurrentSection
-  /**
-   * Temporary fix, after figuring out why cookies are not being sent in /api,
-   * remove the following useEffect, and get completedCurrentSection directly from /api
-   **/
   const completedCurrentSection = completedSectionIds.includes(
     currentSection.id
   )
-  // const completedSectionIds = data.completedSectionIds
 
   const goToPreviousSection = async () => {
     await router.push(
@@ -114,18 +101,27 @@ export default function ResourcePageV2({
     NProgress.done()
   }
 
+  const [, ...sectionIdsPath] = currentSection.pathWithSectionIds.split('/')
+
   return (
     <>
       <Row>
         <Col {...SIDEBAR_COL_LAYOUT}>
-          <SidebarV2
-            sectionsMap={sectionsMap}
-            currentSections={currentSections}
-            resourceSlug={resource.slug}
-            slugs={slugs}
-            defaultSelectedKeys={[currentSection.id as string]}
-            completedSectionIds={completedSectionIds}
+          <MenuOutlined
+            style={{ fontSize: 'x-large' }}
+            onClick={() => setSidebarVisible(!sidebarVisible)}
           />
+          {(sidebarVisible || !xs) && (
+            <SidebarV2
+              sectionsMap={sectionsMap}
+              currentSections={currentSections}
+              resourceSlug={resource.slug}
+              slugs={slugs}
+              defaultSelectedKeys={[currentSection.id as string]}
+              completedSectionIds={completedSectionIds}
+              sectionIdsPath={sectionIdsPath}
+            />
+          )}
         </Col>
 
         <Col className={`${xs ? '' : 'px-5'}`} {...CONTENT_COL_LAYOUT}>

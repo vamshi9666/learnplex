@@ -21,9 +21,11 @@ interface Props {
   resourceSlug: string
   slugs?: string[]
   completedSectionIds: string[]
+  sectionIdsPath: string[]
 }
 
 export default function SidebarV2({
+  sectionIdsPath,
   sectionsMap,
   defaultSelectedKeys = [],
   defaultOpenKeys = [],
@@ -67,20 +69,6 @@ export default function SidebarV2({
         id={'sidebar'}
         style={{ width: sidebar?.parentElement?.clientWidth ?? '24vw' }}
       >
-        <Menu.Item className={'cursor-initial'} disabled={true}>
-          <Breadcrumb>
-            {slugs.length >= 3 && (
-              <Breadcrumb.Item>
-                {titleCase(slugs[slugs.length - 3])}
-              </Breadcrumb.Item>
-            )}
-            {slugs.length >= 2 && (
-              <Breadcrumb.Item>
-                {titleCase(slugs[slugs.length - 2])}
-              </Breadcrumb.Item>
-            )}
-          </Breadcrumb>
-        </Menu.Item>
         <Menu.Item
           key={'resource-index'}
           className={'border-bottom-2 font-weight-bold font-large'}
@@ -90,6 +78,21 @@ export default function SidebarV2({
               Index
             </Typography.Text>
           </Typography>
+        </Menu.Item>
+
+        <Menu.Item className={'cursor-initial'} disabled={true}>
+          <Breadcrumb>
+            {sectionIdsPath.length >= 3 && (
+              <Breadcrumb.Item>
+                {sectionsMap[sectionIdsPath[sectionIdsPath.length - 3]].title}
+              </Breadcrumb.Item>
+            )}
+            {slugs.length >= 2 && (
+              <Breadcrumb.Item>
+                {sectionsMap[sectionIdsPath[sectionIdsPath.length - 2]].title}
+              </Breadcrumb.Item>
+            )}
+          </Breadcrumb>
         </Menu.Item>
 
         {sortedSections.map((section) => (
