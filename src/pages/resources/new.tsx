@@ -128,7 +128,7 @@ export default function CreateResource() {
         </Form.Item>
 
         <Form.Item
-          label={'Url'}
+          label={'Custom Url'}
           name={'slug'}
           rules={[
             { required: true },

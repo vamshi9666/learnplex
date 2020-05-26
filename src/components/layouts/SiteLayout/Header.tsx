@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Menu, Affix, message } from 'antd'
 import { useRouter } from 'next/router'
-import { EditOutlined, ImportOutlined } from '@ant-design/icons'
+import {
+  EditOutlined,
+  ImportOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons'
 
 import { Resource, UserRole } from '../../../graphql/types'
 import { UserContext } from '../../../lib/contexts/UserContext'
@@ -119,6 +123,15 @@ export default function Header() {
           )}
           {isLoggedIn
             ? [
+                <Menu.Item key={'/resources/new'}>
+                  <PlusCircleOutlined
+                    style={{
+                      fontSize: 'x-large',
+                      position: 'relative',
+                      top: '4px',
+                    }}
+                  />
+                </Menu.Item>,
                 <Menu.SubMenu key={'user'} title={user?.username}>
                   <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
                   <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
@@ -130,6 +143,15 @@ export default function Header() {
                 </Menu.SubMenu>,
               ]
             : [
+                <Menu.Item key={'/resources/new'}>
+                  <PlusCircleOutlined
+                    style={{
+                      fontSize: 'x-large',
+                      position: 'relative',
+                      top: '4px',
+                    }}
+                  />
+                </Menu.Item>,
                 <Menu.Item key={'/login'}>Login</Menu.Item>,
                 <Menu.Item key={'/register'}>Register</Menu.Item>,
               ]}
