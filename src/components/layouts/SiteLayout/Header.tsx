@@ -126,25 +126,14 @@ export default function Header() {
                   : '/register?redirectTo=/resources/new'
               }
             >
-              <PlusOutlined
-                style={{
-                  fontSize: 'x-large',
-                  position: 'relative',
-                  top: '5px',
-                }}
-              />
+              Create Resource
             </Menu.Item>
           )}
           {isLoggedIn
             ? [
-                <Menu.SubMenu key={'user'} title={user?.username}>
+                <Menu.SubMenu key={'user'} title={user?.name ?? user?.username}>
                   <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
                   <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
-                  {!xs && (
-                    <Menu.Item key={'/resources/new'}>
-                      Create Resource
-                    </Menu.Item>
-                  )}
                   {user?.roles.includes(UserRole.Admin) && (
                     <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
                   )}
