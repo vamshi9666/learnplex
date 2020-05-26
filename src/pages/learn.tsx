@@ -24,6 +24,7 @@ export default function AllResources() {
         }
         firstPageSlugsPath
         verified
+        createdDate
       }
     }
   `

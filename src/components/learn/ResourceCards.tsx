@@ -30,7 +30,7 @@ export default function ResourceCards({
   resources: Resource[]
 }) {
   const router = useRouter()
-  resources = resources.sort((a, b) => (a.createdDate < b.createdDate ? -1 : 1))
+  resources = resources.sort((a, b) => (a.createdDate > b.createdDate ? -1 : 1))
 
   const goToTopic = async ({ e, slug }: { e: any; slug: string }) => {
     e.preventDefault()
