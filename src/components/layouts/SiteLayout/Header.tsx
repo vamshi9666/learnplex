@@ -71,7 +71,7 @@ export default function Header() {
 
   return (
     <Affix offsetTop={0}>
-      <div className={'header'}>
+      <div className={'header border-bottom'}>
         <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
           <img src={'/logo.png'} alt={'Coderplex Logo'} />
           <span className={'font-large'}>

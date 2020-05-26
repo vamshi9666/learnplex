@@ -69,7 +69,6 @@ export default function NewSectionModalV2({
       message.error(result.message)
       return
     }
-    message.success('New section added successfully')
     reValidate()
     reset()
     form.resetFields()

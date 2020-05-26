@@ -39,7 +39,7 @@ export default function EditSectionItemV2({
         dragHandleProps={dragHandleProps}
       />
       {!collapseSubSections && !currentSection.isPage && (
-        <div className={'mt-5'}>
+        <div className={'mt-5 mb-5 ml-3'}>
           <EditSectionItemsV2
             sections={currentSection.sections}
             parentSectionId={currentSectionId}
