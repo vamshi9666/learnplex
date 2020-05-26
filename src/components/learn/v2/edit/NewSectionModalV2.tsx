@@ -101,7 +101,7 @@ export default function NewSectionModalV2({
             }
           }}
         >
-          {visible ? (
+          {visible && (
             <Form.Item
               name={'title'}
               label={'Title'}
@@ -124,8 +124,6 @@ export default function NewSectionModalV2({
             >
               <Input autoFocus />
             </Form.Item>
-          ) : (
-            ''
           )}
           {!showContentBox && (
             <Form.Item {...FORM_TAIL_LAYOUT_LOCAL}>
