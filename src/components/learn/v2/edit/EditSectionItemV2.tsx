@@ -39,10 +39,12 @@ export default function EditSectionItemV2({
         dragHandleProps={dragHandleProps}
       />
       {!collapseSubSections && !currentSection.isPage && (
-        <EditSectionItemsV2
-          sections={currentSection.sections}
-          parentSectionId={currentSectionId}
-        />
+        <div className={'mt-5'}>
+          <EditSectionItemsV2
+            sections={currentSection.sections}
+            parentSectionId={currentSectionId}
+          />
+        </div>
       )}
     </Timeline.Item>
   )
