@@ -1,4 +1,4 @@
-import { Button, Col, Grid, Row, Typography } from 'antd'
+import { Button, Col, Grid, message, Row, Typography } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
@@ -95,10 +95,24 @@ export default function ResourcePageV2({
     const result = await startProgress({
       resourceId: resource.id,
     })
-    await router.push(
-      `/learn/${resource.slug}${result.resource.firstPageSlugsPath}`
-    )
+    if (result.error) {
+      message.error(result.message)
+    }
     NProgress.done()
+  }
+
+  const completeAndGoToNextSection = async () => {
+    const result = await completeSection({ sectionId: currentSection.id })
+    if (result.error) {
+      message.error(result.message)
+      return
+    }
+    await goToNextSection()
+  }
+
+  const startLearningAndComplete = async () => {
+    await startLearning()
+    await completeAndGoToNextSection()
   }
 
   const [, ...sectionIdsPath] = currentSection.pathWithSectionIds.split('/')
@@ -180,10 +194,7 @@ export default function ResourcePageV2({
                 <Button
                   type={'primary'}
                   disabled={!currentSection.isPage}
-                  onClick={async () =>
-                    (await completeSection({ sectionId: currentSection.id })) &&
-                    goToNextSection()
-                  }
+                  onClick={() => completeAndGoToNextSection()}
                   icon={<CheckOutlined />}
                 >
                   Complete
@@ -193,10 +204,10 @@ export default function ResourcePageV2({
               <Button
                 type={'primary'}
                 onClick={() =>
-                  user ? startLearning() : router.push('/register')
+                  user ? startLearningAndComplete() : router.push('/register')
                 }
               >
-                Start Learning
+                Complete
               </Button>
             )}
           </div>
