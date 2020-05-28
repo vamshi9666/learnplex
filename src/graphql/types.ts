@@ -23,13 +23,13 @@ export type Query = {
   resourcesByUsername: Array<Resource>
   resourcesByTopic: Array<Resource>
   resource?: Maybe<Resource>
+  allPublishedResources: Array<Resource>
   allResources: Array<Resource>
   allResourcesForAdmin: Array<Resource>
   allVerifiedResources: Array<Resource>
   baseSection: Section
   resourceByOwnerUsernameAndSlug?: Maybe<Resource>
   sections: Array<Section>
-  sectionsList: Array<Section>
   sectionsListByBaseSectionId: Array<Section>
   sectionBySlugsPathAndBaseSectionId: Section
   siblingSections: Array<Section>
@@ -39,6 +39,7 @@ export type Query = {
   hasEnrolled: Scalars['Boolean']
   hasEnrolledByResourceId: Scalars['Boolean']
   hasCompletedSection: Scalars['Boolean']
+  sectionsListFromBaseSectionIdV2: Array<Section>
 }
 
 export type QueryPrimaryResourceBySlugArgs = {
@@ -76,11 +77,6 @@ export type QuerySectionsArgs = {
   resourceId: Scalars['String']
 }
 
-export type QuerySectionsListArgs = {
-  resourceSlug: Scalars['String']
-  username: Scalars['String']
-}
-
 export type QuerySectionsListByBaseSectionIdArgs = {
   baseSectionId: Scalars['String']
 }
@@ -115,6 +111,10 @@ export type QueryHasEnrolledByResourceIdArgs = {
 export type QueryHasCompletedSectionArgs = {
   sectionId: Scalars['String']
   resourceId: Scalars['String']
+}
+
+export type QuerySectionsListFromBaseSectionIdV2Args = {
+  baseSectionId: Scalars['String']
 }
 
 export type LoginResponse = {
@@ -154,7 +154,7 @@ export type Resource = {
   baseSectionId: Scalars['String']
   user: User
   topic: Topic
-  topicId: Scalars['Int']
+  topicId: Scalars['String']
   verified: Scalars['Boolean']
   description?: Maybe<Scalars['String']>
   userId: Scalars['Int']
@@ -173,13 +173,16 @@ export type Section = {
   deleted: Scalars['Boolean']
   isFork: Scalars['Boolean']
   order: Scalars['Int']
+  depth: Scalars['Int']
   resource?: Maybe<Resource>
+  resourceId?: Maybe<Scalars['String']>
   sections: Array<Section>
   parentSection?: Maybe<Section>
   parentSectionId?: Maybe<Scalars['String']>
   baseSection?: Maybe<Section>
   baseSectionId?: Maybe<Scalars['String']>
   page?: Maybe<Page>
+  pageId?: Maybe<Scalars['String']>
   createdDate: Scalars['DateTime']
   updatedDate: Scalars['DateTime']
   version: Scalars['Int']
@@ -201,7 +204,7 @@ export type Section = {
   isSection: Scalars['Boolean']
   isBaseSection: Scalars['Boolean']
   isRoot: Scalars['Boolean']
-  depth: Scalars['Int']
+  getDepth: Scalars['Int']
   isDeleted: Scalars['Boolean']
   filteredSections: Array<Section>
 }
@@ -212,6 +215,8 @@ export type Page = {
   content: Scalars['String']
   type: PageType
   isFork: Scalars['Boolean']
+  section: Section
+  sectionId?: Maybe<Scalars['String']>
 }
 
 export enum PageType {
@@ -277,6 +282,8 @@ export type Mutation = {
   togglePublishStatus: Resource
   populateSlugsForAllResources: Scalars['Boolean']
   populateSlugsByResourceId: Scalars['Boolean']
+  createResourceV2: Resource
+  setDepths: Scalars['Boolean']
 }
 
 export type MutationChangePasswordArgs = {
@@ -416,6 +423,10 @@ export type MutationTogglePublishStatusArgs = {
 
 export type MutationPopulateSlugsByResourceIdArgs = {
   resourceId: Scalars['String']
+}
+
+export type MutationCreateResourceV2Args = {
+  data: CreateResourceInput
 }
 
 export type ChangePasswordInput = {

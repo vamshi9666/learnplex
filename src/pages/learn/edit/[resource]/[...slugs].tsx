@@ -27,7 +27,7 @@ export default function EditResourceV2() {
   if (!user) {
     return <NotAuthenticated />
   }
-  if (resource.user.username !== user.username) {
+  if (resource.userId.toString() !== user.id.toString()) {
     return <NotAuthorized />
   }
   const currentSection = data.currentSection

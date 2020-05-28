@@ -11,6 +11,7 @@ export async function savePageContent({
     mutation($data: SavePageInput!) {
       savePage(data: $data) {
         id
+        title
         page {
           id
           content

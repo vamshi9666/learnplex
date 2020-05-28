@@ -9,14 +9,12 @@ import { Section } from '../../../graphql/types'
 interface Props {
   sectionId: string
   sectionsMap: Record<string, Section>
-  username: string
   resourceSlug: string
 }
 
 export default function SectionItemV2({
   sectionId,
   sectionsMap,
-  username,
   resourceSlug,
 }: Props) {
   const router = useRouter()
@@ -38,7 +36,7 @@ export default function SectionItemV2({
     <Timeline.Item
       className={'font-large'}
       dot={
-        currentSection.hasSubSections && (
+        currentSection.sections.length > 0 && (
           <span className={'cursor-pointer'} onClick={() => toggleOpen()}>
             {isOpen ? <DownOutlined /> : <RightOutlined />}
           </span>
@@ -48,7 +46,7 @@ export default function SectionItemV2({
       <div onClick={() => toggleOpen()} className={'cursor-pointer'}>
         <Typography>
           <Typography.Title level={4}>
-            {!currentSection.hasSubSections ? (
+            {currentSection.sections.length === 0 ? (
               <span
                 className={'cursor-pointer text-primary'}
                 onClick={() => goToPage()}
@@ -61,11 +59,10 @@ export default function SectionItemV2({
           </Typography.Title>
         </Typography>
       </div>
-      {isOpen && currentSection.hasSubSections && (
+      {isOpen && currentSection.sections.length > 0 && (
         <SectionItemsV2
           sections={currentSection.sections}
           sectionsMap={sectionsMap}
-          username={username}
           resourceSlug={resourceSlug}
         />
       )}

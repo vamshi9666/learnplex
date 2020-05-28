@@ -17,9 +17,7 @@ export async function getResourceBySlug({
         description
         slug
         baseSectionId
-        user {
-          username
-        }
+        userId
         verified
         published
       }

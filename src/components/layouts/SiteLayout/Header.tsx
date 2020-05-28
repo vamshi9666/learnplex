@@ -37,7 +37,7 @@ export default function Header() {
   }, [resourceSlug])
 
   const isLoggedIn = !!user
-  let username = resource?.user?.username ?? ''
+  const resourceOwnerUserId = resource?.userId
   const slugs = router.query.slugs as string[]
 
   const goToEditPage = async () => {
@@ -72,11 +72,19 @@ export default function Header() {
   }
 
   const showEditButton = () => {
+    console.log({
+      isLoggedIn,
+      correct:
+        router.pathname === '/learn/[resource]' ||
+        router.pathname === '/learn/[resource]/[...slugs]',
+      resourceOwnerUserId,
+      user,
+    })
     return (
       isLoggedIn &&
       (router.pathname === '/learn/[resource]' ||
         router.pathname === '/learn/[resource]/[...slugs]') &&
-      username === user?.username
+      resourceOwnerUserId?.toString() === user?.id.toString()
     )
   }
 
@@ -85,7 +93,7 @@ export default function Header() {
       isLoggedIn &&
       (router.pathname === '/learn/edit/[resource]/[...slugs]' ||
         router.pathname === '/learn/edit/[resource]') &&
-      username === user?.username
+      resourceOwnerUserId?.toString() === user?.id.toString()
     )
   }
 
@@ -158,7 +166,7 @@ export default function Header() {
                 </Tooltip>
               </Menu.Item>,
               <Menu.Item
-                key={'exit'}
+                key={'publish'}
                 disabled={true}
                 className={'cursor-initial border-0 pr-1'}
                 style={{ marginBottom: '2px' }}
@@ -228,10 +236,10 @@ export default function Header() {
                 </Menu.SubMenu>,
               ]
             : [
-                <Menu.Item key={`/login?redirectTo=${router.asPath}`}>
+                <Menu.Item key={`/login?redirectTo=${router.asPath}&`}>
                   Login
                 </Menu.Item>,
-                <Menu.Item key={`/register?redirectTo=${router.asPath}`}>
+                <Menu.Item key={`/register?redirectTo=${router.asPath}&`}>
                   Register
                 </Menu.Item>,
               ]}

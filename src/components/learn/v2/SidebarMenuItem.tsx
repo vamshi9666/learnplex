@@ -18,7 +18,7 @@ export default function SidebarMenuItemV2(props: any) {
     <Menu.Item {...props} id={currentSection.id}>
       <Typography>
         <span className={'mr-3'}>
-          {currentSection.hasSubSections ? (
+          {currentSection.sections.length > 0 ? (
             <FolderFilled />
           ) : currentSection.isPage ? (
             <FileTextOutlined />
@@ -32,7 +32,7 @@ export default function SidebarMenuItemV2(props: any) {
         >
           {currentSection.title}
         </Typography.Text>
-        {!currentSection.hasSubSections && (
+        {currentSection.sections.length === 0 && (
           <span className={'float-right'}>
             {isSectionComplete ? (
               <CheckCircleTwoTone twoToneColor={'#52c41a'} />

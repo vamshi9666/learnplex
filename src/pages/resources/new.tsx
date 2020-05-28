@@ -1,16 +1,17 @@
-import React, { useContext, useState } from 'react'
-import { Button, Form, Input, Select, Skeleton } from 'antd'
-import { useMutation, useQuery } from 'urql'
+import React, { useContext, useEffect, useState } from 'react'
+import { Button, Form, Input, message, Select } from 'antd'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 
 import { SEO } from '../../components/SEO'
 import { Resource, Topic } from '../../graphql/types'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
-import InternalServerError from '../../components/result/InternalServerError'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 import { UserContext } from '../../lib/contexts/UserContext'
 import { slug } from '../../utils/slug'
+import { createResource } from '../../utils/createResource'
+import { getTopics } from '../../utils/getTopics'
+import { getAllResourceSlugs } from '../../utils/getAllResourceSlugs'
 
 export default function CreateResource() {
   const [form] = Form.useForm()
@@ -18,49 +19,26 @@ export default function CreateResource() {
   const router = useRouter()
   const { user } = useContext(UserContext)
 
-  const TOPICS_QUERY = `
-      query {
-        topics {
-          id
-          title
-        }
+  const [resources, setResources] = useState([])
+  const [topics, setTopics] = useState([])
+  useEffect(() => {
+    getAllResourceSlugs().then((result) => {
+      if (result.error) {
+        message.error(result.message)
+      } else {
+        setResources(result)
       }
-  `
-
-  // Since this query is authenticated query, there is no need to pass
-  //    username, we just fetch the resources of the currentUser
-  const RESOURCES_QUERY = `
-      query {
-        resources {
-          slug
-        }
+    })
+  }, [])
+  useEffect(() => {
+    getTopics().then((result) => {
+      if (result.error) {
+        message.error(result.message)
+      } else {
+        setTopics(result)
       }
-  `
-  const CREATE_RESOURCE_MUTATION = `
-    mutation($data: CreateResourceInput!) {
-      createResource(data: $data) {
-        id
-        slug
-        user {
-          username
-        }
-        description
-      }
-    }
-  `
-  const [, createResource] = useMutation(CREATE_RESOURCE_MUTATION)
-
-  const [
-    { data: resourcesData, fetching: resourcesFetching, error: resourcesError },
-  ] = useQuery({
-    query: RESOURCES_QUERY,
-  })
-
-  const [
-    { data: topicsData, fetching: topicsFetching, error: topicsError },
-  ] = useQuery({
-    query: TOPICS_QUERY,
-  })
+    })
+  }, [])
 
   const onFinish = async ({
     title,
@@ -70,30 +48,16 @@ export default function CreateResource() {
   }: any) => {
     console.log({ title, topicId, description, slug })
     NProgress.start()
-    createResource({
-      data: {
-        title,
-        topicId,
-        description,
-        slug,
-      },
-    }).then((result) => {
-      if (result.error) {
-        console.log({ 'create resource error': result.error })
-      } else {
-        console.log({ result })
-        const resourceSlug = result.data.createResource.slug
-        router.push(`/learn/edit/${resourceSlug}`)
-      }
-    })
+    const result = await createResource({ title, topicId, description, slug })
+    if (result.error) {
+      message.error(result.message)
+    } else {
+      await router.push(`/learn/edit/${slug}`)
+    }
     NProgress.done()
   }
 
   if (!user) return <NotAuthenticated />
-  if (topicsFetching || resourcesFetching) return <Skeleton active={true} />
-  if (topicsError) return <InternalServerError message={topicsError.message} />
-  if (resourcesError)
-    return <InternalServerError message={resourcesError.message} />
 
   const handleChange = (e: any) => {
     if (!slugChangedByUser) {
@@ -126,7 +90,7 @@ export default function CreateResource() {
                 .indexOf(input.toLowerCase()) >= 0
             }
           >
-            {topicsData.topics.map((topic: Topic) => (
+            {topics.map((topic: Topic) => (
               <Select.Option key={topic.id} value={topic.id}>
                 {topic.title}
               </Select.Option>
@@ -144,7 +108,7 @@ export default function CreateResource() {
                 if (!value) {
                   return Promise.resolve()
                 }
-                const slugs = resourcesData.resources.map(
+                const slugs = resources.map(
                   (resource: Resource) => resource.slug
                 )
                 if (slugs.includes(value)) {

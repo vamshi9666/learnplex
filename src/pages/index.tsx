@@ -13,9 +13,9 @@ export default function Home() {
   const accessToken: string = router.query.accessToken as string
   const refreshToken: string = router.query.refreshToken as string
   const oauth: boolean = Boolean(router.query.oauth) as boolean
-  const ALL_RESOURCES_QUERY = `
+  const ALL_PUBLISHED_RESOURCES = `
     query {
-      allResources {
+      allPublishedResources {
         id
         title
         description
@@ -35,13 +35,13 @@ export default function Home() {
   `
 
   const [{ data, fetching, error }] = useQuery({
-    query: ALL_RESOURCES_QUERY,
+    query: ALL_PUBLISHED_RESOURCES,
   })
   const [resources, setResources] = useState([] as Resource[])
 
   useEffect(() => {
-    if (!fetching && !error && data && data.allResources) {
-      setResources(data.allResources)
+    if (!fetching && !error && data && data.allPublishedResources) {
+      setResources(data.allPublishedResources)
     }
   }, [data, error, fetching])
 

@@ -9,6 +9,7 @@ export function useUser() {
     query {
         me {
           user {
+             id
              name
              email
              username

@@ -5,6 +5,7 @@ export default async function getLoggedInUser() {
     query {
       me {
         user {
+           id
            name
            email
            username

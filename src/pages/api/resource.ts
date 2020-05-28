@@ -33,27 +33,9 @@ export default async (
   const sectionsList = sectionsListResult
   const sectionsMap = getSectionsMapFromSectionsList({ sectionsList })
 
-  /**
-   * Resource enrollment
-   * TODO: Figure out why cookies are not being sent from here
-   **/
-  // let enrolled
-  // const enrolledResult = await checkIfEnrolledQuery({
-  //   client: clientWithHeaders(headers),
-  //   resourceId: resource.id,
-  // })
-  // console.log({ enrolledResult })
-  // if (enrolledResult.error) {
-  //   console.log({ enrolledResultError: enrolledResult.message })
-  //   enrolled = false
-  // } else {
-  //   enrolled = enrolledResult
-  // }
-
   return res.status(200).json({
     resource,
     sectionsList,
     sectionsMap,
-    // enrolled,
   })
 }

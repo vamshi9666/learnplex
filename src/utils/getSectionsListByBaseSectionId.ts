@@ -12,13 +12,12 @@ export default async function getSectionsListByBaseSectionId({
 }) {
   const SECTIONS_LIST_BY_BASE_SECTION_ID = `
     query($baseSectionId: String!) {
-      sectionsListByBaseSectionId(baseSectionId: $baseSectionId) {
+      sectionsListFromBaseSectionIdV2(baseSectionId: $baseSectionId) {
         id
         title
         slug
         order
         slugsPath
-        hasSubSections
         isPage
         depth
         sections {
@@ -41,7 +40,7 @@ export default async function getSectionsListByBaseSectionId({
       message: result.error.message,
     }
   }
-  return result.data.sectionsListByBaseSectionId
+  return result.data.sectionsListFromBaseSectionIdV2
 }
 
 export function getSectionsMapFromSectionsList({

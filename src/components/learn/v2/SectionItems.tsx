@@ -8,7 +8,6 @@ interface Props {
   sections: Section[]
   sectionsMap: Record<string, Section>
   topLevel?: boolean
-  username: string
   resourceSlug: string
 }
 
@@ -16,7 +15,6 @@ export default function SectionItemsV2({
   sections,
   sectionsMap,
   topLevel,
-  username,
   resourceSlug,
 }: Props) {
   const sortedSections = sections.sort(
@@ -36,7 +34,6 @@ export default function SectionItemsV2({
           key={section.id}
           sectionId={section.id}
           sectionsMap={sectionsMap}
-          username={username}
           resourceSlug={resourceSlug}
         />
       ))}

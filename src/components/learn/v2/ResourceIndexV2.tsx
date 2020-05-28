@@ -39,7 +39,6 @@ export default function ResourceIndexV2({ resource, sectionsMap }: Props) {
   }, [resource.id])
 
   // const enrolled = data.enrolled
-  const ownerUsername = resource.user.username
   const baseSectionId = resource.baseSectionId
   const baseSection = sectionsMap[baseSectionId]
   const isLoggedIn = !!user
@@ -69,7 +68,6 @@ export default function ResourceIndexV2({ resource, sectionsMap }: Props) {
             sections={baseSection.sections}
             sectionsMap={sectionsMap}
             topLevel={true}
-            username={ownerUsername}
             resourceSlug={resource.slug}
           />
 

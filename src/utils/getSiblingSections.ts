@@ -17,7 +17,6 @@ export async function getSiblingSections({
         slug
         order
         slugsPath
-        hasSubSections
         isPage
         depth
         firstLeafSlugsPath

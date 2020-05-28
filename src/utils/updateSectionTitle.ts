@@ -15,7 +15,6 @@ export async function updateSectionTitle({
         slug
         order
         slugsPath
-        hasSubSections
         isPage
         sections {
           id

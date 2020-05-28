@@ -34,7 +34,7 @@ export default function EditSidebarV2({
     const sortedSubSections = section.sections.sort((a, b) =>
       a.order > b.order ? 1 : a.order < b.order ? -1 : 0
     )
-    if (!section.hasSubSections) {
+    if (section.sections.length === 0) {
       return (
         <Menu.Item key={section.id} id={section.id}>
           <Typography>

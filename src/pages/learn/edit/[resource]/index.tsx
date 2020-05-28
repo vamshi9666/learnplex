@@ -35,9 +35,10 @@ export default function EditResourceIndexPageV2() {
   const baseSectionId = resource.baseSectionId
   const sectionsMap = data.sectionsMap
   const baseSection = sectionsMap[baseSectionId]
-  const ownerUsername = resource.user.username
+  const ownerId = resource.userId
   const isLoggedIn = !!loggedInUser
-  const canViewPage = isLoggedIn && ownerUsername === loggedInUser.username
+  const canViewPage =
+    isLoggedIn && ownerId.toString() === loggedInUser.id.toString()
 
   if (!isLoggedIn) {
     return <NotAuthenticated />

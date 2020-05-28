@@ -8,9 +8,9 @@ import ResourceCards from '../components/learn/ResourceCards'
 import { SEO } from '../components/SEO'
 
 export default function AllResources() {
-  const ALL_RESOURCES_QUERY = `
+  const ALL_PUBLISHED_RESOURCES = `
     query {
-      allResources {
+      allPublishedResources {
         id
         title
         description
@@ -29,13 +29,13 @@ export default function AllResources() {
     }
   `
   const [{ data, fetching, error }] = useQuery({
-    query: ALL_RESOURCES_QUERY,
+    query: ALL_PUBLISHED_RESOURCES,
   })
 
   if (fetching) return <Skeleton active={true} />
   if (error) return <InternalServerError message={error.message} />
 
-  const resources = data.allResources as Resource[]
+  const resources = data.allPublishedResources as Resource[]
 
   return (
     <>

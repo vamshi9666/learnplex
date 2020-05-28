@@ -48,9 +48,10 @@ export default function SidebarV2({
       return
     }
 
-    const slugsPath = clickedSection.hasSubSections
-      ? clickedSection.firstLeafSlugsPath
-      : clickedSection.slugsPath
+    const slugsPath =
+      clickedSection.sections.length > 0
+        ? clickedSection.firstLeafSlugsPath
+        : clickedSection.slugsPath
     await router.push(`/learn/${resourceSlug}${slugsPath}`)
   }
 
