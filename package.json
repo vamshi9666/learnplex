@@ -109,7 +109,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "CI=1 npm-run-all --parallel check-types test && lint-staged"
+      "pre-commit": "CI=1 npm-run-all --parallel check-types && lint-staged"
     }
   },
   "lint-staged": {

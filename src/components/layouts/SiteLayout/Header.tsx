@@ -86,7 +86,10 @@ export default function Header() {
     <Affix offsetTop={0}>
       <div className={'header border-bottom'}>
         <div className={'logo cursor-pointer'} onClick={() => router.push('/')}>
-          <img src={'/logo.png'} alt={'Coderplex Logo'} />
+          <img
+            src={'/icons/android-chrome-512x512.png'}
+            alt={'Coderplex Logo'}
+          />
           <span className={'font-large'}>
             <b>Coderplex</b>
           </span>
@@ -169,8 +172,12 @@ export default function Header() {
                 </Menu.SubMenu>,
               ]
             : [
-                <Menu.Item key={'/login'}>Login</Menu.Item>,
-                <Menu.Item key={'/register'}>Register</Menu.Item>,
+                <Menu.Item key={`/login?redirectTo=${router.asPath}`}>
+                  Login
+                </Menu.Item>,
+                <Menu.Item key={`/register?redirectTo=${router.asPath}`}>
+                  Register
+                </Menu.Item>,
               ]}
         </Menu>
       </div>

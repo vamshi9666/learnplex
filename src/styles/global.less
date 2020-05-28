@@ -6,10 +6,18 @@
   box-sizing: inherit;
 }
 
+html, body, #__next {
+  height: 100%;
+}
+#__next {
+  margin: 0 auto;
+}
+
 html {
   box-sizing: border-box;
   font-size: 14px;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+  overflow-x: hidden;
 }
 
 .header {
@@ -26,7 +34,7 @@ html {
 
 .logo > img {
   width: 70px;
-  height: 64px;
+  height: 70px;
   padding: 8px;
 }
 

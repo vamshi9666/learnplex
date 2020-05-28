@@ -24,31 +24,8 @@ describe('SEO', () => {
           Coderplex - Coderplex
         </title>
         <meta
-          charset="utf-8"
-        />
-        <meta
-          content="width=device-width, initial-scale=1"
-          name="viewport"
-        />
-        <meta
-          content="Bhanu Teja P"
-          name="author"
-        />
-        <meta
-          content="website"
-          property="og:type"
-        />
-        <meta
           content="Master any Technology"
           name="description"
-        />
-        <meta
-          content="summary"
-          name="twitter:card"
-        />
-        <meta
-          content="@coderplex"
-          name="twitter:creator"
         />
         <meta
           content="Coderplex - Coderplex"
@@ -61,14 +38,6 @@ describe('SEO', () => {
         <meta
           content="https://coderplex.in/test"
           property="og:url"
-        />
-        <meta
-          content="/logo.png"
-          property="og:image"
-        />
-        <meta
-          content="Coderplex"
-          property="og:site_name"
         />
       </div>
     `)
@@ -84,31 +53,8 @@ describe('SEO', () => {
           Coderplex - Home
         </title>
         <meta
-          charset="utf-8"
-        />
-        <meta
-          content="width=device-width, initial-scale=1"
-          name="viewport"
-        />
-        <meta
-          content="Bhanu Teja P"
-          name="author"
-        />
-        <meta
-          content="website"
-          property="og:type"
-        />
-        <meta
           content="This is some test description"
           name="description"
-        />
-        <meta
-          content="summary"
-          name="twitter:card"
-        />
-        <meta
-          content="@coderplex"
-          name="twitter:creator"
         />
         <meta
           content="Coderplex - Home"
@@ -121,14 +67,6 @@ describe('SEO', () => {
         <meta
           content="https://coderplex.in/test"
           property="og:url"
-        />
-        <meta
-          content="/logo.png"
-          property="og:image"
-        />
-        <meta
-          content="Coderplex"
-          property="og:site_name"
         />
       </div>
     `)
