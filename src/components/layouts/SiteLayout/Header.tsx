@@ -1,11 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Menu, Affix, message, Grid, Tooltip } from 'antd'
+import { Button, Menu, Affix, message, Grid, Tooltip, Popconfirm } from 'antd'
 import { useRouter } from 'next/router'
-import { EditOutlined, ImportOutlined, EyeOutlined } from '@ant-design/icons'
+import {
+  EditOutlined,
+  ImportOutlined,
+  EyeOutlined,
+  UploadOutlined,
+  DownloadOutlined,
+} from '@ant-design/icons'
 
 import { Resource, UserRole } from '../../../graphql/types'
 import { UserContext } from '../../../lib/contexts/UserContext'
 import { getResourceBySlug } from '../../../utils/getResourceBySlug'
+import { togglePublishStatus as togglePublishStatusInDB } from '../../../utils/togglePublishStatus'
 
 export default function Header() {
   const router = useRouter()
@@ -82,6 +89,22 @@ export default function Header() {
     )
   }
 
+  const togglePublishStatus = async () => {
+    if (resource?.id) {
+      const result = await togglePublishStatusInDB({ resourceId: resource.id })
+      if (result.error) {
+        message.error(result.message)
+      } else {
+        if (result.published) {
+          message.success('Resource published successfully.')
+        } else {
+          message.success('Resource unpublished successfully.')
+        }
+        setResource(result)
+      }
+    }
+  }
+
   return (
     <Affix offsetTop={0}>
       <div className={'header border-bottom'}>
@@ -133,6 +156,39 @@ export default function Header() {
                     style={{ position: 'relative', top: '3px' }}
                   />
                 </Tooltip>
+              </Menu.Item>,
+              <Menu.Item
+                key={'exit'}
+                disabled={true}
+                className={'cursor-initial border-0 pr-1'}
+                style={{ marginBottom: '2px' }}
+              >
+                <Popconfirm
+                  title={
+                    resource?.published
+                      ? 'This will unpublish your resource from any of the public pages.'
+                      : 'This will publish your resource and make it public.'
+                  }
+                  okText={'Continue'}
+                  cancelText={'Cancel'}
+                  okType={'danger'}
+                  placement={'topRight'}
+                  onConfirm={() => togglePublishStatus()}
+                >
+                  <Button
+                    danger={resource?.published}
+                    type={'primary'}
+                    icon={
+                      resource?.published ? (
+                        <DownloadOutlined className={'mr-0'} />
+                      ) : (
+                        <UploadOutlined className={'mr-0'} />
+                      )
+                    }
+                  >
+                    {resource?.published ? 'Unpublish' : 'Publish'}
+                  </Button>
+                </Popconfirm>
               </Menu.Item>,
               <Menu.Item
                 key={'exit'}

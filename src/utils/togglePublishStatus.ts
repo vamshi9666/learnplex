@@ -13,6 +13,15 @@ export async function togglePublishStatus({
     mutation($resourceId: String!) {
       togglePublishStatus(resourceId: $resourceId) {
         id
+        title
+        description
+        slug
+        baseSectionId
+        user {
+          username
+        }
+        verified
+        published
       }
     }
   `

@@ -21,6 +21,7 @@ export async function getResourceBySlug({
           username
         }
         verified
+        published
       }
     }
   `
