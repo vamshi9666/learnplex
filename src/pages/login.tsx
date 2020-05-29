@@ -11,7 +11,7 @@ import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
 import AlreadyLoggedIn from '../components/result/AlreadyLoggedIn'
 import { UserContext } from '../lib/contexts/UserContext'
-import { login } from '../graphql/queries/auth'
+import { login } from '../graphql/mutations/auth'
 
 export default function Login() {
   const router = useRouter()

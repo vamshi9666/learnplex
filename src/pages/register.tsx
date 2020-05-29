@@ -15,7 +15,7 @@ import {
   register,
   validateEmail,
   validateUsername,
-} from '../graphql/queries/auth'
+} from '../graphql/mutations/auth'
 
 const validateMessages = {
   types: {

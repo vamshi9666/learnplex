@@ -25,7 +25,7 @@ import {
   updateUser,
   validateEmail,
   validateUsername,
-} from '../../graphql/queries/auth'
+} from '../../graphql/mutations/auth'
 
 export default function ProfileSettings() {
   const router = useRouter()
