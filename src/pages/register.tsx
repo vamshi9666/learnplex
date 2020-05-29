@@ -4,7 +4,6 @@ import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
-import { useMutation } from 'urql'
 
 import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
@@ -12,6 +11,11 @@ import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
 import AlreadyRegistered from '../components/result/AlreadyRegistered'
 import { UserContext } from '../lib/contexts/UserContext'
+import {
+  register,
+  validateEmail,
+  validateUsername,
+} from '../graphql/queries/auth'
 
 const validateMessages = {
   types: {
@@ -21,62 +25,25 @@ const validateMessages = {
 
 export default function Register() {
   const router = useRouter()
-  const VALIDATE_USERNAME_MUTATION = `
-    mutation($username: String!) {
-      validateUsername(username: $username)
-    }
-  `
-  const VALIDATE_EMAIL_MUTATION = `
-    mutation($email: String!) {
-      validateEmail(email: $email)
-    }
-  `
-
-  const REGISTER_MUTATION = `
-    mutation($data: RegisterInput!) {
-      register(data: $data) {
-        accessToken
-        user {
-          name
-          email
-          username
-          roles
-          confirmed
-        }
-      }
-    }
-  `
-  const [, register] = useMutation(REGISTER_MUTATION)
-  const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
-  const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
   const { setUser } = useContext(UserContext)
 
   const onFinish = async ({ name, email, username, password }: any) => {
     logEvent('guest', 'TRIES_TO_REGISTER')
     NProgress.start()
-    register({
-      data: {
-        name,
-        email,
-        username,
-        password,
-      },
-    }).then(async (result) => {
-      if (result.error) {
-        console.log({ 'register error': result.error })
-      } else {
-        console.log({ result })
-        logEvent('guest', 'REGISTERS')
-        setUser(result.data.register.user)
-        message.warn('Please check your email inbox and verify your email')
-        const redirectTo = router.query.redirectTo as string
-        if (redirectTo) {
-          await router.push(redirectTo)
-        } else {
-          await router.push('/')
-        }
-      }
-    })
+    const result = await register({ name, email, username, password })
+    if (result.error) {
+      message.error(result.message)
+      return
+    }
+    logEvent('guest', 'REGISTERS')
+    setUser(result.data.register.user)
+    message.warn('Please check your email inbox and verify your email')
+    const redirectTo = router.query.redirectTo as string
+    if (redirectTo) {
+      await router.push(redirectTo)
+    } else {
+      await router.push('/')
+    }
     NProgress.done()
   }
 
@@ -139,17 +106,14 @@ export default function Register() {
                 }
                 return validateEmail({ email: value }).then((result) => {
                   if (result.error) {
-                    console.log({ validateEmailError: result.error })
                     return Promise.reject('Something went wrong!')
-                  } else {
-                    const valid = result.data.validateEmail
-                    if (!valid) {
-                      return Promise.reject(
-                        'There is already an account with this email id!'
-                      )
-                    }
-                    return Promise.resolve()
                   }
+                  if (!result) {
+                    return Promise.reject(
+                      'There is already an account with this email id!'
+                    )
+                  }
+                  return Promise.resolve()
                 })
               },
             }),
@@ -208,17 +172,14 @@ export default function Register() {
                 }
                 return validateUsername({ username: value }).then((result) => {
                   if (result.error) {
-                    console.log({ validateUsernameError: result.error })
                     return Promise.reject('Something went wrong!')
-                  } else {
-                    const valid = result.data.validateUsername
-                    if (!valid) {
-                      return Promise.reject(
-                        'There is already an account with this username!'
-                      )
-                    }
-                    return Promise.resolve()
                   }
+                  if (!result) {
+                    return Promise.reject(
+                      'There is already an account with this username!'
+                    )
+                  }
+                  return Promise.resolve()
                 })
               },
             }),
