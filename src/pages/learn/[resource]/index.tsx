@@ -1,81 +1,36 @@
-import { useRouter } from 'next/router'
-import { useQuery } from 'urql'
+import { NextPage } from 'next'
 import React from 'react'
-import { Col, Row, Skeleton, Typography } from 'antd'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
+import { Skeleton } from 'antd'
 
-import InternalServerError from '../../../components/result/InternalServerError'
+import ResourceIndexV2 from '../../../components/learn/v2/ResourceIndexV2'
 import { SEO } from '../../../components/SEO'
-import { titleCase, upperCamelCase } from '../../../utils/upperCamelCase'
-import ResourceIndex from '../../../components/learn/ResourceIndex'
-import { useSections } from '../../../lib/hooks/useSections'
-import { CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT } from '../../../constants'
+import { fetcher } from '../../../utils/fetcher'
+import InternalServerError from '../../../components/result/InternalServerError'
 
-export default function ViewPrimaryResourceIndex() {
+const ViewPrimaryResourceIndexPageV2: NextPage = () => {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
-
-  const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
-    query($resourceSlug: String!) {
-      primaryResourceBySlug(resourceSlug: $resourceSlug) {
-        id
-        title
-        slug
-        description
-        user {
-          username
-        }
-      }
-    }
-  `
-
-  const [{ data, fetching, error }] = useQuery({
-    query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
-    variables: {
-      resourceSlug,
-    },
-  })
-
-  const { body, sectionsMap, baseSectionId } = useSections({
-    username: data?.primaryResourceBySlug?.user?.username,
-    resourceSlug,
-  })
-
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
+  const url = `/api/resource?resourceSlug=${resourceSlug}`
+  const { data, error } = useSWR(url, fetcher)
 
   if (error) {
     return <InternalServerError message={error.message} />
   }
+  if (!data) {
+    return <Skeleton active={true} />
+  }
 
-  const resource = data.primaryResourceBySlug
-  const username = resource.user.username
+  const resource = data.resource
+  const sectionsMap = data.sectionsMap
 
   return (
     <>
-      <SEO title={`${upperCamelCase(resourceSlug)}`} />
-      {body ? (
-        body
-      ) : (
-        <Row>
-          <Col {...CONTENT_WITHOUT_SIDEBAR_COL_LAYOUT}>
-            <Typography className={'pb-1 pt-2 pl-5'}>
-              <Typography.Title level={2}>
-                {titleCase(resourceSlug)}
-              </Typography.Title>
-              <Typography.Paragraph ellipsis={{ rows: 3, expandable: true }}>
-                {resource.description}
-              </Typography.Paragraph>
-            </Typography>
-
-            <ResourceIndex
-              baseSectionId={baseSectionId}
-              sectionsMap={sectionsMap}
-              username={username}
-            />
-          </Col>
-        </Row>
-      )}
+      <SEO title={resource.title} description={resource.description} />
+      <ResourceIndexV2 resource={resource} sectionsMap={sectionsMap} />
     </>
   )
 }
+
+export default ViewPrimaryResourceIndexPageV2

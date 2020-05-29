@@ -22,6 +22,8 @@ export default function VerifiedResources() {
           slug
         }
         verified
+        published
+        createdDate
       }
     }
   `

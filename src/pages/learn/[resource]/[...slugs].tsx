@@ -1,41 +1,43 @@
-import React from 'react'
-import { useQuery } from 'urql'
 import { useRouter } from 'next/router'
+import React from 'react'
+import useSWR from 'swr'
 import { Skeleton } from 'antd'
 
-import ResourcePage from '../../../components/learn/ResourcePage'
+import ResourcePageV2 from '../../../components/learn/v2/ResourcePageV2'
+import { SEO } from '../../../components/SEO'
+import { fetcher } from '../../../utils/fetcher'
 import InternalServerError from '../../../components/result/InternalServerError'
 
-export default function ViewPrimaryResource() {
+export default function ViewResourcePageV2() {
   const router = useRouter()
   const resourceSlug = router.query.resource as string
-  const PRIMARY_RESOURCE_BY_SLUG_QUERY = `
-    query($resourceSlug: String!) {
-      primaryResourceBySlug(resourceSlug: $resourceSlug) {
-        id
-        title
-        slug
-        description
-        user {
-          username
-        }
-      }
-    }
-  `
+  const slugs = router.query.slugs as string[]
+  const slugsPath = slugs.reduce((a, b) => `${a}/${b}`, '')
+  const url = `/api/slugs?resourceSlug=${resourceSlug}&slugsPath=${slugsPath}`
+  const { data, error } = useSWR(url, fetcher)
 
-  const [{ data, fetching, error }] = useQuery({
-    query: PRIMARY_RESOURCE_BY_SLUG_QUERY,
-    variables: {
-      resourceSlug,
-    },
-  })
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
+  if (error) return <InternalServerError message={error.message} />
+  if (!data) return <Skeleton active={true} />
 
-  if (error) {
-    return <InternalServerError message={error.message} />
-  }
-  const username = data.primaryResourceBySlug.user.username
-  return <ResourcePage inEditMode={false} username={username} />
+  const resource = data.resource
+  const currentSection = data.currentSection
+  const sectionsMap = data.sectionsMap
+  const siblingSections = data.siblingSections
+
+  return (
+    <>
+      <SEO />
+      <SEO
+        title={currentSection.title}
+        description={resource.description + currentSection.page?.content ?? ''}
+      />
+      <ResourcePageV2
+        slugs={slugs}
+        currentSection={currentSection}
+        currentSections={siblingSections}
+        resource={resource}
+        sectionsMap={sectionsMap}
+      />
+    </>
+  )
 }

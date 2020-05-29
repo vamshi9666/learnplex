@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Divider, Form, Input, Skeleton } from 'antd'
+import React, { useContext } from 'react'
+import { Button, Divider, Form, Input, message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -10,8 +10,8 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
-import { useUser } from '../lib/hooks/useUser'
 import AlreadyRegistered from '../components/result/AlreadyRegistered'
+import { UserContext } from '../lib/contexts/UserContext'
 
 const validateMessages = {
   types: {
@@ -34,12 +34,22 @@ export default function Register() {
 
   const REGISTER_MUTATION = `
     mutation($data: RegisterInput!) {
-      register(data: $data)
+      register(data: $data) {
+        accessToken
+        user {
+          name
+          email
+          username
+          roles
+          confirmed
+        }
+      }
     }
   `
   const [, register] = useMutation(REGISTER_MUTATION)
   const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
   const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
+  const { setUser } = useContext(UserContext)
 
   const onFinish = async ({ name, email, username, password }: any) => {
     logEvent('guest', 'TRIES_TO_REGISTER')
@@ -57,20 +67,21 @@ export default function Register() {
       } else {
         console.log({ result })
         logEvent('guest', 'REGISTERS')
-        await router.push('/')
+        setUser(result.data.register.user)
+        message.warn('Please check your email inbox and verify your email')
+        const redirectTo = router.query.redirectTo as string
+        if (redirectTo) {
+          await router.push(redirectTo)
+        } else {
+          await router.push('/')
+        }
       }
     })
     NProgress.done()
   }
 
-  const { user, fetching } = useUser()
+  const { user } = useContext(UserContext)
   const [form] = Form.useForm()
-
-  console.log({ user, fetching })
-
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
 
   if (user) {
     return <AlreadyRegistered />
@@ -224,7 +235,15 @@ export default function Register() {
           <Button
             className={'float-right'}
             type={'link'}
-            onClick={() => router.push('/login')}
+            onClick={async () => {
+              if (router.query.redirectTo) {
+                await router.push(
+                  `/login?redirectTo=${router.query.redirectTo}`
+                )
+              } else {
+                await router.push('/login')
+              }
+            }}
           >
             Login
           </Button>

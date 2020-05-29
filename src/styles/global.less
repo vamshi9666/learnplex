@@ -6,10 +6,36 @@
   box-sizing: inherit;
 }
 
+html, body, #__next {
+  height: 100%;
+}
+#__next {
+  margin: 0 auto;
+}
+
 html {
   box-sizing: border-box;
   font-size: 14px;
   -ms-overflow-style: -ms-autohiding-scrollbar;
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: @background-color;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.logo > img {
+  width: 70px;
+  height: 70px;
+  padding: 8px;
 }
 
 body {
@@ -805,9 +831,9 @@ h6,
 }
 
 .sidebar-menu {
-  overflow-y:scroll !important;
-  overflow-x:hidden !important;
-  bottom: 80px !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  bottom: 0px !important;
   top: 94px !important;
 }
 
@@ -823,11 +849,21 @@ h6,
   background: initial !important;
 }
 
-.ant-menu-item-selected, .ant-menu-submenu-selected > .ant-menu-submenu-title {
+.ant-menu-item-selected,
+.ant-menu-submenu-selected > .ant-menu-submenu-title {
   font-weight: bold !important;
 }
-.ant-menu-item:hover, .ant-menu-submenu-title:hover {
+.ant-menu-item:hover,
+.ant-menu-submenu-title:hover {
   color: black !important;
+}
+
+.edit-resource-timeline .ant-timeline-item-content {
+  top: -15px
+}
+
+.ant-input-group-addon {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .timeline-bg {
@@ -842,7 +878,9 @@ h6,
   overflow: hidden;
 }
 
-.video-container iframe, .video-container object, .video-container embed {
+.video-container iframe,
+.video-container object,
+.video-container embed {
   position: absolute;
   top: 0;
   left: 0;
@@ -851,6 +889,6 @@ h6,
   border: 0;
 }
 
-.rc-md-editor .editor-container>.section>.section-container {
+.rc-md-editor .editor-container > .section > .section-container {
   padding: 10px 7% 15px 7% !important;
 }

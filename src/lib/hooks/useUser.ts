@@ -9,10 +9,12 @@ export function useUser() {
     query {
         me {
           user {
+             id
              name
              email
              username
              roles
+             confirmed
           }
           accessToken
         }
@@ -22,7 +24,8 @@ export function useUser() {
   const [{ data, fetching, error }, reExecuteMeQuery] = useQuery({
     query: ME_QUERY,
   })
-
+  // const renders = useRef(0)
+  // console.log('useUser called ', renders.current++)
   useEffect(() => {
     reExecuteMeQuery()
   }, [accessToken, reExecuteMeQuery])

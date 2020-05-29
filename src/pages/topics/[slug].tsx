@@ -7,7 +7,7 @@ import { Resource } from '../../graphql/types'
 import ResourceCards from '../../components/learn/ResourceCards'
 import PageNotFound from '../../components/result/PageNotFound'
 import { SEO } from '../../components/SEO'
-import { titleCase } from '../../utils/upperCamelCase'
+import { titleCase } from '../../utils/titleCase'
 
 export default function TopicResources() {
   const router = useRouter()
@@ -27,6 +27,8 @@ export default function TopicResources() {
         }
         firstPageSlugsPath
         verified
+        published
+        createdDate
       }
     }
   `

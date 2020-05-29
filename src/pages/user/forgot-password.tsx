@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { useRouter } from 'next/router'
 import NProgress from 'nprogress'
 import { useMutation } from 'urql'
@@ -24,6 +24,9 @@ export default function ForgotPassword() {
         console.log({ 'forgot-password error': result.error })
       } else {
         console.log({ result })
+        message.success(
+          'Please check your inbox for instructions to reset your password.'
+        )
         await router.push('/')
       }
     })

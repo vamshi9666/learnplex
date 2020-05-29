@@ -1,6 +1,6 @@
 import { useMutation } from 'urql'
-import React, { useState } from 'react'
-import { Alert, Button, Divider, Form, Input, Skeleton } from 'antd'
+import React, { useContext, useState } from 'react'
+import { Alert, Button, Divider, Form, Input, message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -10,28 +10,36 @@ import { SEO } from '../components/SEO'
 import { getServerEndPoint } from '../utils/getServerEndPoint'
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
-import { useUser } from '../lib/hooks/useUser'
 import AlreadyLoggedIn from '../components/result/AlreadyLoggedIn'
+import { UserContext } from '../lib/contexts/UserContext'
 
 export default function Login() {
   const router = useRouter()
 
   const LOGIN_MUTATION = `
-    mutation($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
+    mutation($usernameOrEmail: String!, $password: String!) {
+      login(usernameOrEmail: $usernameOrEmail, password: $password) {
         accessToken
+        user {
+          name
+          email
+          username
+          roles
+          confirmed
+        }
       }
     }
   `
   const [, login] = useMutation(LOGIN_MUTATION)
   const [loginError, setLoginError] = useState(false)
   const [errorDescription, setErrorDescription] = useState('')
+  const { setUser } = useContext(UserContext)
 
-  const onFinish = async ({ email, password }: any) => {
+  const onFinish = async ({ usernameOrEmail, password }: any) => {
     NProgress.start()
     logEvent('guest', 'TRIES_TO_LOGIN')
     login({
-      email,
+      usernameOrEmail,
       password,
     }).then(async (result) => {
       if (result.error) {
@@ -40,21 +48,29 @@ export default function Login() {
         setErrorDescription(result.error.message)
       } else {
         const { accessToken } = result.data.login
+        const user = result.data.login.user
+        if (!user.confirmed) {
+          message.warn(
+            'Your email is not yet verified. Please confirm your email address'
+          )
+        }
         console.log({ accessToken, result })
+        setUser(user)
         // Cookie will be set by server
         // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
         logEvent('guest', 'LOGGED_IN')
-        await router.push('/')
+        const redirectTo = router.query.redirectTo as string
+        if (redirectTo) {
+          await router.push(redirectTo)
+        } else {
+          await router.push('/')
+        }
       }
     })
     NProgress.done()
   }
 
-  const { user, fetching } = useUser()
-
-  if (fetching) {
-    return <Skeleton active={true} />
-  }
+  const { user } = useContext(UserContext)
 
   if (user) {
     return <AlreadyLoggedIn />
@@ -92,12 +108,11 @@ export default function Login() {
 
       <Form {...FORM_LAYOUT} name={'login'} onFinish={onFinish}>
         <Form.Item
-          name={'email'}
-          label={'Email'}
+          name={'usernameOrEmail'}
+          label={'Username/Email'}
           rules={[
             {
               required: true,
-              type: 'email',
             },
           ]}
         >
@@ -124,7 +139,15 @@ export default function Login() {
           <Button
             type={'link'}
             className={'float-right'}
-            onClick={() => router.push('/register')}
+            onClick={async () => {
+              if (router.query.redirectTo) {
+                await router.push(
+                  `/register?redirectTo=${router.query.redirectTo}`
+                )
+              } else {
+                await router.push('/register')
+              }
+            }}
           >
             Register
           </Button>

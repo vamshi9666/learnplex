@@ -8,17 +8,21 @@ import {
   Button,
   Tooltip,
   Skeleton,
-  Divider,
   Empty,
+  message,
 } from 'antd'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { useMutation, useQuery } from 'urql'
 import NProgress from 'nprogress'
-import { TagOutlined, UserOutlined, StarTwoTone } from '@ant-design/icons'
+import { TagOutlined, UserOutlined } from '@ant-design/icons'
 
 import { Progress, Resource } from '../../graphql/types'
-import { useUser } from '../../lib/hooks/useUser'
+import { UserContext } from '../../lib/contexts/UserContext'
+import {
+  togglePrimaryStatus,
+  togglePublishStatus,
+} from '../../utils/togglePublishStatus'
 
 export default function ResourceCards({
   resources,
@@ -26,6 +30,7 @@ export default function ResourceCards({
   resources: Resource[]
 }) {
   const router = useRouter()
+  resources = resources.sort((a, b) => (a.createdDate > b.createdDate ? -1 : 1))
 
   const goToTopic = async ({ e, slug }: { e: any; slug: string }) => {
     e.preventDefault()
@@ -45,8 +50,9 @@ export default function ResourceCards({
     await router.push(`/${username}/resources`)
   }
 
-  const { user } = useUser()
+  const { user } = useContext(UserContext)
   const isLoggedIn = !!user
+  const isAdminPage = router.asPath === '/___admin'
 
   const USER_PROGRESS_LIST_QUERY = `
     query {
@@ -92,11 +98,7 @@ export default function ResourceCards({
   }
 
   const goToResource = async ({ resource }: { resource: Resource }) => {
-    if (resource.verified) {
-      await router.push(`/learn/${resource.slug}`)
-      return
-    }
-    await router.push(`/${resource.user.username}/learn/${resource.slug}`)
+    await router.push(`/learn/${resource.slug}`)
   }
 
   const startProgress = ({ resourceId }: { resourceId: string }) => {
@@ -134,8 +136,88 @@ export default function ResourceCards({
       children
     )
 
+  const goToRegisterPage = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+    router.push('/register')
+  }
+
+  const togglePublish = async ({
+    resourceId,
+    e,
+  }: {
+    resourceId: string
+    e: any
+  }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const result = await togglePublishStatus({ resourceId })
+    if (result.error) {
+      message.error(result.message)
+    } else {
+      message.success('Status updated successfully.')
+      router.reload()
+    }
+  }
+
+  const togglePrimary = async ({
+    resourceId,
+    e,
+  }: {
+    resourceId: string
+    e: any
+  }) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const result = await togglePrimaryStatus({ resourceId })
+    if (result.error) {
+      message.error(result.message)
+    } else {
+      message.success('Status updated successfully.')
+      router.reload()
+    }
+  }
+
+  const adminActions = ({ resource }: { resource: Resource }) => {
+    const adminActions = []
+    if (resource.verified) {
+      adminActions.push(<Button>Toggle Primary</Button>)
+    }
+    return [
+      <Button
+        type={resource.published ? 'default' : 'primary'}
+        danger={resource.published}
+        onClick={(e) => togglePublish({ resourceId: resource.id, e })}
+      >
+        {resource.published ? 'Unpublish' : 'Publish'}
+      </Button>,
+      <Button
+        type={resource.verified ? 'default' : 'primary'}
+        danger={resource.verified}
+        onClick={(e) => togglePrimary({ resourceId: resource.id, e })}
+      >
+        {resource.verified ? 'Remove as Primary' : 'Make Primary'}
+      </Button>,
+    ]
+  }
+
   const getActions = ({ resource }: { resource: Resource }) => {
+    if (isAdminPage) {
+      return adminActions({ resource })
+    }
     const actions = []
+    if (router.asPath === '/resources/me') {
+      actions.push(
+        <Button
+          type={resource.published ? 'default' : 'primary'}
+          danger={resource.published}
+          onClick={(e) => togglePublish({ resourceId: resource.id, e })}
+        >
+          {resource.published ? 'Unpublish' : 'Publish'}
+        </Button>
+      )
+    }
+    console.log({ isLoggedIn })
     if (isLoggedIn) {
       actions.push(
         <Tooltip title={'You can track your progress in your profile'}>
@@ -145,15 +227,16 @@ export default function ResourceCards({
               block={true}
               disabled={!isLoggedIn}
               onClick={() => goToResource({ resource })}
+              style={{ width: '70%' }}
             >
-              Resume Learning
+              Continue Learning
             </Button>
           ) : (
             <Button
               type={'primary'}
               block={true}
-              disabled={!isLoggedIn}
               onClick={() => startProgress({ resourceId: resource.id })}
+              style={{ width: '70%' }}
             >
               Start Learning
             </Button>
@@ -163,7 +246,11 @@ export default function ResourceCards({
     } else {
       actions.push(
         <Tooltip title={'Login to start learning and track your progress'}>
-          <Button type={'primary'} disabled={!isLoggedIn} block={true}>
+          <Button
+            type={'primary'}
+            onClick={(e) => goToRegisterPage(e)}
+            style={{ width: '70%' }}
+          >
             Start Learning
           </Button>
         </Tooltip>
@@ -171,12 +258,6 @@ export default function ResourceCards({
     }
     return actions
   }
-
-  const primaryResources = () =>
-    resources.filter((resource) => resource.verified)
-
-  const otherResources = () =>
-    resources.filter((resource) => !resource.verified)
 
   const ResourceGrid = ({ resources }: { resources: Resource[] }) => {
     return (
@@ -189,31 +270,33 @@ export default function ResourceCards({
               actions={getActions({ resource })}
               onClick={() => goToResource({ resource })}
             >
-              {resource.verified && (
-                <StarTwoTone
-                  style={{
-                    color: '#1890ff',
-                    borderColor: '#91d5ff',
-                  }}
-                  className={'float-right font-x-large'}
-                />
-              )}
               <Card.Meta
-                title={`${resource.title}`}
+                title={
+                  <Tooltip title={resource.title}>
+                    <Typography>
+                      <Typography.Title level={4} ellipsis={true}>
+                        {resource.title}
+                      </Typography.Title>
+                    </Typography>
+                  </Tooltip>
+                }
                 description={
-                  <Typography.Paragraph
-                    ellipsis={{
-                      rows: 3,
-                    }}
-                  >
-                    {resource.description}
-                  </Typography.Paragraph>
+                  <Typography>
+                    <Typography.Paragraph
+                      ellipsis={{
+                        rows: 3,
+                      }}
+                    >
+                      {resource.description}
+                    </Typography.Paragraph>
+                  </Typography>
                 }
                 // className={'overflow-scroll'}
                 style={{
                   height: '100px',
                 }}
               />
+              <br />
               <br />
               <Space style={{ overflowWrap: 'normal' }}>
                 <TruncatedTag value={resource.user.username}>
@@ -251,25 +334,5 @@ export default function ResourceCards({
     )
   }
 
-  return (
-    <>
-      <Typography className={'p-2'}>
-        <Typography.Title level={3}>Primary Resources</Typography.Title>
-      </Typography>
-      <br />
-      <ResourceGrid resources={primaryResources()} />
-
-      {router.pathname !== '/resources' && (
-        <>
-          <Divider />
-
-          <Typography className={'p-2'}>
-            <Typography.Title level={3}>Other Resources</Typography.Title>
-          </Typography>
-          <br />
-          <ResourceGrid resources={otherResources()} />
-        </>
-      )}
-    </>
-  )
+  return <ResourceGrid resources={resources} />
 }
