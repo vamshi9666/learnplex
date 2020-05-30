@@ -149,73 +149,70 @@ export default function Header() {
               </Button>
             </Menu.Item>
           )}
-          {!xs && showExitButton() && (
-            <Menu.Item
-              key={'preview'}
-              disabled={true}
-              className={'cursor-initial border-0'}
-              style={{ marginBottom: '2px' }}
-            >
-              <Tooltip title={'Show Preview'}>
-                <EyeOutlined
-                  className={'font-x-large text-black-50'}
-                  onClick={() => openPreviewPage()}
-                  style={{ position: 'relative', top: '3px' }}
-                />
-              </Tooltip>
-            </Menu.Item>
-          )}
-          {!xs && showExitButton() && (
-            <Menu.Item
-              key={'publish'}
-              disabled={true}
-              className={'cursor-initial border-0 pr-1'}
-              style={{ marginBottom: '2px' }}
-            >
-              <Popconfirm
-                title={
-                  resource?.published
-                    ? 'This will unpublish your resource from any of the public pages.'
-                    : 'This will publish your resource and make it public.'
-                }
-                okText={'Continue'}
-                cancelText={'Cancel'}
-                okType={'danger'}
-                placement={'topRight'}
-                onConfirm={() => togglePublishStatus()}
+          {!xs &&
+            showExitButton() && [
+              <Menu.Item
+                key={'preview'}
+                disabled={true}
+                className={'cursor-initial border-0'}
+                style={{ marginBottom: '2px' }}
+              >
+                <Tooltip title={'Show Preview'}>
+                  <EyeOutlined
+                    className={'font-x-large text-black-50'}
+                    onClick={() => openPreviewPage()}
+                    style={{ position: 'relative', top: '3px' }}
+                  />
+                </Tooltip>
+              </Menu.Item>,
+              <Menu.Item
+                key={'publish'}
+                disabled={true}
+                className={'cursor-initial border-0 pr-1'}
+                style={{ marginBottom: '2px' }}
+              >
+                <Popconfirm
+                  title={
+                    resource?.published
+                      ? 'This will unpublish your resource from any of the public pages.'
+                      : 'This will publish your resource and make it public.'
+                  }
+                  okText={'Continue'}
+                  cancelText={'Cancel'}
+                  okType={'danger'}
+                  placement={'topRight'}
+                  onConfirm={() => togglePublishStatus()}
+                >
+                  <Button
+                    danger={resource?.published}
+                    type={'primary'}
+                    icon={
+                      resource?.published ? (
+                        <DownloadOutlined className={'mr-0'} />
+                      ) : (
+                        <UploadOutlined className={'mr-0'} />
+                      )
+                    }
+                  >
+                    {resource?.published ? 'Unpublish' : 'Publish'}
+                  </Button>
+                </Popconfirm>
+              </Menu.Item>,
+              <Menu.Item
+                key={'exit'}
+                disabled={true}
+                className={'cursor-initial border-0 pr-1'}
+                style={{ marginBottom: '2px' }}
               >
                 <Button
-                  danger={resource?.published}
                   type={'primary'}
-                  icon={
-                    resource?.published ? (
-                      <DownloadOutlined className={'mr-0'} />
-                    ) : (
-                      <UploadOutlined className={'mr-0'} />
-                    )
-                  }
+                  icon={<ImportOutlined className={'mr-0'} />}
+                  onClick={() => exitEditMode()}
                 >
-                  {resource?.published ? 'Unpublish' : 'Publish'}
+                  Exit
                 </Button>
-              </Popconfirm>
-            </Menu.Item>
-          )}
-          {!xs && showExitButton() && (
-            <Menu.Item
-              key={'exit'}
-              disabled={true}
-              className={'cursor-initial border-0 pr-1'}
-              style={{ marginBottom: '2px' }}
-            >
-              <Button
-                type={'primary'}
-                icon={<ImportOutlined className={'mr-0'} />}
-                onClick={() => exitEditMode()}
-              >
-                Exit
-              </Button>
-            </Menu.Item>
-          )}
+              </Menu.Item>,
+            ]}
           {!xs && (
             <Menu.Item
               key={
@@ -227,26 +224,25 @@ export default function Header() {
               Create Resource
             </Menu.Item>
           )}
-          {isLoggedIn && (
-            <Menu.SubMenu key={'user'} title={user?.name ?? user?.username}>
-              <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
-              <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
-              {user?.roles.includes(UserRole.Admin) && (
-                <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
-              )}
-              <Menu.Item key={'/logout'}>Logout</Menu.Item>,
-            </Menu.SubMenu>
-          )}
-          {!isLoggedIn && (
-            <Menu.Item key={`/login?redirectTo=${router.asPath}&`}>
-              Login
-            </Menu.Item>
-          )}
-          {!isLoggedIn && (
-            <Menu.Item key={`/register?redirectTo=${router.asPath}&`}>
-              Register
-            </Menu.Item>
-          )}
+          {isLoggedIn
+            ? [
+                <Menu.SubMenu key={'user'} title={user?.name ?? user?.username}>
+                  <Menu.Item key={'/profile/settings'}>Profile</Menu.Item>
+                  <Menu.Item key={'/resources/me'}>My Resources</Menu.Item>
+                  {user?.roles.includes(UserRole.Admin) && (
+                    <Menu.Item key={'/topics/new'}>Create Topic</Menu.Item>
+                  )}
+                  <Menu.Item key={'/logout'}>Logout</Menu.Item>,
+                </Menu.SubMenu>,
+              ]
+            : [
+                <Menu.Item key={`/login?redirectTo=${router.asPath}&`}>
+                  Login
+                </Menu.Item>,
+                <Menu.Item key={`/register?redirectTo=${router.asPath}&`}>
+                  Register
+                </Menu.Item>,
+              ]}
         </Menu>
       </div>
     </Affix>
