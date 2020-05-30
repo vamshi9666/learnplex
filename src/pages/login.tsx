@@ -26,7 +26,7 @@ export default function Login() {
       return
     }
     const user = result.user
-    if (!user.confirmed) {
+    if (!user.disabledOrConfirmed) {
       message.warn(
         'Your email is not yet verified. Please confirm your email address'
       )

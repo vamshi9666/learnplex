@@ -17,6 +17,7 @@ export async function login({
           username
           roles
           confirmed
+          disabledOrConfirmed
         }
       }
     }
@@ -57,6 +58,7 @@ export async function register({
           username
           roles
           confirmed
+          disabledOrConfirmed
         }
       }
     }

@@ -130,6 +130,7 @@ export type User = {
   email?: Maybe<Scalars['String']>
   username: Scalars['String']
   confirmed: Scalars['Boolean']
+  disabledOrConfirmed: Scalars['Boolean']
   roles: Array<UserRole>
   githubId?: Maybe<Scalars['Int']>
   resources: Array<Resource>

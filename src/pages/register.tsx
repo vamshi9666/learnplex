@@ -36,8 +36,10 @@ export default function Register() {
       return
     }
     logEvent('guest', 'REGISTERS')
-    setUser(result.data.register.user)
-    message.warn('Please check your email inbox and verify your email')
+    setUser(result.user)
+    if (!result.user.disabledOrConfirmed) {
+      message.warn('Please check your email inbox and verify your email')
+    }
     const redirectTo = router.query.redirectTo as string
     if (redirectTo) {
       await router.push(redirectTo)

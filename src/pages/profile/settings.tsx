@@ -155,14 +155,7 @@ export default function ProfileSettings() {
               >
                 <Input
                   suffix={
-                    user.confirmed ? (
-                      <Tooltip
-                        placement={'topLeft'}
-                        title={'Email is verified.'}
-                      >
-                        <CheckCircleTwoTone twoToneColor="#52c41a" />
-                      </Tooltip>
-                    ) : (
+                    !user.disabledOrConfirmed && (
                       <Tooltip
                         placement={'topLeft'}
                         title={'Please verify your email address.'}
@@ -210,7 +203,7 @@ export default function ProfileSettings() {
                 <Button type={'primary'} htmlType={'submit'}>
                   Update
                 </Button>
-                {!user.confirmed && (
+                {!user.disabledOrConfirmed && (
                   <Button
                     className={'float-right'}
                     type={'link'}
