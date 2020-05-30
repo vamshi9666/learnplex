@@ -126,7 +126,7 @@ export default function Header() {
           </span>
         </div>
         <Menu
-          className={'bg-initial border-0'}
+          className={'top-nav bg-initial border-0'}
           mode={'horizontal'}
           selectable={false}
           onClick={async ({ key }) => {
