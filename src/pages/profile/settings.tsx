@@ -10,18 +10,25 @@ import {
   Row,
   Tooltip,
 } from 'antd'
-import { useMutation } from 'urql'
-import { useRouter } from 'next/router'
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons'
 import NProgress from 'nprogress'
+import { useRouter } from 'next/router'
 
 import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../../constants'
 import { SEO } from '../../components/SEO'
 import Enrollments from '../../components/user/Enrollments'
 import { UserContext } from '../../lib/contexts/UserContext'
 import NotAuthenticated from '../../components/result/NotAuthenticated'
+import {
+  resendVerificationEmail as resendEmail,
+  updatePassword,
+  updateUser,
+  validateEmail,
+  validateUsername,
+} from '../../graphql/mutations/auth'
 
 export default function ProfileSettings() {
+  const router = useRouter()
   const { user } = useContext(UserContext)
 
   const BASIC = 'basic'
@@ -29,43 +36,6 @@ export default function ProfileSettings() {
   const ENROLLMENTS = 'enrollments'
   const [selectedKey, setSelectedKey] = useState(BASIC)
 
-  const UPDATE_USER_MUTATION = `
-    mutation($data: UpdateUserInput!) {
-      updateUser(data: $data)
-    }
-  `
-
-  const UPDATE_PASSWORD_MUTATION = `
-    mutation($data: UpdatePasswordInput!) {
-      updatePassword(data: $data)
-    }
-  `
-
-  const VALIDATE_USERNAME_MUTATION = `
-    mutation($username: String!) {
-      validateUsername(username: $username)
-    }
-  `
-  const VALIDATE_EMAIL_MUTATION = `
-    mutation($email: String!) {
-      validateEmail(email: $email)
-    }
-  `
-
-  const RESEND_VERIFICATION_EMAIL_MUTATION = `
-    mutation {
-      resendConfirmationEmail
-    }
-  `
-
-  const router = useRouter()
-  const [, updateUser] = useMutation(UPDATE_USER_MUTATION)
-  const [, validateUsername] = useMutation(VALIDATE_USERNAME_MUTATION)
-  const [, validateEmail] = useMutation(VALIDATE_EMAIL_MUTATION)
-  const [, updatePassword] = useMutation(UPDATE_PASSWORD_MUTATION)
-  const [, resendConfirmationEmailMutation] = useMutation(
-    RESEND_VERIFICATION_EMAIL_MUTATION
-  )
   const [updatePasswordForm] = Form.useForm()
   const [updateUserForm] = Form.useForm()
   const { xs } = Grid.useBreakpoint()
@@ -76,57 +46,43 @@ export default function ProfileSettings() {
 
   const resendVerificationEmail = async () => {
     NProgress.start()
-    const result = await resendConfirmationEmailMutation()
+    const result = await resendEmail()
     if (result.error) {
-      console.log({ verificationEmailError: result.error })
+      message.error(result.message)
     } else {
       message.success('Please check your inbox for verification email.')
     }
     NProgress.done()
   }
 
-  const onFinish = ({ name, email, username }: any) => {
-    updateUser({
-      data: {
-        name,
-        email,
-        username,
-      },
-    }).then((result) => {
-      if (result.error) {
-        console.log({ updateError: result.error })
-      } else {
-        console.log({ result })
-        if (result.data.updateUser) {
-          message.success('Detqails updated successfully')
-        } else {
-          message.error('Something went wrong. Try again')
-        }
-        router.reload()
-      }
-    })
+  const onFinish = async ({ name, email, username }: any) => {
+    const result = await updateUser({ name, email, username })
+    if (result.error) {
+      message.error(result.message)
+      return
+    }
+    if (result) {
+      message.success('Detqails updated successfully')
+    } else {
+      message.error('Something went wrong. Try again')
+    }
+    router.reload()
   }
 
-  const onFinishPassword = ({ current_password, password }: any) => {
-    updatePassword({
-      data: {
-        password,
-        currentPassword: current_password,
-      },
-    }).then((result) => {
-      if (result.error) {
-        message.error('Something went wrong. Please try again.')
-        console.log({ updatePasswordError: result.error })
-      } else {
-        console.log({ result })
-        updatePasswordForm.resetFields()
-        if (result.data.updatePassword) {
-          message.success('Password Updated successfully')
-        } else {
-          message.error('Something went wrong. Try again')
-        }
-      }
+  const onFinishPassword = async ({ current_password, password }: any) => {
+    const result = await updatePassword({
+      password,
+      currentPassword: current_password,
     })
+    if (result.error) {
+      message.error(result.message)
+      return
+    }
+    if (result) {
+      message.success('Password Updated successfully')
+    } else {
+      message.error('Something went wrong. Try again')
+    }
   }
 
   return (
@@ -184,17 +140,14 @@ export default function ProfileSettings() {
                       }
                       return validateEmail({ email: value }).then((result) => {
                         if (result.error) {
-                          console.log({ validateEmailError: result.error })
                           return Promise.reject('Something went wrong!')
-                        } else {
-                          const valid = result.data.validateEmail
-                          if (!valid) {
-                            return Promise.reject(
-                              'There is already an account with this email id!'
-                            )
-                          }
-                          return Promise.resolve()
                         }
+                        if (!result) {
+                          return Promise.reject(
+                            'There is already an account with this email id!'
+                          )
+                        }
+                        return Promise.resolve()
                       })
                     },
                   }),
@@ -202,14 +155,7 @@ export default function ProfileSettings() {
               >
                 <Input
                   suffix={
-                    user.confirmed ? (
-                      <Tooltip
-                        placement={'topLeft'}
-                        title={'Email is verified.'}
-                      >
-                        <CheckCircleTwoTone twoToneColor="#52c41a" />
-                      </Tooltip>
-                    ) : (
+                    !user.disabledOrConfirmed && (
                       <Tooltip
                         placement={'topLeft'}
                         title={'Please verify your email address.'}
@@ -235,17 +181,14 @@ export default function ProfileSettings() {
                       return validateUsername({ username: value }).then(
                         (result) => {
                           if (result.error) {
-                            console.log({ validateUsernameError: result.error })
                             return Promise.reject('Something went wrong!')
-                          } else {
-                            const valid = result.data.validateUsername
-                            if (!valid) {
-                              return Promise.reject(
-                                'There is already an account with this username!'
-                              )
-                            }
-                            return Promise.resolve()
                           }
+                          if (!result) {
+                            return Promise.reject(
+                              'There is already an account with this username!'
+                            )
+                          }
+                          return Promise.resolve()
                         }
                       )
                     },
@@ -260,7 +203,7 @@ export default function ProfileSettings() {
                 <Button type={'primary'} htmlType={'submit'}>
                   Update
                 </Button>
-                {!user.confirmed && (
+                {!user.disabledOrConfirmed && (
                   <Button
                     className={'float-right'}
                     type={'link'}

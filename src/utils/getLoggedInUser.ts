@@ -11,6 +11,7 @@ export default async function getLoggedInUser() {
            username
            roles
            confirmed
+           disabledOrConfirmed
         }
         accessToken
       }

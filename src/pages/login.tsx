@@ -1,6 +1,5 @@
-import { useMutation } from 'urql'
-import React, { useContext, useState } from 'react'
-import { Alert, Button, Divider, Form, Input, message } from 'antd'
+import React, { useContext } from 'react'
+import { Button, Divider, Form, Input, message } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import urljoin from 'url-join'
 import { useRouter } from 'next/router'
@@ -12,61 +11,34 @@ import { FORM_LAYOUT, FORM_TAIL_LAYOUT } from '../constants'
 import { logEvent } from '../utils/analytics'
 import AlreadyLoggedIn from '../components/result/AlreadyLoggedIn'
 import { UserContext } from '../lib/contexts/UserContext'
+import { login } from '../graphql/mutations/auth'
 
 export default function Login() {
   const router = useRouter()
-
-  const LOGIN_MUTATION = `
-    mutation($usernameOrEmail: String!, $password: String!) {
-      login(usernameOrEmail: $usernameOrEmail, password: $password) {
-        accessToken
-        user {
-          name
-          email
-          username
-          roles
-          confirmed
-        }
-      }
-    }
-  `
-  const [, login] = useMutation(LOGIN_MUTATION)
-  const [loginError, setLoginError] = useState(false)
-  const [errorDescription, setErrorDescription] = useState('')
   const { setUser } = useContext(UserContext)
 
   const onFinish = async ({ usernameOrEmail, password }: any) => {
     NProgress.start()
     logEvent('guest', 'TRIES_TO_LOGIN')
-    login({
-      usernameOrEmail,
-      password,
-    }).then(async (result) => {
-      if (result.error) {
-        console.log({ 'login error': result.error })
-        setLoginError(true)
-        setErrorDescription(result.error.message)
-      } else {
-        const { accessToken } = result.data.login
-        const user = result.data.login.user
-        if (!user.confirmed) {
-          message.warn(
-            'Your email is not yet verified. Please confirm your email address'
-          )
-        }
-        console.log({ accessToken, result })
-        setUser(user)
-        // Cookie will be set by server
-        // Cookies.set(ACCESS_TOKEN_COOKIE, accessToken)
-        logEvent('guest', 'LOGGED_IN')
-        const redirectTo = router.query.redirectTo as string
-        if (redirectTo) {
-          await router.push(redirectTo)
-        } else {
-          await router.push('/')
-        }
-      }
-    })
+    const result = await login({ usernameOrEmail, password })
+    if (result.error) {
+      message.error(result.message)
+      return
+    }
+    const user = result.user
+    if (!user.disabledOrConfirmed) {
+      message.warn(
+        'Your email is not yet verified. Please confirm your email address'
+      )
+    }
+    setUser(user)
+    logEvent('guest', 'LOGGED_IN')
+    const redirectTo = router.query.redirectTo as string
+    if (redirectTo) {
+      await router.push(redirectTo)
+    } else {
+      await router.push('/')
+    }
     NProgress.done()
   }
 
@@ -93,18 +65,6 @@ export default function Login() {
       <Form.Item {...FORM_TAIL_LAYOUT}>
         <Divider>(OR)</Divider>
       </Form.Item>
-
-      {loginError && (
-        <Form.Item {...FORM_TAIL_LAYOUT}>
-          <Alert
-            message="Something went Wrong! Try again"
-            description={errorDescription}
-            type="error"
-            closable
-            onClose={() => setLoginError(false)}
-          />
-        </Form.Item>
-      )}
 
       <Form {...FORM_LAYOUT} name={'login'} onFinish={onFinish}>
         <Form.Item
